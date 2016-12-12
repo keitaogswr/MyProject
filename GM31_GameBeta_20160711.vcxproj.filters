@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\Lib">
+      <UniqueIdentifier>{43dcdfac-2a2c-4b8b-badd-dc4393509c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Renderer">
+      <UniqueIdentifier>{ecd12d52-2b9d-480d-a37b-0dcff7c0ecc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Mode">
+      <UniqueIdentifier>{1f4090fe-342c-4567-a211-8cdf2bc5d4ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Lib">
+      <UniqueIdentifier>{787de578-8091-467e-bb8e-b6ff6fba246b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Mode">
+      <UniqueIdentifier>{1f742ec1-f2a2-4149-8883-754dc6a95148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene">
+      <UniqueIdentifier>{1e7e3bbf-f377-412a-a784-61ef7ee60816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\2D">
+      <UniqueIdentifier>{ee000682-a738-45ad-b368-eb2ec42b7876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\3D">
+      <UniqueIdentifier>{a9b200ea-3114-41d5-b989-25b2b0cce3f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Background">
+      <UniqueIdentifier>{b2bc5a7a-8bc5-473c-bb13-fb6f3b19d5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Billboard">
+      <UniqueIdentifier>{43efea3c-3282-40aa-ada2-eb86e88fe3fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Renderer">
+      <UniqueIdentifier>{c1611ea3-60f7-46f9-a332-afd6356b8def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Motion">
+      <UniqueIdentifier>{2e2cb736-2cd3-4d7d-bea8-5851bfe5ab0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Motion">
+      <UniqueIdentifier>{9a627197-8807-4300-93f0-83eaca9256b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{6071cc12-cec8-45d3-b851-59f65fde3c9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Billboard">
+      <UniqueIdentifier>{1dd79184-ce67-48f0-bdc5-276282919d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Background">
+      <UniqueIdentifier>{38d734a0-106e-4225-a8fc-8b398119594a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\3D">
+      <UniqueIdentifier>{a3846321-a28f-4257-81ec-72b3733c00c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\2D">
+      <UniqueIdentifier>{a5a3ca79-eb2c-4b74-a20c-900ae88ba3ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Effect">
+      <UniqueIdentifier>{e1e68105-c2a5-4163-b5cd-c3011e1c5784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Effect">
+      <UniqueIdentifier>{b59f0f87-fcc8-4eb3-bd29-8be18205be20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Billboard\Bullet">
+      <UniqueIdentifier>{5b7a73b1-6898-4f99-8670-2d901e8234be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Billboard\Bullet">
+      <UniqueIdentifier>{c9438ee6-1f59-4867-a867-a4826be44ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Camera">
+      <UniqueIdentifier>{9c3c661c-0556-4cca-aa2d-8733ad8fe365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Camera">
+      <UniqueIdentifier>{19f21bb4-fbfe-403b-b319-39282e67e040}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="manager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="sound.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="dynamicModel.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="field.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="scene2D.cpp">
+      <Filter>ソース ファイル\Scene\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="scene3D.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="sceneX.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="time.cpp">
+      <Filter>ソース ファイル\Scene\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="meshField.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="number.cpp">
+      <Filter>ソース ファイル\Scene\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="title.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="billboard.cpp">
+      <Filter>ソース ファイル\Scene\Billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="treeObject.cpp">
+      <Filter>ソース ファイル\Scene\Billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="skyDome.cpp">
+      <Filter>ソース ファイル\Scene\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>ソース ファイル\Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="motionManager.cpp">
+      <Filter>ソース ファイル\Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>ソース ファイル\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="list.cpp">
+      <Filter>ソース ファイル\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>ソース ファイル\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="mode.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="bg.cpp">
+      <Filter>ソース ファイル\Scene\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="fade.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="shadow.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>ソース ファイル\Scene\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet.cpp">
+      <Filter>ソース ファイル\Scene\Billboard\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="diffusionBullet.cpp">
+      <Filter>ソース ファイル\Scene\Billboard\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="skySphere.cpp">
+      <Filter>ソース ファイル\Scene\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="logo.cpp">
+      <Filter>ソース ファイル\Scene\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="load.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="playerT.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="animationBoard.cpp">
+      <Filter>ソース ファイル\Scene\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="smoke.cpp">
+      <Filter>ソース ファイル\Scene\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>ソース ファイル\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="orbit.cpp">
+      <Filter>ソース ファイル\Scene\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="stencilShadow.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="reticle.cpp">
+      <Filter>ソース ファイル\Scene\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="editor.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="titleCamera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="editorCamera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="bossEnemy.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="explosion.cpp">
+      <Filter>ソース ファイル\Scene\Effect</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="light.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="manager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="billboard.h">
+      <Filter>ヘッダー ファイル\Scene\Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamicModel.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="field.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="meshField.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="number.h">
+      <Filter>ヘッダー ファイル\Scene\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="scene2D.h">
+      <Filter>ヘッダー ファイル\Scene\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="scene3D.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneX.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="time.h">
+      <Filter>ヘッダー ファイル\Scene\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="treeObject.h">
+      <Filter>ヘッダー ファイル\Scene\Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="skyDome.h">
+      <Filter>ヘッダー ファイル\Scene\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>ヘッダー ファイル\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="motionManager.h">
+      <Filter>ヘッダー ファイル\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>ヘッダー ファイル\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="title.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="result.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="list.h">
+      <Filter>ヘッダー ファイル\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>ヘッダー ファイル\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="mode.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="bg.h">
+      <Filter>ヘッダー ファイル\Scene\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="fade.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet.h">
+      <Filter>ヘッダー ファイル\Scene\Billboard\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="diffusionBullet.h">
+      <Filter>ヘッダー ファイル\Scene\Billboard\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="skySphere.h">
+      <Filter>ヘッダー ファイル\Scene\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="logo.h">
+      <Filter>ヘッダー ファイル\Scene\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="load.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="playerT.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="animationBoard.h">
+      <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="smoke.h">
+      <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>ヘッダー ファイル\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="orbit.h">
+      <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="stencilShadow.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="reticle.h">
+      <Filter>ヘッダー ファイル\Scene\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="editor.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>ヘッダー ファイル\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="editorCamera.h">
+      <Filter>ヘッダー ファイル\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="titleCamera.h">
+      <Filter>ヘッダー ファイル\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="bossEnemy.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="explosion.h">
+      <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

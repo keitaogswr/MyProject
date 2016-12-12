@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{65FFA349-D929-4AA0-B1D5-B93EF3434C0A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>GM31_GameBeta_20160711</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="bg.cpp" />
+    <ClCompile Include="billboard.cpp" />
+    <ClCompile Include="bossEnemy.cpp" />
+    <ClCompile Include="bullet.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="diffusionBullet.cpp" />
+    <ClCompile Include="dynamicModel.cpp" />
+    <ClCompile Include="editor.cpp" />
+    <ClCompile Include="editorCamera.cpp" />
+    <ClCompile Include="effect.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="explosion.cpp" />
+    <ClCompile Include="fade.cpp" />
+    <ClCompile Include="field.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="input.cpp" />
+    <ClCompile Include="light.cpp" />
+    <ClCompile Include="list.cpp" />
+    <ClCompile Include="load.cpp" />
+    <ClCompile Include="logo.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="manager.cpp" />
+    <ClCompile Include="meshField.cpp" />
+    <ClCompile Include="mode.cpp" />
+    <ClCompile Include="model.cpp" />
+    <ClCompile Include="motionManager.cpp" />
+    <ClCompile Include="number.cpp" />
+    <ClCompile Include="orbit.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerT.cpp" />
+    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="result.cpp" />
+    <ClCompile Include="reticle.cpp" />
+    <ClCompile Include="scene.cpp" />
+    <ClCompile Include="scene2D.cpp" />
+    <ClCompile Include="scene3D.cpp" />
+    <ClCompile Include="sceneX.cpp" />
+    <ClCompile Include="shadow.cpp" />
+    <ClCompile Include="skyDome.cpp" />
+    <ClCompile Include="skySphere.cpp" />
+    <ClCompile Include="animationBoard.cpp" />
+    <ClCompile Include="smoke.cpp" />
+    <ClCompile Include="sound.cpp" />
+    <ClCompile Include="stencilShadow.cpp" />
+    <ClCompile Include="texture.cpp" />
+    <ClCompile Include="time.cpp" />
+    <ClCompile Include="title.cpp" />
+    <ClCompile Include="titleCamera.cpp" />
+    <ClCompile Include="treeObject.cpp" />
+    <ClCompile Include="Vector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bg.h" />
+    <ClInclude Include="billboard.h" />
+    <ClInclude Include="bossEnemy.h" />
+    <ClInclude Include="bullet.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="diffusionBullet.h" />
+    <ClInclude Include="dynamicModel.h" />
+    <ClInclude Include="editor.h" />
+    <ClInclude Include="editorCamera.h" />
+    <ClInclude Include="effect.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="explosion.h" />
+    <ClInclude Include="fade.h" />
+    <ClInclude Include="field.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="light.h" />
+    <ClInclude Include="list.h" />
+    <ClInclude Include="load.h" />
+    <ClInclude Include="logo.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="manager.h" />
+    <ClInclude Include="meshField.h" />
+    <ClInclude Include="mode.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="motionManager.h" />
+    <ClInclude Include="number.h" />
+    <ClInclude Include="orbit.h" />
+    <ClInclude Include="player.h" />
+    <ClInclude Include="playerT.h" />
+    <ClInclude Include="renderer.h" />
+    <ClInclude Include="result.h" />
+    <ClInclude Include="reticle.h" />
+    <ClInclude Include="scene.h" />
+    <ClInclude Include="scene2D.h" />
+    <ClInclude Include="scene3D.h" />
+    <ClInclude Include="sceneX.h" />
+    <ClInclude Include="shadow.h" />
+    <ClInclude Include="skyDome.h" />
+    <ClInclude Include="skySphere.h" />
+    <ClInclude Include="animationBoard.h" />
+    <ClInclude Include="smoke.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="stencilShadow.h" />
+    <ClInclude Include="texture.h" />
+    <ClInclude Include="time.h" />
+    <ClInclude Include="title.h" />
+    <ClInclude Include="titleCamera.h" />
+    <ClInclude Include="treeObject.h" />
+    <ClInclude Include="Vector.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
