@@ -175,7 +175,7 @@ void CStencilShadow::Init(Vector3 pos)
 	pVtx[0].pos.x = 0.0f;
 	pVtx[0].pos.y = m_fHeight * 0.5f;
 	pVtx[0].pos.z = 0.0f;
-	for (int nCntColumn = 1; nCntColumn <= m_nColumnNumVtx; nCntColumn++)
+	for (int nCntColumn = 1; nCntColumn < m_nColumnNumVtx; nCntColumn++)
 	{
 		pVtx[nCntColumn].pos.x = sinf(-D3DX_PI + 360.0f / m_nColumnBlock * RAD * (nCntColumn - 1)) * m_fRadius;
 		pVtx[nCntColumn].pos.y = m_fHeight * 0.5f;
