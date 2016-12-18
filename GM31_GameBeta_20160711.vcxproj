@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="barrier.cpp" />
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="bossEnemy.cpp" />
@@ -108,6 +109,7 @@
     <ClCompile Include="number.cpp" />
     <ClCompile Include="orbit.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerLifeGauge.cpp" />
     <ClCompile Include="playerT.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="result.cpp" />
@@ -131,6 +133,7 @@
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="barrier.h" />
     <ClInclude Include="bg.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="bossEnemy.h" />
@@ -160,6 +163,7 @@
     <ClInclude Include="number.h" />
     <ClInclude Include="orbit.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="playerLifeGauge.h" />
     <ClInclude Include="playerT.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="result.h" />

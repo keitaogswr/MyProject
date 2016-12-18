@@ -369,7 +369,7 @@ void CSkySphere::Draw(void)
 	/* 変数定義 */
 	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
 
-											// デバイスの取得
+	// デバイスの取得
 	CRenderer *renderer = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
 

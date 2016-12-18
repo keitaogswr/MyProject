@@ -27,7 +27,13 @@
 #include "enemy.h"
 #include "bossEnemy.h"
 #include "billboard.h"
+#include "effect.h"
 #include "bullet.h"
+#include "skyDome.h"
+#include "skySphere.h"
+#include "barrier.h"
+#include "animationBoard.h"
+#include "explosion.h"
 #include "input.h"
 
 /*******************************************************************************
@@ -48,7 +54,10 @@
 const float SHADOW_RADIUS = 400.0f;		// 影の半径
 const float  SHADOW_HEIGHT = 100.0f;	// 影の高さ
 
-const int COLLISION_LENGTH = 400;
+const int COLLISION_LENGTH = 400;		// 当たり判定
+const int DAMAGE_CNT = 60;				// 被弾カウンタ
+const int STATE_CHANGE = 150;			// 状態変化カウンタ
+const int STATE_CHANGE_ATTACK = 300;	// 状態変化カウンタ(攻撃時)
 
 /*******************************************************************************
 * グローバル変数
@@ -65,6 +74,8 @@ CBossEnemy::CBossEnemy(DRAWORDER DrawOrder, OBJTYPE ObjType) :CEnemy(DrawOrder, 
 {
 	m_nLife = LIFE_MAX;
 	m_nCollisionLength = COLLISION_LENGTH;
+	m_pBarrier = NULL;
+	m_State = STATE_NORMAL;
 }
 
 /*******************************************************************************
@@ -92,6 +103,7 @@ void CBossEnemy::Init(Vector3 pos)
 	m_Shadow = CStencilShadow::Create(m_Pos);
 	m_MotionManager = CMotionManager::Create(DYNAMICMODEL_TYPE_BOSS_00, &m_MtxWorld);
 	m_MotionManager->SetMotion(0);
+	m_pBarrier = CBarrier::Create(m_TargetPos, 300.0f, 8, 16);
 }
 
 /*******************************************************************************
@@ -112,6 +124,12 @@ void CBossEnemy::Uninit(void)
 	// 削除フラグ
 	SetDeleteFlg(true);
 	m_Shadow->SetDeleteFlg(true);
+	m_Shadow = NULL;
+	m_pBarrier->SetDeleteFlg(true);
+	m_pBarrier = NULL;
+
+	// エフェクトの生成
+	CExplosion::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 500.0f, 500.0f);
 }
 
 /*******************************************************************************
@@ -159,13 +177,12 @@ void CBossEnemy::Update(void)
 				m_RotN.y = atan2f(m_Pos.x - pos.x, m_Pos.z - pos.z);
 
 				m_bSearch = true;
-				m_MotionManager->SetMotion(1);
 			}
 			else
 			{
 				m_bSearch = false;
 				m_nAttCnt = 0;
-				m_MotionManager->SetMotion(0);
+				SetState(STATE_NORMAL);
 			}
 		}
 		scene = next;
@@ -181,29 +198,6 @@ void CBossEnemy::Update(void)
 	// 向きを更新
 	m_Rot.y += m_Rad.y * ROT_ATEEN;
 	CManager::CheckRot(&m_Rot.y);
-
-	if (m_bSearch)
-	{
-		m_nAttCnt++;
-		if (m_nAttCnt > ATTACK_CNT)
-		{
-			m_nAttCnt = 0;
-			scene = CScene::GetList(DRAWORDER_3D);
-			next = NULL;
-			while (scene != NULL)
-			{
-				next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
-				if (scene->GetObjType() == OBJTYPE_PLAYER)
-				{
-					// モデルのマトリクス計算
-					SetModelMatrix();
-					// 弾のセット
-					SetBullet(scene);
-				}
-				scene = next;
-			}
-		}
-	}
 
 	// 状態遷移
 	UpdateState();
@@ -295,4 +289,83 @@ void CBossEnemy::SetBullet(CScene *scene)
 	diff.Normalize();
 	// 弾の生成
 	CBossBullet::Create(pos, diff, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+}
+
+/*******************************************************************************
+* 関数名：void CEnemy::UpdateState(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：状態更新処理
+*******************************************************************************/
+void CBossEnemy::UpdateState(void)
+{
+	CScene *scene = CScene::GetList(DRAWORDER_3D);
+	CScene *next = NULL;
+	m_nStateCnt++;
+	switch (m_State)
+	{
+	case STATE_NORMAL:
+		m_MotionManager->SetMotion(0);
+		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_MotionManager->SetModelColFlgAll(false);
+		m_pBarrier->Set(m_TargetPos, 0.0f);
+		if (m_nStateCnt > STATE_CHANGE)
+		{
+			if (m_bSearch)
+			{
+				SetState(STATE_ATTACK);
+			}
+			else
+			{
+				SetState(STATE_GUARD);
+			}
+		}
+		break;
+	case STATE_DAMAGE:
+		m_MotionManager->SetMotion(0);
+		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+		if (m_nStateCnt >= DAMAGE_CNT)
+		{
+			SetState(STATE_NORMAL);
+		}
+		break;
+	case STATE_ATTACK:
+		m_MotionManager->SetMotion(1);
+		m_nAttCnt++;
+		if (m_nAttCnt > ATTACK_CNT)
+		{
+			m_nAttCnt = 0;
+			scene = CScene::GetList(DRAWORDER_3D);
+			next = NULL;
+			while (scene != NULL)
+			{
+				next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
+				if (scene->GetObjType() == OBJTYPE_PLAYER)
+				{
+					// モデルのマトリクス計算
+					SetModelMatrix();
+					// 弾のセット
+					SetBullet(scene);
+				}
+				scene = next;
+			}
+		}
+		if (m_nStateCnt >= STATE_CHANGE_ATTACK)
+		{
+			SetState(STATE_GUARD);
+			m_nAttCnt = 0;
+		}
+		break;
+	case STATE_GUARD:
+		m_MotionManager->SetMotion(0);
+		m_pBarrier->Set(m_TargetPos, 1.0f);
+		if (m_nStateCnt >= STATE_CHANGE)
+		{
+			SetState(STATE_NORMAL);
+		}
+		break;
+	default:
+		break;
+	}
 }

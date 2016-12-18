@@ -1,6 +1,6 @@
 /*******************************************************************************
 * タイトル名：
-* ファイル名：sceneX.cpp
+* ファイル名：player.cpp
 * 作成者	：AT13B284 10 小笠原啓太
 * 作成日	：
 ********************************************************************************
@@ -38,6 +38,7 @@
 #include "orbit.h"
 #include "reticle.h"
 #include "stencilShadow.h"
+#include "playerLifeGauge.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -53,7 +54,7 @@
 #define ROT_ATEEN				( 0.3f )		// 回転量減衰係数
 #define MOVE_ATEEN				( 0.08f )		// 移動量減衰係数
 
-#define SEARCH_LENG				( 1000 )		// ロックオン距離
+#define SEARCH_LENG				( 1500 )		// ロックオン距離
 
 #define DISTANCE_R				( 1000.0f )		// カメラ注視点の初期距離
 
@@ -61,6 +62,8 @@
 #define SHADOW_RADIUS_TRANSFORM	( 17 )			// 影の半径
 #define SHADOW_RADIUS_VEHICLE	( 15 )			// 影の半径
 #define SHADOW_HEIGHT			( 100 )			// 影の高さ
+
+const int LIFE_MAX = 1000;
 
 /*******************************************************************************
 * グローバル変数
@@ -84,7 +87,7 @@ CPlayer::CPlayer(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder,
 	m_bBullet = false;
 	m_Shadow = NULL;
 	m_Orbit[0] = m_Orbit[1] = NULL;
-	m_nLife = 1000;
+	m_nLife = LIFE_MAX;
 	m_TargetPos = Vector3(0.0f, 0.0f, 0.0f);
 }
 
@@ -258,6 +261,12 @@ void CPlayer::Update(void)
 	m_MotionManager->Update();
 	/* オービットの更新 */
 	SetOrbit();
+	/* ライフバーの更新 */
+	game->GetPlayerLifeGauge()->SetLife((float)m_nLife, (float)LIFE_MAX);
+	if (m_nLife <= 0)
+	{
+		m_nLife = 0;
+	}
 }
 
 /*******************************************************************************

@@ -116,7 +116,8 @@ void CStencilShadow::Init(Vector3 pos)
 
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (int nCntRow = 0, nIdxCnt = 0; nCntRow < m_nRowNumVtx; nCntRow++)
+	int nIdxCnt = 0;
+	for (int nCntRow = 0; nCntRow < m_nRowNumVtx; nCntRow++)
 	{
 		for (int nCntColumn = m_nColumnNumVtx - 1; nCntColumn >= 0; nCntColumn--, nIdxCnt++)
 		{
@@ -139,14 +140,15 @@ void CStencilShadow::Init(Vector3 pos)
 
 	for (y = 0, cnt = 0; y < m_nRowBlock; y++)
 	{
-		for (x = 0; x < m_nColumnNumVtx; x++, cnt++, pIdx += 2)
+		for (x = 0; x < m_nColumnNumVtx; x++, cnt += 2, pIdx += 2)
 		{
 			pIdx[0] = x + (y + 1) * m_nColumnNumVtx;
 			pIdx[1] = x + (y + 0) * m_nColumnNumVtx;
-			if (x == m_nColumnNumVtx - 1 && cnt * 2 < m_nNumIdx - 2)
+			if (x == m_nColumnNumVtx - 1 && y != m_nRowBlock - 1)
 			{
 				pIdx[0] = x + (y + 1) * m_nColumnNumVtx;
 				pIdx[1] = x + (y + 0) * m_nColumnNumVtx;
+				cnt += 2;
 			}
 		}
 	}
@@ -371,7 +373,7 @@ void CStencilShadow::Draw(void)
 		0,
 		m_nNumPrim);				// 描画するプリミティブ数
 
-	//// ファンを描画 ///
+	// ファンを描画 ///
 	for (int i = 0; i < 2; i++)
 	{
 		// 頂点フォーマットの設定

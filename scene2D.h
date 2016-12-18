@@ -34,28 +34,28 @@
 *******************************************************************************/
 class CScene2D : public CScene
 {
-	protected:
-		LPDIRECT3DTEXTURE9	*m_pTexture;			// テクスチャへのポインタ
-		LPDIRECT3DVERTEXBUFFER9 m_VtxBuff;		// 頂点バッファへのポインタ
-		
-		float m_fWidth;		// ポリゴン幅
-		float m_fHeight;	// ポリゴン高さ
-		char *pFileName;	// ファイル名
-		float m_fLength;	// 対角線の長さ
-		float m_fAngle;		// 角度
+protected:
+	LPDIRECT3DTEXTURE9	*m_pTexture;			// テクスチャへのポインタ
+	LPDIRECT3DVERTEXBUFFER9 m_VtxBuff;		// 頂点バッファへのポインタ
 
-		D3DXCOLOR m_Col;	// 色
+	float m_fWidth;		// ポリゴン幅
+	float m_fHeight;	// ポリゴン高さ
+	char *pFileName;	// ファイル名
+	float m_fLength;	// 対角線の長さ
+	float m_fAngle;		// 角度
 
-		virtual void SetVertex(void);
-	public:
-		CScene2D( DRAWORDER DrawOrder = DRAWORDER_2D, OBJTYPE ObjType = OBJTYPE_NONE );
-		~CScene2D();
-		void Init( Vector3 pos );
-		void Uninit( void );
-		void Update( void );
-		void Draw( void );
+	D3DXCOLOR m_Col;	// 色
 
-		static CScene2D *Create( Vector3 pos );
+	virtual void SetVertex(void);
+public:
+	CScene2D(DRAWORDER DrawOrder = DRAWORDER_2D, OBJTYPE ObjType = OBJTYPE_NONE);
+	~CScene2D();
+	void Init(Vector3 pos, float width, float height, int texId);
+	void Uninit(void);
+	void Update(void);
+	void Draw(void);
+
+	static CScene2D *Create(Vector3 pos, float width, float height, int texId);
 };
 
 #endif

@@ -81,7 +81,7 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 
 	CFade::Init();
 	// ÉTÉEÉìÉhçƒê∂
-	CSound::Play(CSound::SOUND_LABEL_002);
+	//CSound::Play(CSound::SOUND_LABEL_002);
 
 	SetMode(new CLoad);
 }

@@ -44,6 +44,9 @@
 #define LIFE_MAX_BOSS		( 100 )			// 弾の寿命
 #define NUM_UPDATE			( 3 )			// 更新回数
 #define EXPLOSION_RAND		( 50 )			// 爆発範囲
+const int PLAYER_BULLET_DAMAGE = 100;		// 弾のダメージ(プレイヤー)
+const int ENEMY_BULLET_DAMAGE = 20;			// 弾のダメージ(エネミー)
+const int BOSS_BULLET_DAMAGE = 40;			// 弾のダメージ(ボス)
 
 /*******************************************************************************
 * グローバル変数
@@ -213,11 +216,13 @@ void CBullet::Update(void)
 			if (length < search)
 			{
 				CEnemy *enemy = (CEnemy*)scene;
-				enemy->SetDamage(100);
-				enemy->SetState(CEnemy::STATE_DAMAGE);
-				CGame *game = (CGame*)CManager::GetMode();
-				CCamera *camera = game->GetCamera();
-				camera->SetShake();
+				if (enemy->GetState() != CEnemy::STATE_GUARD)
+				{
+					enemy->SetDamage(PLAYER_BULLET_DAMAGE);
+					CGame *game = (CGame*)CManager::GetMode();
+					CCamera *camera = game->GetCamera();
+					camera->SetShake();
+				}
 				Uninit();
 			}
 		}
@@ -296,7 +301,7 @@ void CEnemyBullet::Update(void)
 			if (length < 40)
 			{
 				CPlayer *player = (CPlayer*)scene;
-				player->SetDamage(10);
+				player->SetDamage(ENEMY_BULLET_DAMAGE);
 				CGame *game = (CGame*)CManager::GetMode();
 				CCamera *camera = game->GetCamera();
 				camera->SetShake();
@@ -379,7 +384,7 @@ void CBossBullet::Update(void)
 			if (length < 40)
 			{
 				CPlayer *player = (CPlayer*)scene;
-				player->SetDamage(10);
+				player->SetDamage(BOSS_BULLET_DAMAGE);
 				CGame *game = (CGame*)CManager::GetMode();
 				CCamera *camera = game->GetCamera();
 				camera->SetShake();

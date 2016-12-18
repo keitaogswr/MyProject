@@ -45,6 +45,7 @@ CScene2D::CScene2D(DRAWORDER DrawOrder, OBJTYPE ObjType) :CScene(DrawOrder, ObjT
 	m_fAngle = 0.0f;
 
 	m_Col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	m_pTexture = NULL;
 }
 
 /*******************************************************************************
@@ -59,25 +60,25 @@ CScene2D::~CScene2D()
 }
 
 /*******************************************************************************
-* 関数名：void CScene2D::Init( Vector3 pos )
+* 関数名：void CScene2D::Init(Vector3 pos, float width, float height, int texId)
 * 
 * 引数	：
 * 戻り値：
 * 説明	：初期化処理
 *******************************************************************************/
-void CScene2D::Init( Vector3 pos )
+void CScene2D::Init(Vector3 pos, float width, float height, int texId)
 {
 	m_Pos = pos;
 
-	m_fWidth = WIDTH;
-	m_fHeight = HEIGHT;
+	m_fWidth = width;
+	m_fHeight = height;
 
 	// デバイスの取得
 	CRenderer *renderer = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
 
 	// テクスチャの読み込み
-	m_pTexture = CTexture::GetTexture(TEXTURE_TYPE_RETICLE_000);
+	m_pTexture = CTexture::GetTexture(texId);
 
 	// 頂点バッファの生成
 	if( FAILED( pDevice->CreateVertexBuffer(
@@ -154,7 +155,7 @@ void CScene2D::Uninit( void )
 *******************************************************************************/
 void CScene2D::Update( void )
 {
-
+	SetVertex();
 }
 
 /*******************************************************************************
@@ -187,17 +188,17 @@ void CScene2D::Draw( void )
 }
 
 /*******************************************************************************
-* 関数名：CScene2D *CScene2D::Create( Vector3 pos )
+* 関数名：CScene2D *CScene2D::Create(Vector3 pos, float width, float height, int texId)
 * 
 * 引数	：
 * 戻り値：
 * 説明	：生成処理
 *******************************************************************************/
-CScene2D *CScene2D::Create( Vector3 pos )
+CScene2D *CScene2D::Create(Vector3 pos, float width, float height, int texId)
 {
 	CScene2D *scene2D;
 	scene2D = new CScene2D;
-	scene2D->Init( pos );
+	scene2D->Init(pos, width, height, texId);
 	return scene2D;
 }
 

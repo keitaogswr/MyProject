@@ -237,6 +237,9 @@
     <ClCompile Include="explosion.cpp">
       <Filter>ソース ファイル\Scene\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="barrier.cpp">
+      <Filter>ソース ファイル\Scene\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="light.h">
@@ -388,6 +391,9 @@
     </ClInclude>
     <ClInclude Include="explosion.h">
       <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="barrier.h">
+      <Filter>ヘッダー ファイル\Scene\3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

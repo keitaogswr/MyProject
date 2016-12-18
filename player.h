@@ -34,6 +34,7 @@ class CMotionManager;
 class CShadow;
 class COrbit;
 class CStencilShadow;
+class CPlayerLifeGauge;
 
 /*******************************************************************************
 * ƒNƒ‰ƒXéŒ¾

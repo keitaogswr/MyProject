@@ -42,6 +42,8 @@
 #include "shadow.h"
 #include "effect.h"
 #include "reticle.h"
+#include "barrier.h"
+#include "playerLifeGauge.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -66,6 +68,7 @@ CGame::CGame()
 	m_MeshField = NULL;
 	m_Player = NULL;
 	m_pReticle = NULL;
+	m_pPlayerLifeGauge = NULL;
 }
 
 /*******************************************************************************
@@ -106,6 +109,7 @@ void CGame::Init(void)
 
 	m_pReticle = CReticle::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
 	scene = CTime::Create(Vector3(SCREEN_WIDTH / 2, 50.0f, 0.0f));
+	m_pPlayerLifeGauge = CPlayerLifeGauge::Create(Vector3(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 50.0f, 0.0f));
 	// カメラ生成
 	m_Camera = CCamera::Create();
 	// ライト生成
@@ -131,6 +135,7 @@ void CGame::Uninit(void)
 	m_Player = NULL;
 	m_MeshField = NULL;
 	m_pReticle = NULL;
+	m_pPlayerLifeGauge = NULL;
 	CMotionManager::Unload();
 }
 

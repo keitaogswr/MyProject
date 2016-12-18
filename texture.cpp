@@ -46,7 +46,10 @@ TEXTURE_PARAM CTexture::m_TexParam[TEXTURE_TYPE_MAX] =
 	{ "data\\TEXTURE\\shadow000.jpg" },				// TEXTURE_TYPE_SHADOW_000
 	{ "data\\TEXTURE\\bullet000.png" },				// TEXTURE_TYPE_BULLET_000
 	{ "data\\TEXTURE\\reticle001.png" },			// TEXTURE_TYPE_RETICLE_000
-	{ "data\\TEXTURE\\explosion.png" }				// TEXTURE_TYPE_EXPLOSION_000
+	{ "data\\TEXTURE\\explosion.png" },				// TEXTURE_TYPE_EXPLOSION_000
+	{ "data\\TEXTURE\\barrierEffect001.png" },		// TEXTURE_TYPE_BARRIER_000
+	{ "data\\TEXTURE\\lifebar.png" },				// TEXTURE_TYPE_LIFEBAR_000
+	{ "data\\TEXTURE\\lifebarGauge.png" }			// TEXTURE_TYPE_LIFEBAR_GAUGE_000
 };
 
 /*******************************************************************************

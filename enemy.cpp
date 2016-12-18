@@ -275,6 +275,7 @@ void CEnemy::UpdateState(void)
 	switch (m_State)
 	{
 	case STATE_NORMAL:
+		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_MotionManager->SetModelColFlgAll(false);
 		break;
 	case STATE_DAMAGE:

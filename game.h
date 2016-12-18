@@ -34,6 +34,7 @@ class CMeshField;
 class CPlayer;
 class CMode;
 class CReticle;
+class CPlayerLifeGauge;
 
 /*******************************************************************************
 * ÉNÉâÉXêÈåæ
@@ -47,6 +48,7 @@ class CGame : public CMode
 		CMeshField *m_MeshField;
 		CPlayer *m_Player;
 		CReticle *m_pReticle;
+		CPlayerLifeGauge *m_pPlayerLifeGauge;
 	public:
 		CGame();
 		~CGame();
@@ -59,6 +61,7 @@ class CGame : public CMode
 		CMeshField *GetMeshField( void );
 		CPlayer *GetPlayer( void );
 		CReticle *GetReticle(void) { return m_pReticle; }
+		CPlayerLifeGauge *GetPlayerLifeGauge(void) { return m_pPlayerLifeGauge; }
 };
 
 #endif
