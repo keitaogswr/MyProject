@@ -21,7 +21,6 @@
 /*******************************************************************************
 * マクロ定義
 *******************************************************************************/
-#define SOUND_MAX	( 3 )
 
 /*******************************************************************************
 * 前方宣言
@@ -35,9 +34,13 @@ class CSound
 	public:
 		typedef enum
 		{
-			SOUND_LABEL_000 = 0,		// BGM0
-			SOUND_LABEL_EXPLOSION_000,	// BGM1
-			SOUND_LABEL_002,			// BGM2
+			SOUND_LABEL_000 = 0,			// SE0
+			SOUND_LABEL_EXPLOSION_000,		// SE1
+			SOUND_LABEL_SE_SHOT_000,		// SE1
+			SOUND_LABEL_SE_BUTTON_000,		// SE1
+			SOUND_LABEL_BGM_000,			// BGM0
+			SOUND_LABEL_BGM_001,			// BGM1
+			SOUND_LABEL_BGM_002,			// BGM2
 			SOUND_LABEL_MAX
 		}SOUND_LABEL;
 
@@ -60,7 +63,7 @@ class CSound
 		static HRESULT CheckChunk( HANDLE hFile, DWORD format, DWORD *pChunkSize, DWORD *pChunkDataPosition );
 		static HRESULT ReadChunkData( HANDLE hFile, void *pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset );
 
-		static SOUND_PARAM m_SoundParam[ SOUND_MAX ];
+		static SOUND_PARAM m_SoundParam[SOUND_LABEL_MAX];
 
 		static IXAudio2 *m_pXAudio2;									// XAudio2オブジェクトへのインターフェイス
 		static IXAudio2MasteringVoice *m_pMasteringVoice;				// マスターボイス

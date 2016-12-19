@@ -47,7 +47,7 @@
 
 #define LIFE_MAX		( 10000 )		// 最大ライフ
 #define SEARCH_LENG		( 2000 )		// 索敵範囲
-#define ATTACK_CNT		( 60 )			// 攻撃カウンタ
+#define ATTACK_CNT		( 30 )			// 攻撃カウンタ
 
 #define GRAVITY			( 0.5f )		// 重力
 

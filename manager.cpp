@@ -81,7 +81,7 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 
 	CFade::Init();
 
-	SetMode(new CLoad);
+	SetMode(new CTitle);
 }
 
 /*******************************************************************************
@@ -93,8 +93,6 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 *******************************************************************************/
 void CManager::Uninit( void )
 {
-	// サウンド停止
-	CSound::Stop();
 	CInput::Uninit();
 	CFade::Uninit();
 
@@ -104,6 +102,7 @@ void CManager::Uninit( void )
 	// 解放処理
 	SAFE_DELETE(m_Renderer);
 	SAFE_DELETE(m_Mode);
+	// サウンド解放
 	CSound::Uninit();
 }
 

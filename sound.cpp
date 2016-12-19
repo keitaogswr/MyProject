@@ -31,7 +31,11 @@ CSound::SOUND_PARAM CSound::m_SoundParam[ SOUND_LABEL_MAX ] =
 {
 	{ "data\\SE\\dededon.wav", 0 },
 	{ "data\\SE\\explosion000.wav", 0 },
-	{ "data\\BGM\\bgm000.wav", -1 }
+	{ "data\\SE\\shot000.wav", 0 },
+	{ "data\\SE\\button.wav", 0 },
+	{ "data\\BGM\\bgm000.wav", -1 },
+	{ "data\\BGM\\bgm001.wav", -1 },
+	{ "data\\BGM\\bgm002.wav", -1 },
 };
 
 /*******************************************************************************

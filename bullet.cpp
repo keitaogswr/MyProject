@@ -40,7 +40,7 @@
 #define TEXTURE_COLUMN		( 1 )			// テクスチャ行分割数
 #define MOVE_SPEED			( 10.0f )		// 弾の移動速度
 #define MOVE_SPEED_ENEMY	( 25.0f )		// 弾の移動速度
-#define MOVE_SPEED_BOSS		( 30.0f )		// 弾の移動速度
+#define MOVE_SPEED_BOSS		( 40.0f )		// 弾の移動速度
 #define LIFE_MAX			( 50 )			// 弾の寿命
 #define LIFE_MAX_ENEMY		( 50 )			// 弾の寿命(エネミー)
 #define LIFE_MAX_BOSS		( 100 )			// 弾の寿命(ボス)
@@ -48,7 +48,7 @@
 #define EXPLOSION_RAND		( 50 )			// 爆発範囲
 const int PLAYER_BULLET_DAMAGE = 100;		// 弾のダメージ(プレイヤー)
 const int ENEMY_BULLET_DAMAGE = 20;			// 弾のダメージ(エネミー)
-const int BOSS_BULLET_DAMAGE = 40;			// 弾のダメージ(ボス)
+const int BOSS_BULLET_DAMAGE = 30;			// 弾のダメージ(ボス)
 
 /*******************************************************************************
 * グローバル変数
@@ -395,7 +395,7 @@ void CBossBullet::Update(void)
 			Vector3 pos = scene->GetPosition();
 			Vector3 diff = pos - m_Pos;
 			float length = diff.Length();
-			if (length < 40)
+			if (length < 100)
 			{
 				CPlayer *player = (CPlayer*)scene;
 				player->SetDamage(BOSS_BULLET_DAMAGE);

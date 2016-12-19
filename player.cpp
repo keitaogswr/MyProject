@@ -40,6 +40,7 @@
 #include "stencilShadow.h"
 #include "playerLifeGauge.h"
 #include "explosion.h"
+#include "sound.h"
 
 /*******************************************************************************
 * É}ÉNÉçíËã`
@@ -545,6 +546,8 @@ void CPlayer::UpdateState(void)
 			m_bRockOn ? vec = m_TargetPos - pos : vec = Vector3(sinf(D3DX_PI + m_Rot.y), 0.0f, cosf(D3DX_PI + m_Rot.y));
 			vec.Normalize();
 			CBullet::Create(Vector3(pos.x, pos.y, pos.z), vec, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+
+			CSound::Play(CSound::SOUND_LABEL_SE_SHOT_000);
 		}
 	}
 }

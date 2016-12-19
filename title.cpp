@@ -83,7 +83,7 @@ void CTitle::Init(void)
 	m_Camera = CTitleCamera::Create();
 	m_Light = CLight::Create();
 	// ÉTÉEÉìÉhçƒê∂
-	CSound::Play(CSound::SOUND_LABEL_002);
+	CSound::Play(CSound::SOUND_LABEL_BGM_000);
 }
 
 /*******************************************************************************
@@ -117,8 +117,8 @@ void CTitle::Update(void)
 	if (CInput::GetKeyboardTrigger(DIK_RETURN))
 	{
 		CFade::Start(new CLoad);
+		CSound::Play(CSound::SOUND_LABEL_SE_BUTTON_000);
 	}
-
 }
 
 /*******************************************************************************

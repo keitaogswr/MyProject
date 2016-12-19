@@ -22,6 +22,7 @@
 #include "scene2D.h"
 #include "bg.h"
 #include "texture.h"
+#include "sound.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -67,6 +68,9 @@ void CResult::Init( void )
 {
 	CScene *scene = CBg::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), TEXTURE_TYPE_RESULT);
 	CScene2D::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), 800.0f, 60.0f, TEXTURE_TYPE_THANK_YOU_000);
+
+	// サウンド再生
+	CSound::Play(CSound::SOUND_LABEL_BGM_002);
 }
 
 /*******************************************************************************
@@ -79,6 +83,7 @@ void CResult::Init( void )
 void CResult::Uninit( void )
 {
 	CScene::UninitAll();
+	CSound::Stop();
 }
 
 /*******************************************************************************

@@ -66,37 +66,37 @@ void CLight::Init( void )
 		ZeroMemory( &m_aLight[ i ], sizeof( D3DLIGHT9 ) );						// 中身を0で埋める
 	}
 
-	// ライト0の設定
-	m_aLight[ 0 ].Type = D3DLIGHT_DIRECTIONAL;									// 平行光源
-	m_aLight[ 0 ].Diffuse = D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f );				// 拡散光
-	vecDir = D3DXVECTOR3( 0.0f, -1.0f, 0.0f );									// 光の方向
-	D3DXVec3Normalize( ( D3DXVECTOR3* )&m_aLight[ 0 ].Direction, &vecDir );		// 正規化
-	pDevice->SetLight( 0, &m_aLight[ 0 ] );									// ライトの設定
-	pDevice->LightEnable( 0, TRUE );											// ライトを有効にする
-
 	//// ライト0の設定
 	//m_aLight[ 0 ].Type = D3DLIGHT_DIRECTIONAL;									// 平行光源
 	//m_aLight[ 0 ].Diffuse = D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f );				// 拡散光
-	//vecDir = D3DXVECTOR3( 0.3f, -1.0f, -0.5f );									// 光の方向
+	//vecDir = D3DXVECTOR3( 0.0f, -1.0f, 0.0f );									// 光の方向
 	//D3DXVec3Normalize( ( D3DXVECTOR3* )&m_aLight[ 0 ].Direction, &vecDir );		// 正規化
 	//pDevice->SetLight( 0, &m_aLight[ 0 ] );									// ライトの設定
 	//pDevice->LightEnable( 0, TRUE );											// ライトを有効にする
 
-	//// ライト1の設定
-	//m_aLight[ 1 ].Type = D3DLIGHT_DIRECTIONAL;									// 平行光源
-	//m_aLight[ 1 ].Diffuse = D3DXCOLOR( 0.7f, 0.7f, 0.7f, 1.0f );				// 拡散光
-	//vecDir = D3DXVECTOR3( -0.4f, 1.0f, 0.7f );									// 光の方向
-	//D3DXVec3Normalize( ( D3DXVECTOR3* )&m_aLight[ 1 ].Direction, &vecDir );		// 正規化
-	//pDevice->SetLight( 1, &m_aLight[ 1 ] );									// ライトの設定
-	//pDevice->LightEnable( 1, TRUE );											// ライトを有効にする
+	// ライト0の設定
+	m_aLight[ 0 ].Type = D3DLIGHT_DIRECTIONAL;									// 平行光源
+	m_aLight[ 0 ].Diffuse = D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f );				// 拡散光
+	vecDir = D3DXVECTOR3( 0.3f, -1.0f, -0.5f );									// 光の方向
+	D3DXVec3Normalize( ( D3DXVECTOR3* )&m_aLight[ 0 ].Direction, &vecDir );		// 正規化
+	pDevice->SetLight( 0, &m_aLight[ 0 ] );										// ライトの設定
+	pDevice->LightEnable( 0, TRUE );											// ライトを有効にする
 
-	//// ライト2の設定
-	//m_aLight[ 2 ].Type = D3DLIGHT_DIRECTIONAL;									// 平行光源
-	//m_aLight[ 2 ].Diffuse = D3DXCOLOR( 0.3f, 0.3f, 0.3f, 1.0f );				// 拡散光
-	//vecDir = D3DXVECTOR3( 0.1f, -0.2f, -1.0f );									// 光の方向
-	//D3DXVec3Normalize( ( D3DXVECTOR3* )&m_aLight[ 2 ].Direction, &vecDir );		// 正規化
-	//pDevice->SetLight( 2, &m_aLight[ 2 ] );									// ライトの設定
-	//pDevice->LightEnable( 2, TRUE );											// ライトを有効にする
+	// ライト1の設定
+	m_aLight[ 1 ].Type = D3DLIGHT_DIRECTIONAL;									// 平行光源
+	m_aLight[ 1 ].Diffuse = D3DXCOLOR( 0.7f, 0.7f, 0.7f, 1.0f );				// 拡散光
+	vecDir = D3DXVECTOR3( -0.4f, 1.0f, 0.7f );									// 光の方向
+	D3DXVec3Normalize( ( D3DXVECTOR3* )&m_aLight[ 1 ].Direction, &vecDir );		// 正規化
+	pDevice->SetLight( 1, &m_aLight[ 1 ] );										// ライトの設定
+	pDevice->LightEnable( 1, TRUE );											// ライトを有効にする
+
+	// ライト2の設定
+	m_aLight[ 2 ].Type = D3DLIGHT_DIRECTIONAL;									// 平行光源
+	m_aLight[ 2 ].Diffuse = D3DXCOLOR( 0.3f, 0.3f, 0.3f, 1.0f );				// 拡散光
+	vecDir = D3DXVECTOR3( 0.1f, -0.2f, -1.0f );									// 光の方向
+	D3DXVec3Normalize( ( D3DXVECTOR3* )&m_aLight[ 2 ].Direction, &vecDir );		// 正規化
+	pDevice->SetLight( 2, &m_aLight[ 2 ] );										// ライトの設定
+	pDevice->LightEnable( 2, TRUE );											// ライトを有効にする
 
 }
 

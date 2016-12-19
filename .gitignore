@@ -3,3 +3,8 @@ data/
 .vs/
 *.opendb
 *.db
+*.exe
+Release/
+*.iobj
+*.ipdb
+*.pdb

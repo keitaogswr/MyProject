@@ -129,6 +129,8 @@ void CGame::Init(void)
 	CTreeObject::LoadFile();
 
 	CPause::Init();
+	// ÉTÉEÉìÉhçƒê∂
+	CSound::Play(CSound::SOUND_LABEL_BGM_001);
 }
 
 /*******************************************************************************
@@ -151,6 +153,8 @@ void CGame::Uninit(void)
 	m_pPlayerLifeGauge = NULL;
 	m_pLogo = NULL;
 	CMotionManager::Unload();
+
+	CSound::Stop();
 }
 
 /*******************************************************************************
