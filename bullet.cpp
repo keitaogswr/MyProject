@@ -39,9 +39,11 @@
 #define TEXTURE_ROW			( 1 )			// テクスチャ列分割数
 #define TEXTURE_COLUMN		( 1 )			// テクスチャ行分割数
 #define MOVE_SPEED			( 10.0f )		// 弾の移動速度
-#define MOVE_SPEED_BOSS		( 20.0f )		// 弾の移動速度
+#define MOVE_SPEED_ENEMY	( 25.0f )		// 弾の移動速度
+#define MOVE_SPEED_BOSS		( 30.0f )		// 弾の移動速度
 #define LIFE_MAX			( 50 )			// 弾の寿命
-#define LIFE_MAX_BOSS		( 100 )			// 弾の寿命
+#define LIFE_MAX_ENEMY		( 50 )			// 弾の寿命(エネミー)
+#define LIFE_MAX_BOSS		( 100 )			// 弾の寿命(ボス)
 #define NUM_UPDATE			( 3 )			// 更新回数
 #define EXPLOSION_RAND		( 50 )			// 爆発範囲
 const int PLAYER_BULLET_DAMAGE = 100;		// 弾のダメージ(プレイヤー)
@@ -259,6 +261,18 @@ CBullet *CBullet::Create(Vector3 pos, Vector3 vec, D3DXCOLOR col)
 }
 
 /*******************************************************************************
+* 関数名：CEnemyBullet::CBossBullet()
+*
+* 引数	：
+* 戻り値：
+* 説明	：コンストラクタ
+*******************************************************************************/
+CEnemyBullet::CEnemyBullet(DRAWORDER DrawOrder, OBJTYPE ObjType) :CBullet(DrawOrder, ObjType)
+{
+	m_nLife = LIFE_MAX_ENEMY;
+}
+
+/*******************************************************************************
 * 関数名：void CEnemyBullet::Update( void )
 *
 * 引数	：
@@ -269,7 +283,7 @@ void CEnemyBullet::Update(void)
 {
 	// エフェクトの生成
 	CEffect *effect = CEffect::Create(m_Pos, m_Col, 20, 20);
-	m_Pos += m_Vec * MOVE_SPEED;
+	m_Pos += m_Vec * MOVE_SPEED_ENEMY;
 	// フィールドの取得
 	CGame *game = (CGame*)CManager::GetMode();
 	CMeshField *mesh = game->GetMeshField();

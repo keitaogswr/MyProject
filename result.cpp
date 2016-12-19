@@ -26,6 +26,7 @@
 /*******************************************************************************
 * マクロ定義
 *******************************************************************************/
+const int SWITCH_CNT = 180;
 
 /*******************************************************************************
 * グローバル変数
@@ -41,6 +42,7 @@
 CResult::CResult()
 {
 	m_bMultithread = false;
+	m_nStateCnt = 0;
 }
 
 /*******************************************************************************
@@ -64,6 +66,7 @@ CResult::~CResult()
 void CResult::Init( void )
 {
 	CScene *scene = CBg::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), TEXTURE_TYPE_RESULT);
+	CScene2D::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), 800.0f, 60.0f, TEXTURE_TYPE_THANK_YOU_000);
 }
 
 /*******************************************************************************
@@ -88,7 +91,8 @@ void CResult::Uninit( void )
 void CResult::Update( void )
 {
 	CScene::UpdateAll();
-	if( CInput::GetKeyboardTrigger( DIK_RETURN ) )
+	m_nStateCnt++;
+	if( CInput::GetKeyboardTrigger( DIK_RETURN ) || m_nStateCnt > SWITCH_CNT)
 	{
 		CFade::Start( new CTitle );
 	}

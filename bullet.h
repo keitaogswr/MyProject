@@ -56,7 +56,7 @@ class CEnemyBullet : public CBullet
 {
 protected:
 public:
-	CEnemyBullet(DRAWORDER DrawOrder = DRAWORDER_3DLATE, OBJTYPE ObjType = OBJTYPE_BILLBOARD) {}
+	CEnemyBullet(DRAWORDER DrawOrder = DRAWORDER_3DLATE, OBJTYPE ObjType = OBJTYPE_BILLBOARD);
 	~CEnemyBullet(){}
 
 	void Update(void);

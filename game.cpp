@@ -16,6 +16,7 @@
 #include "fade.h"
 #include "title.h"
 #include "result.h"
+#include "pause.h"
 #include "sound.h"
 #include "input.h"
 #include "scene.h"
@@ -44,10 +45,14 @@
 #include "reticle.h"
 #include "barrier.h"
 #include "playerLifeGauge.h"
+#include "texture.h"
+#include "sound.h"
 
 /*******************************************************************************
 * マクロ定義
 *******************************************************************************/
+const int START_CNT = 180;
+const int END_CNT = 180;
 
 /*******************************************************************************
 * グローバル変数
@@ -69,6 +74,10 @@ CGame::CGame()
 	m_Player = NULL;
 	m_pReticle = NULL;
 	m_pPlayerLifeGauge = NULL;
+	m_pLogo = NULL;
+	m_bPause = false;
+	m_State = STATE_START;
+	m_nStateCnt = 0;
 }
 
 /*******************************************************************************
@@ -102,14 +111,15 @@ void CGame::Init(void)
 	//scene = CField::Create( Vector3( 0.0f, 0.0f, 0.0f ) );
 	m_MeshField = CMeshField::Create(Vector3(0.0f, 0.0f, 0.0f), 100, 100, 64, 64);
 	scene = CSkySphere::Create(Vector3(0.0f, 0.0f, 0.0f), 7000.0f, 8, 16);
-	m_Player = CPlayer::Create(Vector3(10.0f, 1000.0f, 300.0f));
+	m_Player = CPlayer::Create(Vector3(10.0f, 1000.0f, 100.0f));
 
 	CEnemy::Load();
-	scene = CBossEnemy::Create(Vector3(0.0f, 1000.0f, 0.0f));
 
 	m_pReticle = CReticle::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
 	scene = CTime::Create(Vector3(SCREEN_WIDTH / 2, 50.0f, 0.0f));
-	m_pPlayerLifeGauge = CPlayerLifeGauge::Create(Vector3(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 50.0f, 0.0f));
+	m_pPlayerLifeGauge = CPlayerLifeGauge::Create(Vector3(300.0f, 50.0f, 0.0f));
+	CScene2D::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT, TEXTURE_TYPE_GAMEUI_000);
+	m_pLogo = CScene2D::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), 600.0f, 200.0f, TEXTURE_TYPE_GAME_START_000);
 	// カメラ生成
 	m_Camera = CCamera::Create();
 	// ライト生成
@@ -117,6 +127,8 @@ void CGame::Init(void)
 
 	// リソース読み込み
 	CTreeObject::LoadFile();
+
+	CPause::Init();
 }
 
 /*******************************************************************************
@@ -129,6 +141,7 @@ void CGame::Init(void)
 void CGame::Uninit(void)
 {
 	// リソース解放
+	CPause::Uninit();
 	SAFE_DELETE(m_Camera);
 	SAFE_DELETE(m_Light);
 	CScene::UninitAll();
@@ -136,6 +149,7 @@ void CGame::Uninit(void)
 	m_MeshField = NULL;
 	m_pReticle = NULL;
 	m_pPlayerLifeGauge = NULL;
+	m_pLogo = NULL;
 	CMotionManager::Unload();
 }
 
@@ -148,29 +162,26 @@ void CGame::Uninit(void)
 *******************************************************************************/
 void CGame::Update(void)
 {
-	m_Camera->Update();
-
-	CScene::UpdateAll();
-
-	if (CInput::GetKeyboardTrigger(DIK_RETURN))
+	StateUpdate();
+	if (CInput::GetKeyboardTrigger(DIK_P))
 	{
-		CFade::Start(new CResult);
+		m_bPause = m_bPause == true ? false : true;
 	}
-	int cnt = 0;
-	CScene *scene = CScene::GetList(DRAWORDER_3D);
-	CScene *next = NULL;
-	while (scene != NULL)
+	if (!m_bPause)
 	{
-		next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
-		if (scene->GetObjType() == OBJTYPE_ENEMY)
+		m_Camera->Update();
+
+		CScene::UpdateAll();
+#ifdef _DEBUG
+		if (CInput::GetKeyboardTrigger(DIK_RETURN))
 		{
-			cnt++;
+			CFade::Start(new CResult);
 		}
-		scene = next;
+#endif
 	}
-	if (cnt == 0)
+	else
 	{
-		//CFade::Start(new CResult);
+		CPause::Update();
 	}
 }
 
@@ -185,6 +196,10 @@ void CGame::Draw(void)
 {
 	m_Camera->Set();
 	CScene::DrawAll();
+	if (m_bPause)
+	{
+		CPause::Draw();
+	}
 }
 
 /*******************************************************************************
@@ -221,4 +236,61 @@ CMeshField *CGame::GetMeshField(void)
 CPlayer *CGame::GetPlayer(void)
 {
 	return m_Player;
+}
+
+/*******************************************************************************
+* 関数名：void CGame::StateUpdate(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：ゲーム状態遷移処理
+*******************************************************************************/
+void CGame::StateUpdate(void)
+{
+	int cnt = 0;
+	CScene *scene = CScene::GetList(DRAWORDER_3D);
+	CScene *next = NULL;
+	switch (m_State)
+	{
+	case STATE_START:
+		m_nStateCnt++;
+		if (m_nStateCnt > START_CNT)
+		{
+			SetState(STATE_NORMAL);
+			m_pLogo->SetDeleteFlg(true);
+		}
+		break;
+	case STATE_NORMAL:
+		while (scene != NULL)
+		{
+			next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
+			if (scene->GetObjType() == OBJTYPE_ENEMY)
+			{
+				cnt++;
+			}
+			scene = next;
+		}
+		if (cnt == 0)
+		{
+			SetState(STATE_BOSS);
+			CBossEnemy::Create(Vector3(0.0f, 1000.0f, 0.0f));
+		}
+		break;
+	case STATE_BOSS:
+
+		break;
+	case STATE_END:
+		if (m_nStateCnt == 0)
+		{
+			m_pLogo = CScene2D::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), 600.0f, 200.0f, TEXTURE_TYPE_FINISH_000);
+		}
+		m_nStateCnt++;
+		if (m_nStateCnt > END_CNT)
+		{
+			CFade::Start(new CResult);
+		}
+		break;
+	default:
+		break;
+	}
 }

@@ -108,6 +108,7 @@
     <ClCompile Include="motionManager.cpp" />
     <ClCompile Include="number.cpp" />
     <ClCompile Include="orbit.cpp" />
+    <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerLifeGauge.cpp" />
     <ClCompile Include="playerT.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="motionManager.h" />
     <ClInclude Include="number.h" />
     <ClInclude Include="orbit.h" />
+    <ClInclude Include="pause.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerLifeGauge.h" />
     <ClInclude Include="playerT.h" />

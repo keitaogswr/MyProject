@@ -49,7 +49,14 @@ TEXTURE_PARAM CTexture::m_TexParam[TEXTURE_TYPE_MAX] =
 	{ "data\\TEXTURE\\explosion.png" },				// TEXTURE_TYPE_EXPLOSION_000
 	{ "data\\TEXTURE\\barrierEffect001.png" },		// TEXTURE_TYPE_BARRIER_000
 	{ "data\\TEXTURE\\lifebar.png" },				// TEXTURE_TYPE_LIFEBAR_000
-	{ "data\\TEXTURE\\lifebarGauge.png" }			// TEXTURE_TYPE_LIFEBAR_GAUGE_000
+	{ "data\\TEXTURE\\lifebarGauge.png" },			// TEXTURE_TYPE_LIFEBAR_GAUGE_000
+	{ "data\\TEXTURE\\pause.png" },					// TEXTURE_TYPE_PAUSE_000
+	{ "data\\TEXTURE\\restart.png" },				// TEXTURE_TYPE_RESTART_000
+	{ "data\\TEXTURE\\exit.png" },					// TEXTURE_TYPE_EXIT_000
+	{ "data\\TEXTURE\\game_start.png" },			// TEXTURE_TYPE_GAME_START_000
+	{ "data\\TEXTURE\\finish.png" },				// TEXTURE_TYPE_FINISH_000
+	{ "data\\TEXTURE\\gameUI.png" },				// TEXTURE_TYPE_GAMEUI_000
+	{ "data\\TEXTURE\\thank_you.png" },				// TEXTURE_TYPE_THANK_YOU_000
 };
 
 /*******************************************************************************

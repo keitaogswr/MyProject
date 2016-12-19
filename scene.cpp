@@ -48,6 +48,8 @@ CScene::CScene(DRAWORDER DrawOrder, OBJTYPE ObjType)
 	m_Pos = Vector3(0.0f, 0.0f, 0.0f);
 	m_Rot = Vector3(0.0f, 0.0f, 0.0f);
 	m_Delete = false;
+	m_bPause = false;
+	m_bDraw = true;
 	SetObjType(ObjType);
 	SetDrawOrder(DrawOrder);
 }
@@ -104,7 +106,7 @@ void CScene::UpdateAll(void)
 		while (scene != NULL)
 		{
 			next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
-			if (!scene->m_Delete)
+			if (!scene->m_Delete && !scene->m_bPause)
 			{
 				scene->Update();
 			}
@@ -139,7 +141,10 @@ void CScene::DrawAll(void)
 		CScene *scene = m_Top[i];
 		while (scene != NULL)
 		{
-			scene->Draw();
+			if (scene->m_bDraw)
+			{
+				scene->Draw();
+			}
 			scene = scene->m_Next;
 		}
 	}

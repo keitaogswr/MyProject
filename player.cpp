@@ -39,6 +39,7 @@
 #include "reticle.h"
 #include "stencilShadow.h"
 #include "playerLifeGauge.h"
+#include "explosion.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -64,6 +65,7 @@
 #define SHADOW_HEIGHT			( 100 )			// 影の高さ
 
 const int LIFE_MAX = 1000;
+const int EXPLOSION_CNT = 30;
 
 /*******************************************************************************
 * グローバル変数
@@ -81,6 +83,7 @@ CPlayer::CPlayer(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder,
 	m_State = PLAYERSTATE_WAIT;
 	m_Mode = PLAYERMODE_HUMAN;
 	m_Rot = Vector3(0.0f, D3DX_PI, 0.0f);
+	m_RotN = Vector3(0.0f, D3DX_PI, 0.0f);
 	m_bMove = false;
 	m_bJump = false;
 	m_bRockOn = false;
@@ -89,6 +92,7 @@ CPlayer::CPlayer(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder,
 	m_Orbit[0] = m_Orbit[1] = NULL;
 	m_nLife = LIFE_MAX;
 	m_TargetPos = Vector3(0.0f, 0.0f, 0.0f);
+	m_nExplosionCnt = 0;
 }
 
 /*******************************************************************************
@@ -157,8 +161,11 @@ void CPlayer::Update(void)
 		return;
 	}
 
-	// プレイヤーの操作
-	Operate();
+	if (game->GetState() != CGame::STATE_START && game->GetState() != CGame::STATE_END)
+	{
+		// プレイヤーの操作
+		Operate();
+	}
 
 	// 重力、上昇の加算
 	m_Move.y -= GRAVITY;
@@ -265,7 +272,21 @@ void CPlayer::Update(void)
 	game->GetPlayerLifeGauge()->SetLife((float)m_nLife, (float)LIFE_MAX);
 	if (m_nLife <= 0)
 	{
+		if (m_nExplosionCnt == 0)
+		{
+			game->SetState(CGame::STATE_END);
+		}
 		m_nLife = 0;
+		m_nExplosionCnt++;
+		if (m_nExplosionCnt % EXPLOSION_CNT == 0)
+		{
+			// モデルの座標を受け取り、爆発エフェクトを生成
+			CModel *model = m_MotionManager->GetModel(0);
+			D3DXMATRIX *matrix = model->GetMatrix();
+			Vector3 pos = Vector3(matrix->_41, matrix->_42, matrix->_43);
+			CExplosion::Create(pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 100.0f, 100.0f);
+			CSmoke::Create(pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 70.0f, 70.0f);
+		}
 	}
 }
 
@@ -766,7 +787,7 @@ void CPlayer::Operate(void)
 			break;
 		}
 		// ジャンプ
-		if (CInput::GetKeyboardTrigger(DIK_LSHIFT) && m_bJump == false
+		if (CInput::GetKeyboardTrigger(DIK_J) && m_bJump == false
 			&& (m_State == PLAYERSTATE_WAIT || m_State == PLAYERSTATE_WALK))
 		{
 			m_Move.y = JUMP_SPEED;

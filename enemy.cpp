@@ -39,11 +39,11 @@
 
 const float SHADOW_RADIUS = 20.0f;		// ‰e‚Ì”¼Œa
 const float  SHADOW_HEIGHT = 1000.0f;	// ‰e‚Ì‚‚³
-#define LIFE_MAX		( 100 )			// Å‘åƒ‰ƒCƒt
-#define SEARCH_LENG		( 500 )
-#define ATTACK_CNT		( 60 )
-const int COLLISION_LENGTH = 40;
-const int DAMAGE_CNT = 60;
+const int LIFE_MAX = 100;				// Å‘åƒ‰ƒCƒt
+const int SEARCH_LENG = 1600;			// õ“G”ÍˆÍ
+const int ATTACK_CNT = 60;				// UŒ‚ƒJƒEƒ“ƒ^
+const int COLLISION_LENGTH = 40;		// ‚ ‚½‚è”»’è
+const int DAMAGE_CNT = 60;				// ”í’eƒJƒEƒ“ƒ^
 
 #define TEXTFILENAME	( "data\\EDITDATA\\EnemyData.txt" )
 
@@ -138,27 +138,30 @@ void CEnemy::Update( void )
 
 	CScene *scene = CScene::GetList(DRAWORDER_3D);
 	CScene *next = NULL;
-	while (scene != NULL)
+	if (game->GetState() != CGame::STATE_START && game->GetState() != CGame::STATE_END)
 	{
-		next = scene->m_Next;	// deleteŽž‚Ìƒƒ‚ƒŠƒŠ[ƒN‰ñ”ð‚Ì‚½‚ß‚Éƒ|ƒCƒ“ƒ^‚ðŠi”[
-		if (scene->GetObjType() == OBJTYPE_PLAYER)
+		while (scene != NULL)
 		{
-			Vector3 pos = scene->GetPosition();
-			Vector3 diff = m_Pos - pos;
-			float length = diff.Length();
-			if (length < SEARCH_LENG)
+			next = scene->m_Next;	// deleteŽž‚Ìƒƒ‚ƒŠƒŠ[ƒN‰ñ”ð‚Ì‚½‚ß‚Éƒ|ƒCƒ“ƒ^‚ðŠi”[
+			if (scene->GetObjType() == OBJTYPE_PLAYER)
 			{
-				m_RotN.y = atan2f( m_Pos.x - pos.x, m_Pos.z - pos.z );
+				Vector3 pos = scene->GetPosition();
+				Vector3 diff = m_Pos - pos;
+				float length = diff.Length();
+				if (length < SEARCH_LENG)
+				{
+					m_RotN.y = atan2f(m_Pos.x - pos.x, m_Pos.z - pos.z);
 
-				m_bSearch = true;
+					m_bSearch = true;
+				}
+				else
+				{
+					m_bSearch = false;
+					m_nAttCnt = 0;
+				}
 			}
-			else
-			{
-				m_bSearch = false;
-				m_nAttCnt = 0;
-			}
+			scene = next;
 		}
-		scene = next;
 	}
 
 	// –Ú“I‚ÌŠp“x‚Ì•â³

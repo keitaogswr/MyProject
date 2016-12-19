@@ -75,8 +75,9 @@ protected:
 	bool m_bBullet;						// 射撃フラグ
 	CStencilShadow *m_Shadow;			// 影ポインタ
 	COrbit *m_Orbit[2];					// オービットポインタ
-	int m_nLife;
-	Vector3 m_TargetPos;
+	int m_nLife;						// ライフ
+	Vector3 m_TargetPos;				// ターゲットされる位置
+	int m_nExplosionCnt;				// 爆発カウンタ
 
 	virtual void SetState(PLAYERSTATE state);
 	virtual void SetMode(PLAYERMODE mode);

@@ -157,13 +157,13 @@ void CCamera::Update( void )
 	CPlayer *player = game->GetPlayer();
 
 	// 視点旋回
-	if (CInput::GetKeyboardPress(DIK_Q))
+	if (CInput::GetKeyboardPress(DIK_K))
 	{
 		m_RotN.y -= ROT_SPEED;
 		CManager::CheckRot(&m_RotN.y); // 円周率チェック
 	}
 	// 視点旋回
-	if (CInput::GetKeyboardPress(DIK_E))
+	if (CInput::GetKeyboardPress(DIK_L))
 	{
 		m_RotN.y += ROT_SPEED;
 		CManager::CheckRot(&m_RotN.y); // 円周率チェック

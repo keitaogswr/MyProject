@@ -35,11 +35,12 @@ class CPlayer;
 class CMode;
 class CReticle;
 class CPlayerLifeGauge;
+class CScene2D;
 
 /*******************************************************************************
 * クラス宣言
 *******************************************************************************/
-// タイトルクラス
+// ゲームクラス
 class CGame : public CMode
 {
 	private:
@@ -49,7 +50,19 @@ class CGame : public CMode
 		CPlayer *m_Player;
 		CReticle *m_pReticle;
 		CPlayerLifeGauge *m_pPlayerLifeGauge;
+		CScene2D *m_pLogo;
+		bool m_bPause;
+		int m_State;
+		int m_nStateCnt;
 	public:
+		typedef enum
+		{
+			STATE_START,
+			STATE_NORMAL,
+			STATE_BOSS,
+			STATE_END,
+			STATE_MAX
+		}STATE;
 		CGame();
 		~CGame();
 		void Init( void );
@@ -62,6 +75,10 @@ class CGame : public CMode
 		CPlayer *GetPlayer( void );
 		CReticle *GetReticle(void) { return m_pReticle; }
 		CPlayerLifeGauge *GetPlayerLifeGauge(void) { return m_pPlayerLifeGauge; }
+		void SetPause(bool flg) { m_bPause = flg; }
+		void StateUpdate(void);
+		int GetState(void) { return m_State; }
+		void SetState(int state) { m_State = state; m_nStateCnt = 0; }
 };
 
 #endif

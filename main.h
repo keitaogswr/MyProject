@@ -24,6 +24,8 @@
 #include <windows.h>
 #include <stdio.h>
 #include <time.h>
+#include <vector>
+#include <functional>
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>

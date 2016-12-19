@@ -36,7 +36,7 @@ class CSound
 		typedef enum
 		{
 			SOUND_LABEL_000 = 0,		// BGM0
-			SOUND_LABEL_001,			// BGM1
+			SOUND_LABEL_EXPLOSION_000,	// BGM1
 			SOUND_LABEL_002,			// BGM2
 			SOUND_LABEL_MAX
 		}SOUND_LABEL;

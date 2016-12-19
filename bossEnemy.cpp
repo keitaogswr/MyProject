@@ -45,7 +45,7 @@
 #define ROT_ATEEN		( 0.1f )		// 回転量減衰係数
 #define MOVE_ATEEN		( 0.15f )		// 移動量減衰係数
 
-#define LIFE_MAX		( 400 )			// 最大ライフ
+#define LIFE_MAX		( 10000 )		// 最大ライフ
 #define SEARCH_LENG		( 2000 )		// 索敵範囲
 #define ATTACK_CNT		( 60 )			// 攻撃カウンタ
 
@@ -130,6 +130,9 @@ void CBossEnemy::Uninit(void)
 
 	// エフェクトの生成
 	CExplosion::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 500.0f, 500.0f);
+
+	CGame *game = (CGame*)CManager::GetMode();
+	game->SetState(CGame::STATE_END);
 }
 
 /*******************************************************************************

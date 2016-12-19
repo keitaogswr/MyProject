@@ -36,7 +36,7 @@
 class CResult : public CMode
 {
 	private:
-
+		int m_nStateCnt;
 	public:
 		CResult();
 		~CResult();

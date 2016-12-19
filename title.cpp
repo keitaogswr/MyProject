@@ -31,6 +31,7 @@
 #include "camera.h"
 #include "titleCamera.h"
 #include "texture.h"
+#include "sound.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -81,6 +82,8 @@ void CTitle::Init(void)
 	// カメラ生成
 	m_Camera = CTitleCamera::Create();
 	m_Light = CLight::Create();
+	// サウンド再生
+	CSound::Play(CSound::SOUND_LABEL_002);
 }
 
 /*******************************************************************************
@@ -92,11 +95,12 @@ void CTitle::Init(void)
 *******************************************************************************/
 void CTitle::Uninit(void)
 {
+	// リソース解放
 	CScene::UninitAll();
 	SAFE_DELETE(m_Camera);
 	SAFE_DELETE(m_Light);
-	// リソース解放
 	CMotionManager::Unload();
+	CSound::Stop();
 }
 
 /*******************************************************************************

@@ -80,8 +80,6 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 	CTexture::Load();
 
 	CFade::Init();
-	// サウンド再生
-	//CSound::Play(CSound::SOUND_LABEL_002);
 
 	SetMode(new CLoad);
 }
@@ -98,7 +96,6 @@ void CManager::Uninit( void )
 	// サウンド停止
 	CSound::Stop();
 	CInput::Uninit();
-	CSound::Uninit();
 	CFade::Uninit();
 
 	m_Mode->Uninit();
@@ -107,6 +104,7 @@ void CManager::Uninit( void )
 	// 解放処理
 	SAFE_DELETE(m_Renderer);
 	SAFE_DELETE(m_Mode);
+	CSound::Uninit();
 }
 
 /*******************************************************************************

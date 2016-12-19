@@ -56,6 +56,7 @@ public:
 	void Draw(void);
 
 	static CScene2D *Create(Vector3 pos, float width, float height, int texId);
+	void SetColor(D3DXCOLOR col) { m_Col = col; }
 };
 
 #endif

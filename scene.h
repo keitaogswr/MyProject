@@ -71,6 +71,7 @@ class CScene
 		Vector3 m_Rot;			// 回転値
 		bool m_Delete;			// 削除フラグ
 		bool m_bPause;			// ポーズフラグ
+		bool m_bDraw;			// 描画フラグ
 
 		OBJTYPE m_ObjType;
 		DRAWORDER m_DrawOrder;
@@ -96,6 +97,8 @@ class CScene
 		
 		void SetDrawOrder( DRAWORDER type ){ m_DrawOrder = type; }
 		void SetDeleteFlg(bool flg) { m_Delete = flg; }
+		void SetPauseFlg(bool flg) { m_bPause = flg; }
+		void SetDrawFlg(bool flg) { m_bDraw = flg; }
 
 		CScene *m_Prev;			// 前のポインタ
 		CScene *m_Next;			// 次のポインタ

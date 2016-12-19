@@ -25,6 +25,7 @@
 #include "animationBoard.h"
 #include "explosion.h"
 #include "texture.h"
+#include "sound.h"
 
 /*******************************************************************************
 * É}ÉNÉçíËã`
@@ -57,6 +58,7 @@ CExplosion::CExplosion(DRAWORDER DrawOrder, OBJTYPE ObjType) : CAnimationBoard(D
 	m_nRowAnim = 0;
 	m_nTexColumn = TEXTURE_COLUMN;
 	m_nTexRow = TEXTURE_ROW;
+	CSound::Play(CSound::SOUND_LABEL_EXPLOSION_000);
 }
 
 /*******************************************************************************
