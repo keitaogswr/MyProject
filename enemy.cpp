@@ -27,6 +27,9 @@
 #include "billboard.h"
 #include "bullet.h"
 #include "input.h"
+#include "effect.h"
+#include "animationBoard.h"
+#include "explosion.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -113,9 +116,9 @@ void CEnemy::Uninit( void )
 		m_MotionManager->Uninit();
 		delete m_MotionManager;
 	}
-	// 削除フラグ
-	SetDeleteFlg(true);
 	m_Shadow->SetDeleteFlg(true);
+	// エフェクトの生成
+	CExplosion::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 500.0f, 500.0f);
 }
 
 /*******************************************************************************
@@ -211,7 +214,8 @@ void CEnemy::Update( void )
 	// 寿命チェック
 	if (m_nLife <= 0)
 	{
-		Uninit();
+		// 削除フラグ
+		SetDeleteFlg(true);
 	}
 }
 

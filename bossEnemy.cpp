@@ -52,7 +52,7 @@
 #define GRAVITY			( 0.5f )		// 重力
 
 const float SHADOW_RADIUS = 400.0f;		// 影の半径
-const float  SHADOW_HEIGHT = 100.0f;	// 影の高さ
+const float SHADOW_HEIGHT = 100.0f;		// 影の高さ
 
 const int COLLISION_LENGTH = 400;		// 当たり判定
 const int DAMAGE_CNT = 60;				// 被弾カウンタ
@@ -213,7 +213,8 @@ void CBossEnemy::Update(void)
 	// 寿命チェック
 	if (m_nLife <= 0)
 	{
-		Uninit();
+		// 削除フラグ
+		SetDeleteFlg(true);
 	}
 }
 

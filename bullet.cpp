@@ -40,7 +40,7 @@
 #define TEXTURE_COLUMN		( 1 )			// テクスチャ行分割数
 #define MOVE_SPEED			( 10.0f )		// 弾の移動速度
 #define MOVE_SPEED_ENEMY	( 25.0f )		// 弾の移動速度
-#define MOVE_SPEED_BOSS		( 40.0f )		// 弾の移動速度
+#define MOVE_SPEED_BOSS		( 50.0f )		// 弾の移動速度
 #define LIFE_MAX			( 50 )			// 弾の寿命
 #define LIFE_MAX_ENEMY		( 50 )			// 弾の寿命(エネミー)
 #define LIFE_MAX_BOSS		( 100 )			// 弾の寿命(ボス)

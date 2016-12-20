@@ -189,6 +189,7 @@ void CScene::Release(DRAWORDER DrawOrder)
 		this->m_Next->m_Prev = this->m_Prev;	// 自分の前のポインタを設定
 	}
 
+	this->Uninit();
 	delete this;
 }
 

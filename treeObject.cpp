@@ -30,7 +30,7 @@
 *******************************************************************************/
 #define TEXTURE_ROW		( 1 )
 #define TEXTURE_COLUMN	( 1 )
-#define TEXTFILENAME	( "BillboardData.txt" )
+#define TEXTFILENAME	( "data\\EDITDATA\\BillboardData.txt" )
 
 /*******************************************************************************
 * ÉOÉçÅ[ÉoÉãïœêî

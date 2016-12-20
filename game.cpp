@@ -181,6 +181,21 @@ void CGame::Update(void)
 		{
 			CFade::Start(new CResult);
 		}
+		// “G‚ÌÁ‹Ž
+		CScene *scene = CScene::GetList(DRAWORDER_3D);
+		CScene *next = NULL;
+		if (CInput::GetKeyboardTrigger(DIK_DELETE))
+		{
+			while (scene != NULL)
+			{
+				next = scene->m_Next;	// deleteŽž‚Ìƒƒ‚ƒŠƒŠ[ƒN‰ñ”ð‚Ì‚½‚ß‚Éƒ|ƒCƒ“ƒ^‚ðŠi”[
+				if (scene->GetObjType() == OBJTYPE_ENEMY)
+				{
+					scene->SetDeleteFlg(true);
+				}
+				scene = next;
+			}
+		}
 #endif
 	}
 	else

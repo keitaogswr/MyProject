@@ -118,12 +118,6 @@ void CManager::Update( void )
 	CInput::UpdateKeyboard();
 	CInput::UpdateMouse();
 
-	// ‘€ìØ‚è‘Ö‚¦
-	if( CInput::GetKeyboardTrigger( DIK_F6 ) )
-	{
-		CManager::m_Opmode == CManager::OPMODE_PLAYER?
-		CManager::m_Opmode = CManager::OPMODE_MESH : CManager::m_Opmode = CManager::OPMODE_PLAYER;
-	}
 	m_Renderer->Update();
 	m_Mode->Update();
 	
