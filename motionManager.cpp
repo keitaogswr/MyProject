@@ -30,7 +30,6 @@
 DYNAMICMODEL_INFO CMotionManager::m_DModel[DYNAMICMODEL_TYPE_MAX] =
 {
 	{ "data\\MOTION\\motion_b_type_origin.txt" },
-	//{ "data\\MODEL\\AKR\\motion_AKR.txt" },
 	{ "data\\MOTION\\motion_haitatsuoh.txt" },
 	{ "data\\MOTION\\motion_enemyFly.txt" },
 	{ "data\\MOTION\\motion_enemyBoss_TypeFortress.txt" }
@@ -68,7 +67,6 @@ CMotionManager::CMotionManager()
 *******************************************************************************/
 CMotionManager::~CMotionManager()
 {
-
 }
 
 /*******************************************************************************
