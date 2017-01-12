@@ -316,6 +316,7 @@ void CEnemyBullet::Update(void)
 			{
 				CPlayer *player = (CPlayer*)scene;
 				player->SetDamage(ENEMY_BULLET_DAMAGE);
+				player->SetKeep(ENEMY_BULLET_DAMAGE);
 				CGame *game = (CGame*)CManager::GetMode();
 				CCamera *camera = game->GetCamera();
 				camera->SetShake();

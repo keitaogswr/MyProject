@@ -75,12 +75,10 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void Reset(void);
 	void Switch(void);
 
 	void SetMatrix();
 
-	//void SetFileName(const char *FileName) { strcpy(m_fileName, FileName); }	// ファイル名セット
 	void SetIndex(int nIdx) { m_nIdx = nIdx; }									// インデックスセット
 	void SetParent(int parent) { m_nParent = parent; }							// 親インデックスセット
 	D3DXMATRIX *GetMatrix(void) { return &m_MtxWorld; }							// ワールドマトリクスの取得

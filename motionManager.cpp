@@ -491,13 +491,12 @@ void CMotionManager::ResetMotion(void)
 	{
 		// モデル情報の再設定
 		model = &m_pModel[i];
-		//(*model)->Reset();
 		(*model)->Switch();
 	}
 }
 
 /*******************************************************************************
-* 関数名：CMotionManager *CMotionManager::Create( char *FileName, D3DXMATRIX *pMtx )
+* 関数名：CMotionManager *CMotionManager::Create(DYNAMICMODEL_TYPE type, D3DXMATRIX *pMtx)
 *
 * 引数	：
 * 戻り値：

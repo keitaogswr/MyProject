@@ -300,29 +300,6 @@ void CModel::Draw(void)
 *
 * 引数	：
 * 戻り値：
-* 説明	：リセット処理
-*******************************************************************************/
-void CModel::Reset(void)
-{
-	// 変数代入
-	int nMotionId = m_pMotionManager->GetMotionId();				// 現在のモーション番号
-	int nKeyInfoId = m_pMotionManager->GetKeyInfoId();				// 現在のキーフレーム番号
-	// 構造体代入
-	MOTION_INFO **pMotion = m_pMotionManager->GetMotion();			// モーシヨンポインタ
-	KEY *key = pMotion[nMotionId]->pKeyInfo[0]->pKey[m_nIdx];		// 現在のキー
-
-	m_PosNext = key->pos;
-	m_RotNext = key->rot;
-	m_PosTemp = m_Pos - m_PosOffset;
-	m_RotTemp = m_Rot - m_RotOffset;
-	CManager::CheckRot(&m_RotTemp);	// 円周率チェック
-}
-
-/*******************************************************************************
-* 関数名：void CModel::Reset( void )
-*
-* 引数	：
-* 戻り値：
 * 説明	：モーション切り替え処理
 *******************************************************************************/
 void CModel::Switch(void)

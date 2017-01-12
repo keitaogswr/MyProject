@@ -313,15 +313,16 @@ void CBossEnemy::UpdateState(void)
 		m_MotionManager->SetMotion(0);
 		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_MotionManager->SetModelColFlgAll(false);
+		// バリア(透明)をセット
 		m_pBarrier->Set(m_TargetPos, 0.0f);
 		if (m_nStateCnt > STATE_CHANGE)
 		{
 			if (m_bSearch)
-			{
+			{// 索敵フラグがtrue
 				SetState(STATE_ATTACK);
 			}
 			else
-			{
+			{// 索敵フラグがfalse
 				SetState(STATE_GUARD);
 			}
 		}
@@ -357,12 +358,15 @@ void CBossEnemy::UpdateState(void)
 		}
 		if (m_nStateCnt >= STATE_CHANGE_ATTACK)
 		{
+			// ガード状態に移行
 			SetState(STATE_GUARD);
 			m_nAttCnt = 0;
 		}
 		break;
 	case STATE_GUARD:
+		// ガード時
 		m_MotionManager->SetMotion(0);
+		// バリアのセット
 		m_pBarrier->Set(m_TargetPos, 1.0f);
 		if (m_nStateCnt >= STATE_CHANGE)
 		{

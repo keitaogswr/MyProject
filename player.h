@@ -49,6 +49,7 @@ typedef enum PLAYERSTATE
 	PLAYERSTATE_ATTACK,					// 攻撃
 	PLAYERSTATE_TRANSFORM,				// 変形
 	PLAYERSTATE_JUMP,					// ジャンプ
+	PLAYERSTATE_BOMBED,					// 被弾時
 	PLAYERSTATE_VEHICLE_WAIT,			// 待機(乗り物)
 	PLAYERSTATE_VEHICLE_WALK,			// 歩行(乗り物)
 	PLAYERSTATE_VEHICLE_TRANSFORM,		// 変形(乗り物)
@@ -78,14 +79,16 @@ protected:
 	int m_nLife;						// ライフ
 	Vector3 m_TargetPos;				// ターゲットされる位置
 	int m_nExplosionCnt;				// 爆発カウンタ
+	int m_nKeep;						// 仰け反り耐久値
 
-	virtual void SetState(PLAYERSTATE state);
 	virtual void SetMode(PLAYERMODE mode);
 	virtual void UpdateState(void);
+	virtual void SetState(PLAYERSTATE state);
 	virtual void Operate(void);
 	virtual void UpdateMode(void);
 	virtual void SetOrbit(void);
 	virtual void UpdateRockOn(void);
+	virtual void UpdateKeep(void);
 public:
 	CPlayer(DRAWORDER DrawOrder = DRAWORDER_3D, OBJTYPE ObjType = OBJTYPE_PLAYER);
 	~CPlayer();
@@ -99,6 +102,7 @@ public:
 
 	static CPlayer *Create(Vector3 pos);
 	virtual void SetDamage(int nDamage) { m_nLife -= nDamage; }
+	virtual void SetKeep(int keep) { m_nKeep -= keep; }
 	Vector3 GetTargetPos(void) { return m_TargetPos; }
 };
 

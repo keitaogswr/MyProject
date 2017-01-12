@@ -67,6 +67,7 @@
 
 const int LIFE_MAX = 1000;
 const int EXPLOSION_CNT = 30;
+const int KEEP_MAX = 30;
 
 /*******************************************************************************
 * グローバル変数
@@ -94,6 +95,7 @@ CPlayer::CPlayer(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder,
 	m_nLife = LIFE_MAX;
 	m_TargetPos = Vector3(0.0f, 0.0f, 0.0f);
 	m_nExplosionCnt = 0;
+	m_nKeep = KEEP_MAX;
 }
 
 /*******************************************************************************
@@ -260,6 +262,9 @@ void CPlayer::Update(void)
 	m_Rot.y += m_Rad.y * ROT_ATEEN;
 	CManager::CheckRot(&m_Rot);
 
+	/* 仰け反り耐久値の更新 */
+	UpdateKeep();
+
 	// モードごとの処理
 	UpdateMode();
 
@@ -421,6 +426,9 @@ void CPlayer::SetState(PLAYERSTATE state)
 	case PLAYERSTATE_JUMP:
 		m_MotionManager->SetMotion(10);
 		break;
+	case PLAYERSTATE_BOMBED:
+		m_MotionManager->SetMotion(11);
+		break;
 	case PLAYERSTATE_VEHICLE_WAIT:
 		m_MotionManager->SetMotion(9);
 		break;
@@ -481,6 +489,9 @@ void CPlayer::UpdateState(void)
 			SetMode(PLAYERMODE_VEHICLE);
 			SetState(PLAYERSTATE_VEHICLE_WAIT);
 			break;
+		case PLAYERSTATE_BOMBED:
+			SetState(PLAYERSTATE_WAIT);
+			break;
 		case PLAYERSTATE_VEHICLE_WAIT:
 
 			break;
@@ -528,7 +539,7 @@ void CPlayer::UpdateState(void)
 	{
 		int nKeyFrame = m_MotionManager->GetKeyInfoId();
 		int nFrame = m_MotionManager->GetFrame();
-		if (nKeyFrame == 1 && nFrame == 0)
+		if (nKeyFrame == 2 && nFrame == 0)
 		{// モーションの指定フレームに達したら
 			Vector3 vec;
 
@@ -979,6 +990,22 @@ void CPlayer::UpdateRockOn(void)
 		// 照準を通常モードにする
 		CReticle *reticle = ((CGame*)CManager::GetMode())->GetReticle();
 		reticle->SetRockOn(false);
+	}
+}
+
+/*******************************************************************************
+* 関数名：void CPlayer::UpdateKeep(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：仰け反り耐久値更新処理
+*******************************************************************************/
+void CPlayer::UpdateKeep(void)
+{
+	if (m_nKeep <= 0)
+	{
+		SetState(PLAYERSTATE_BOMBED);
+		m_nKeep = KEEP_MAX;
 	}
 }
 
