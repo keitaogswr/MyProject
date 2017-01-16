@@ -85,6 +85,7 @@
     <ClCompile Include="bossEnemy.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="debugProc.cpp" />
     <ClCompile Include="diffusionBullet.cpp" />
     <ClCompile Include="dynamicModel.cpp" />
     <ClCompile Include="editor.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="bossEnemy.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="debugProc.h" />
     <ClInclude Include="diffusionBullet.h" />
     <ClInclude Include="dynamicModel.h" />
     <ClInclude Include="editor.h" />

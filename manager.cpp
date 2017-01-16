@@ -81,7 +81,7 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 
 	CFade::Init();
 
-	SetMode(new CLoad);
+	SetMode(new CTitle);
 }
 
 /*******************************************************************************

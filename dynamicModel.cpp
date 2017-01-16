@@ -85,15 +85,16 @@ void CDynamicModel::Init( Vector3 pos )
 {
 	m_Pos = pos;
 	int num = rand() % 2;
-	if (num == 0)
-	{
-		m_MotionManager = CMotionManager::Create(DYNAMICMODEL_TYPE_PLAYER_00, &m_MtxWorld);
-	}
-	else if (num == 1)
-	{
-		m_MotionManager = CMotionManager::Create(DYNAMICMODEL_TYPE_PLAYER_01, &m_MtxWorld);
-	}
+	//if (num == 0)
+	//{
+	//	m_MotionManager = CMotionManager::Create(DYNAMICMODEL_TYPE_PLAYER_00, &m_MtxWorld);
+	//}
+	//else if (num == 1)
+	//{
+	//	m_MotionManager = CMotionManager::Create(DYNAMICMODEL_TYPE_PLAYER_01, &m_MtxWorld);
+	//}
 
+	m_MotionManager = CMotionManager::Create(DYNAMICMODEL_TYPE_PLAYER_00, &m_MtxWorld);
 	m_MotionManager->SetMotion(0);
 }
 

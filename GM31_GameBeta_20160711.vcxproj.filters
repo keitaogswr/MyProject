@@ -246,6 +246,9 @@
     <ClCompile Include="pause.cpp">
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
+    <ClCompile Include="debugProc.cpp">
+      <Filter>ソース ファイル\Lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="light.h">
@@ -406,6 +409,9 @@
     </ClInclude>
     <ClInclude Include="pause.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="debugProc.h">
+      <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
