@@ -998,14 +998,18 @@ void CPlayer::UpdateRockOn(void)
 *
 * 引数	：
 * 戻り値：
-* 説明	：仰け反り耐久値更新処理
+* 説明	：モーション耐久値更新処理
 *******************************************************************************/
 void CPlayer::UpdateKeep(void)
 {
-	if (m_nKeep <= 0)
+	if (m_Mode != PLAYERMODE_TRANSFORM)
 	{
-		SetState(PLAYERSTATE_BOMBED);
-		m_nKeep = KEEP_MAX;
+		if (m_nKeep <= 0)
+		{
+			SetState(PLAYERSTATE_BOMBED);
+			m_nKeep = KEEP_MAX;
+			m_bBullet = false;
+		}
 	}
 }
 

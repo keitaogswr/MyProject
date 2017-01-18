@@ -19,11 +19,16 @@
 class CDebugProc
 {
 public:
-	void Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
-	void Print(char *fmt, ...);
+	CDebugProc(){}
+	~CDebugProc(){}
+	static void Init(void);
+	static void Uninit(void);
+	static void Update(void);
+	static void Draw(void);
+	static void Print(char *fmt, ...);
+private:
+	static LPD3DXFONT m_pFont;
+	static char m_aStr[10240];
 };
 
 #endif

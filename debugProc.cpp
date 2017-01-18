@@ -31,8 +31,8 @@
 /*******************************************************************************
 * グローバル変数
 *******************************************************************************/
-static LPD3DXFONT g_pFont;
-char g_aStrDebug[10240];
+LPD3DXFONT CDebugProc::m_pFont;
+char CDebugProc::m_aStr[10240];
 
 /*******************************************************************************
 * 関数名：void CDebugProc::Init( void )
@@ -52,10 +52,10 @@ void CDebugProc::Init(void)
 		DEFAULT_QUALITY,
 		DEFAULT_PITCH,
 		"Terminal",
-		&g_pFont);
+		&m_pFont);
 
 	// フォントのメモリクリア
-	memset(g_aStrDebug, 0, sizeof(g_aStrDebug));
+	memset(m_aStr, 0, sizeof(m_aStr));
 }
 
 /*******************************************************************************
@@ -67,11 +67,7 @@ void CDebugProc::Init(void)
 *******************************************************************************/
 void CDebugProc::Uninit(void)
 {
-	if (g_pFont != NULL)
-	{
-		g_pFont->Release();
-		g_pFont = NULL;
-	}
+	SAFE_RELEASE(m_pFont);
 }
 
 /*******************************************************************************
@@ -98,10 +94,10 @@ void CDebugProc::Draw(void)
 	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	// 文字描画
-	g_pFont->DrawText(NULL, &g_aStrDebug[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
+	m_pFont->DrawText(NULL, &m_aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
 
 	// メモリクリア
-	memset(g_aStrDebug, 0, sizeof(g_aStrDebug));
+	memset(m_aStr, 0, sizeof(m_aStr));
 }
 
 /*******************************************************************************
@@ -118,7 +114,7 @@ void CDebugProc::Print(char *fmt, ...)
 	va_start(arg, fmt);
 
 	vsprintf(str, fmt, arg);
-	strcat(g_aStrDebug, str);
+	strcat(m_aStr, str);
 
 	va_end(arg);
 

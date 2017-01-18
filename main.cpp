@@ -15,6 +15,9 @@
 #include "scene.h"
 #include "input.h"
 #include "manager.h"
+#ifdef _DEBUG
+#include "debugProc.h"
+#endif
 
 /*******************************************************************************
 * プロトタイプ宣言
@@ -106,7 +109,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	dwFPSLastTime = timeGetTime();
 
 	// 初期化
-	CManager::Init( hInstance, hWnd, TRUE );
+	Init( hInstance, hWnd, TRUE );
 
 	//メッセージループ
 	while( 1 )
@@ -135,8 +138,8 @@ int WINAPI WinMain( HINSTANCE hInstance,
 			if( ( dwCurrentTime - dwExecLastTime ) >= ( 1000 / 60 ) )
 			{
 				dwExecLastTime = dwCurrentTime;
-				CManager::Update();			//更新処理
-				CManager::Draw();			//描画処理
+				Update();		//更新処理
+				Draw();			//描画処理
 				dwFrameCount++;
 			}
 		}
@@ -144,7 +147,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	UnregisterClass( WindowClassName,		//ウインドウクラスの名前
 					wcex.hInstance
 					);
-	CManager::Uninit();
+	Uninit();			// 終了処理
 	timeEndPeriod( 1 );
 	return ( int )msg.wParam;
 }
@@ -158,7 +161,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 *******************************************************************************/
 HRESULT Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 {
-
+	CManager::Init(hInstance, hWnd, TRUE);
 	return S_OK;
 }
 
@@ -171,7 +174,7 @@ HRESULT Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 *******************************************************************************/
 void Uninit( void )
 {
-
+	CManager::Uninit();
 }
 
 /*******************************************************************************
@@ -183,7 +186,8 @@ void Uninit( void )
 *******************************************************************************/
 void Update( void )
 {
-
+	CManager::Update();
+	CDebugProc::Print("FPS:%d\n\n", g_nCountFPS);
 }
 
 /*******************************************************************************
@@ -195,7 +199,7 @@ void Update( void )
 *******************************************************************************/
 void Draw( void )
 {
-
+	CManager::Draw();			//描画処理
 }
 
 /*******************************************************************************

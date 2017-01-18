@@ -23,6 +23,9 @@
 #include "load.h"
 #include "texture.h"
 #include "manager.h"
+#ifdef _DEBUG
+#include "debugProc.h"
+#endif
 
 /*******************************************************************************
 * グローバル変数
@@ -80,8 +83,11 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 	CTexture::Load();
 
 	CFade::Init();
+#ifdef _DEBUG
+	CDebugProc::Init();
+#endif
 
-	SetMode(new CTitle);
+	SetMode(new CLoad);
 }
 
 /*******************************************************************************
@@ -99,6 +105,9 @@ void CManager::Uninit( void )
 	m_Mode->Uninit();
 	CTexture::Unload();
 	m_Renderer->Uninit();
+#ifdef _DEBUG
+	CDebugProc::Uninit();
+#endif
 	// 解放処理
 	SAFE_DELETE(m_Renderer);
 	SAFE_DELETE(m_Mode);
@@ -122,6 +131,9 @@ void CManager::Update( void )
 	m_Mode->Update();
 	
 	CFade::Update();
+#ifdef _DEBUG
+	CDebugProc::Update();
+#endif
 }
 
 /*******************************************************************************
@@ -137,6 +149,9 @@ void CManager::Draw( void )
 	m_Renderer->Begin();
 	m_Mode->Draw();
 	CFade::Draw();
+#ifdef _DEBUG
+	CDebugProc::Draw();
+#endif
 	m_Renderer->End();
 	// 描画終了
 }
