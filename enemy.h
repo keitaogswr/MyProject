@@ -41,6 +41,7 @@ public:
 	typedef enum
 	{
 		STATE_NORMAL,		// 通常
+		STATE_MOVE,			// 移動
 		STATE_ATTACK,		// 攻撃中
 		STATE_DAMAGE,		// 被弾
 		STATE_DEATH,		// 死亡時
@@ -59,8 +60,8 @@ public:
 
 	void SetDamage(int nDamage) { m_nLife -= nDamage; }
 	Vector3 GetTargetPos(void) { return m_TargetPos; }
-	int GetCollisionLength(void) { return m_nCollisionLength; }
-	void SetState(STATE state) { m_State = state; m_nStateCnt = 0; }
+	float GetCollisionLength(void) { return m_fCollisionLength; }
+	void SetState(int state) { m_State = state; m_nStateCnt = 0; }
 	int GetState(void) { return m_State; }
 
 protected:
@@ -69,11 +70,14 @@ protected:
 	bool m_bSearch;					// 索敵フラグ
 	int m_nAttCnt;					// 攻撃カウンタ
 	Vector3 m_TargetPos;			// ロックオンされる座標
-	int m_nCollisionLength;			// あたり判定距離
-	STATE m_State;					// 状態
+	float m_fCollisionLength;		// あたり判定距離
+	int m_State;					// 状態
 	int m_nStateCnt;				// 状態カウンタ
+	int m_nSearchCnt;				// 索敵カウンタ
 
-	void UpdateState(void);
+	void UpdateState(void);			// 状態更新
+	void UpdateSearch(void);		// 索敵更新
+	void UpdateAttack(void);		// 攻撃更新
 };
 
 #endif

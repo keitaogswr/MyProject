@@ -73,7 +73,7 @@ const int STATE_CHANGE_ATTACK = 300;	// èÛë‘ïœâªÉJÉEÉìÉ^(çUåÇéû)
 CBossEnemy::CBossEnemy(DRAWORDER DrawOrder, OBJTYPE ObjType) :CEnemy(DrawOrder, ObjType)
 {
 	m_nLife = LIFE_MAX;
-	m_nCollisionLength = COLLISION_LENGTH;
+	m_fCollisionLength = COLLISION_LENGTH;
 	m_pBarrier = NULL;
 	m_State = STATE_NORMAL;
 }

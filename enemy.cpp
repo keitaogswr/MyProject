@@ -30,6 +30,8 @@
 #include "effect.h"
 #include "animationBoard.h"
 #include "explosion.h"
+#include "enemySpeed.h"
+#include "player.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -45,7 +47,7 @@ const float  SHADOW_HEIGHT = 1000.0f;	// 影の高さ
 const int LIFE_MAX = 100;				// 最大ライフ
 const int SEARCH_LENG = 1600;			// 索敵範囲
 const int ATTACK_CNT = 60;				// 攻撃カウンタ
-const int COLLISION_LENGTH = 40;		// あたり判定
+const float COLLISION_LENGTH = 20.0f;	// あたり判定
 const int DAMAGE_CNT = 60;				// 被弾カウンタ
 
 #define TEXTFILENAME	( "data\\EDITDATA\\EnemyData.txt" )
@@ -56,12 +58,12 @@ const int DAMAGE_CNT = 60;				// 被弾カウンタ
 
 /*******************************************************************************
 * 関数名：CEnemy::CEnemy( DRAWORDER DrawOrder, OBJTYPE ObjType ):CDynamicModel( DrawOrder, ObjType )
-* 
+*
 * 引数	：
 * 戻り値：
 * 説明	：コンストラクタ
 *******************************************************************************/
-CEnemy::CEnemy( DRAWORDER DrawOrder, OBJTYPE ObjType ):CDynamicModel( DrawOrder, ObjType )
+CEnemy::CEnemy(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder, ObjType)
 {
 	m_Shadow = NULL;
 	m_nLife = LIFE_MAX;
@@ -69,14 +71,15 @@ CEnemy::CEnemy( DRAWORDER DrawOrder, OBJTYPE ObjType ):CDynamicModel( DrawOrder,
 	m_bSearch = false;
 	m_nAttCnt = 0;
 	m_TargetPos = Vector3(0.0f, 0.0f, 0.0f);
-	m_nCollisionLength = COLLISION_LENGTH;
+	m_fCollisionLength = COLLISION_LENGTH;
 	m_State = STATE_NORMAL;
 	m_nStateCnt = 0;
+	m_nSearchCnt = 0;
 }
 
 /*******************************************************************************
 * 関数名：CEnemy::~CEnemy()
-* 
+*
 * 引数	：
 * 戻り値：
 * 説明	：デストラクタ
@@ -87,12 +90,12 @@ CEnemy::~CEnemy()
 
 /*******************************************************************************
 * 関数名：void CEnemy::Init( Vector3 pos )
-* 
+*
 * 引数	：
 * 戻り値：
 * 説明	：初期化処理
 *******************************************************************************/
-void CEnemy::Init( Vector3 pos )
+void CEnemy::Init(Vector3 pos)
 {
 	m_Pos = pos;
 	m_TargetPos = m_Pos;
@@ -103,12 +106,12 @@ void CEnemy::Init( Vector3 pos )
 
 /*******************************************************************************
 * 関数名：void CEnemy::Uninit( void )
-* 
+*
 * 引数	：
 * 戻り値：
 * 説明	：終了処理
 *******************************************************************************/
-void CEnemy::Uninit( void )
+void CEnemy::Uninit(void)
 {
 	// 解放
 	if (m_MotionManager)
@@ -123,83 +126,41 @@ void CEnemy::Uninit( void )
 
 /*******************************************************************************
 * 関数名：void CEnemy::Update( void )
-* 
+*
 * 引数	：
 * 戻り値：
 * 説明	：更新処理
 *******************************************************************************/
-void CEnemy::Update( void )
+void CEnemy::Update(void)
 {
-	D3DXVECTOR3 axis = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
-	D3DXQUATERNION quat = D3DXQUATERNION( 0.0f, 0.0f, 0.0f, 0.0f );
-	CGame *game = ( CGame* )CManager::GetMode();
+	D3DXVECTOR3 axis = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXQUATERNION quat = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 0.0f);
+	CGame *game = (CGame*)CManager::GetMode();
 	CMeshField *meshField = game->GetMeshField();
+	CScene *scene = CScene::GetList(DRAWORDER_3D);
+	CScene *next = NULL;
 
 	// 位置更新
 	m_Pos.x += m_Move.x;
 	m_Pos.z += m_Move.z;
+	m_TargetPos = m_Pos;
 
-	CScene *scene = CScene::GetList(DRAWORDER_3D);
-	CScene *next = NULL;
-	if (game->GetState() != CGame::STATE_START && game->GetState() != CGame::STATE_END)
-	{
-		while (scene != NULL)
-		{
-			next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
-			if (scene->GetObjType() == OBJTYPE_PLAYER)
-			{
-				Vector3 pos = scene->GetPosition();
-				Vector3 diff = m_Pos - pos;
-				float length = diff.Length();
-				if (length < SEARCH_LENG)
-				{
-					m_RotN.y = atan2f(m_Pos.x - pos.x, m_Pos.z - pos.z);
-
-					m_bSearch = true;
-				}
-				else
-				{
-					m_bSearch = false;
-					m_nAttCnt = 0;
-				}
-			}
-			scene = next;
-		}
-	}
+	// 索敵更新
+	UpdateSearch();
 
 	// 目的の角度の補正
-	CManager::CheckRot( &m_RotN.y );
+	CManager::CheckRot(&m_RotN.y);
 
 	// 差分計算
 	m_Rad.y = m_RotN.y - m_Rot.y;
-	CManager::CheckRot( &m_Rad.y );
+	CManager::CheckRot(&m_Rad.y);
 
 	// 向きを更新
 	m_Rot.y += m_Rad.y * ROT_ATEEN;
-	CManager::CheckRot( &m_Rot.y );
+	CManager::CheckRot(&m_Rot.y);
 
-	if (m_bSearch)
-	{
-		m_nAttCnt++;
-		if (m_nAttCnt > ATTACK_CNT)
-		{
-			m_nAttCnt = 0;
-			scene = CScene::GetList(DRAWORDER_3D);
-			next = NULL;
-			while (scene != NULL)
-			{
-				next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
-				if (scene->GetObjType() == OBJTYPE_PLAYER)
-				{
-					Vector3 pos = scene->GetPosition();
-					Vector3 diff = pos - m_Pos;
-					diff.Normalize();
-					CEnemyBullet::Create(m_Pos, diff, D3DXCOLOR( 1.0f, 0.0f, 1.0f, 1.0f ));
-				}
-				scene = next;
-			}
-		}
-	}
+	// 攻撃更新
+	UpdateAttack();
 
 	// 状態遷移
 	UpdateState();
@@ -220,17 +181,17 @@ void CEnemy::Update( void )
 }
 
 /*******************************************************************************
-* 関数名：void CEnemy::Uninit( void )
-* 
+* 関数名：CEnemy *CEnemy::Create(Vector3 pos)
+*
 * 引数	：
 * 戻り値：CEnemy型のポインタ
 * 説明	：生成処理
 *******************************************************************************/
-CEnemy *CEnemy::Create( Vector3 pos )
+CEnemy *CEnemy::Create(Vector3 pos)
 {
 	CEnemy *model;
 	model = new CEnemy;
-	model->Init( pos );
+	model->Init(pos);
 	return model;
 }
 
@@ -254,13 +215,21 @@ int CEnemy::Load(void)
 	CEnemy *enemy = NULL;
 	Vector3 vector;
 	char str[256];
+	int number = 0;
 
 	while (fscanf(fp, "%s", str) != EOF)
 	{
 		if (strcmp(str, "POSXYZ") == 0)
 		{
-			fscanf(fp, "%f %f %f", &vector.x, &vector.y, &vector.z);
-			enemy = Create(vector);
+			fscanf(fp, "%f %f %f %d", &vector.x, &vector.y, &vector.z, &number);
+			if (number == 0)
+			{
+				enemy = Create(vector);
+			}
+			if (number == 1)
+			{
+				enemy = CEnemySpeed::Create(vector);
+			}
 		}
 	}
 
@@ -284,6 +253,7 @@ void CEnemy::UpdateState(void)
 	case STATE_NORMAL:
 		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_MotionManager->SetModelColFlgAll(false);
+
 		break;
 	case STATE_DAMAGE:
 		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
@@ -295,5 +265,60 @@ void CEnemy::UpdateState(void)
 		break;
 	default:
 		break;
+	}
+}
+
+/*******************************************************************************
+* 関数名：void CEnemy::UpdateSearch(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：索敵更新処理
+*******************************************************************************/
+void CEnemy::UpdateSearch(void)
+{
+	CGame *game = (CGame*)CManager::GetMode();
+	CPlayer *player = game->GetPlayer();
+
+	if (game->GetState() != CGame::STATE_START && game->GetState() != CGame::STATE_END)
+	{
+		Vector3 pos = player->GetPosition();
+		Vector3 diff = m_Pos - pos;
+		float length = diff.Length();
+		if (length < SEARCH_LENG)
+		{
+			m_RotN.y = atan2f(m_Pos.x - pos.x, m_Pos.z - pos.z);
+			m_bSearch = true;
+		}
+		else
+		{
+			m_bSearch = false;
+			m_nAttCnt = 0;
+		}
+	}
+}
+
+/*******************************************************************************
+* 関数名：void CEnemy::UpdateAttack(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：攻撃更新処理
+*******************************************************************************/
+void CEnemy::UpdateAttack(void)
+{
+	if (m_bSearch)
+	{
+		m_nAttCnt++;
+		if (m_nAttCnt > ATTACK_CNT)
+		{
+			m_nAttCnt = 0;
+			CGame *game = (CGame*)CManager::GetMode();
+			CPlayer *player = game->GetPlayer();
+			Vector3 pos = player->GetPosition();
+			Vector3 diff = pos - m_Pos;
+			diff.Normalize();
+			CEnemyBullet::Create(m_Pos, diff, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+		}
 	}
 }
