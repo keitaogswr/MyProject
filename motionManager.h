@@ -160,12 +160,14 @@ public:
 	int GetOldKeyInfoId(void) { return m_nOldKeyInfoId; }									// 一個前のキーフレームを取得
 
 	bool GetSwitch(void) { return m_bSwitch; }												// 切り替えフラグの取得
-	CModel *GetModel(int nId) { return m_pModel[nId]; }										// 親モデルの取得
+	CModel *GetModel(int nId) { return m_pModel[nId]; }										// モデルのポインタ取得
+	D3DXMATRIX *GetModelMatrix(int id) { return m_pModel[id]->GetMatrix(); }				// モデルのマトリクスの取得
 
 	bool EndMotion(void);																	// モーションが終了しているかどうか
 	static DYNAMICMODEL_INFO *GetDynamicModelInfo(int nType) { return &m_DModel[nType]; }	// アニメーションモデル情報の取得
 	void SetModelType(DYNAMICMODEL_TYPE nType) { m_ModelType = nType; }						// モデルタイプのセット
 	DYNAMICMODEL_TYPE GetModelType(void) { return m_ModelType; }							// モデルタイプの取得
+
 	void SetModelColor(int num, D3DXCOLOR color){ m_pModel[num]->SetDiffuseCol(color); }
 	void SetModelColorAll(D3DXCOLOR color);
 	void SetModelColFlg(int num, bool flg) { m_pModel[num]->SetChangeColFlg(flg); }

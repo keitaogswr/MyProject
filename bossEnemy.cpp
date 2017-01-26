@@ -39,17 +39,17 @@
 /*******************************************************************************
 * マクロ定義
 *******************************************************************************/
-#define MOVE_SPEED		( 1.0f )		// 移動量
-#define ROT_SPEED		( 0.05f )		// 回転量
+const float  MOVE_SPEED = 1.0f;			// 移動量
+const float  ROT_SPEED = 0.05f;			// 回転量
 
-#define ROT_ATEEN		( 0.1f )		// 回転量減衰係数
-#define MOVE_ATEEN		( 0.15f )		// 移動量減衰係数
+const float  ROT_ATEEN = 0.1f;			// 回転量減衰係数
+const float  MOVE_ATEEN = 0.15f;		// 移動量減衰係数
 
-#define LIFE_MAX		( 10000 )		// 最大ライフ
-#define SEARCH_LENG		( 2000 )		// 索敵範囲
-#define ATTACK_CNT		( 30 )			// 攻撃カウンタ
+const int LIFE_MAX = 10000;				// 最大ライフ
+const float SEARCH_LENG = 2000.0f;		// 索敵範囲
+const int ATTACK_CNT = 30;				// 攻撃カウンタ
 
-#define GRAVITY			( 0.5f )		// 重力
+const float GRAVITY = 0.5f;				// 重力
 
 const float SHADOW_RADIUS = 400.0f;		// 影の半径
 const float SHADOW_HEIGHT = 100.0f;		// 影の高さ

@@ -79,9 +79,9 @@ void CBarrier::Init(Vector3 pos, float rad, int row, int column)
 	m_MeshDome.nRowNumVtx = m_MeshDome.nRowBlock + 1;
 	m_MeshDome.nColumnNumVtx = m_MeshDome.nColumnBlock + 1;
 	m_MeshDome.fRadius = rad;
-	m_MeshDome.nNumVtxMax = (m_MeshDome.nRowNumVtx * 2 - 1) * m_MeshDome.nColumnNumVtx;
-	m_MeshDome.nNumIdx = (m_MeshDome.nColumnNumVtx * m_MeshDome.nRowBlock * 2 * 2) + (m_MeshDome.nRowBlock * 2 - 1) * 2;
-	m_MeshDome.nNumPrim = (m_MeshDome.nColumnNumVtx * m_MeshDome.nRowBlock * 2 * 2) + (m_MeshDome.nRowBlock * 2 - 1) * 4;
+	m_MeshDome.nNumVtxMax = m_MeshDome.nRowNumVtx * m_MeshDome.nColumnNumVtx;
+	m_MeshDome.nNumIdx = (m_MeshDome.nColumnNumVtx * m_MeshDome.nRowBlock * 2) + (m_MeshDome.nRowBlock - 1) * 2;
+	m_MeshDome.nNumPrim = (m_MeshDome.nColumnBlock * m_MeshDome.nRowBlock * 2) + (m_MeshDome.nRowBlock - 1) * 4;
 
 	// ファン部分
 	m_MeshFan[0].nNumVtxMax = m_MeshDome.nColumnNumVtx + 1;
@@ -148,23 +148,24 @@ void CBarrier::Init(Vector3 pos, float rad, int row, int column)
 	// 頂点バッファの設定
 	VERTEX_3D *pVtx;
 	int nIdxCnt = 0;
+	int rowVtxMax;
 	/// ドーム部分
 	m_MeshDome.pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (int nCntRow = m_MeshDome.nRowNumVtx - 1; nCntRow >= 0; nCntRow--)
+	for (int nCntRow = (m_MeshDome.nRowNumVtx - 1) / 2; nCntRow >= 0; nCntRow--)
 	{
 		for (int nCntColumn = 0; nCntColumn < m_MeshDome.nColumnNumVtx; nCntColumn++, nIdxCnt++)
 		{
-			pVtx[nIdxCnt].pos.x = cosf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) *
+			pVtx[nIdxCnt].pos.x = cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 				sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn) * m_MeshDome.fRadius;
-			pVtx[nIdxCnt].pos.y = sinf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) * m_MeshDome.fRadius;
-			pVtx[nIdxCnt].pos.z = cosf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) *
+			pVtx[nIdxCnt].pos.y = sinf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) * m_MeshDome.fRadius;
+			pVtx[nIdxCnt].pos.z = cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 				cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn) * m_MeshDome.fRadius;
 
-			pVtx[nIdxCnt].nor = D3DXVECTOR3(cosf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) *
+			pVtx[nIdxCnt].nor = D3DXVECTOR3(cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 				sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn),
-				sinf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow),
-				cosf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) *
+				sinf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow),
+				cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 				cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn));
 
 			pVtx[nIdxCnt].col = D3DCOLOR_RGBA(255, 255, 255, 255);
@@ -174,20 +175,21 @@ void CBarrier::Init(Vector3 pos, float rad, int row, int column)
 			pVtx[ nIdxCnt ].tex.y = 1.0f * nCntRow;
 		}
 	}
-	for (int nCntRow = 1; nCntRow < m_MeshDome.nRowNumVtx; nCntRow++)
+	rowVtxMax = (m_MeshDome.nRowNumVtx - 1) / 2 + 1;
+	for (int nCntRow = 1; nCntRow < rowVtxMax; nCntRow++)
 	{
 		for (int nCntColumn = 0; nCntColumn < m_MeshDome.nColumnNumVtx; nCntColumn++, nIdxCnt++)
 		{
-			pVtx[nIdxCnt].pos.x = cosf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) *
+			pVtx[nIdxCnt].pos.x = cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 				sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn) * m_MeshDome.fRadius;
-			pVtx[nIdxCnt].pos.y = sinf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) * -m_MeshDome.fRadius;
-			pVtx[nIdxCnt].pos.z = cosf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) *
+			pVtx[nIdxCnt].pos.y = sinf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) * -m_MeshDome.fRadius;
+			pVtx[nIdxCnt].pos.z = cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 				cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn) * m_MeshDome.fRadius;
 
-			pVtx[nIdxCnt].nor = D3DXVECTOR3(cosf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) *
+			pVtx[nIdxCnt].nor = D3DXVECTOR3(cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 				sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn),
-				sinf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow),
-				cosf(MESHDOME_ANGLE / m_MeshDome.nRowBlock * RAD * nCntRow) *
+				sinf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow),
+				cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 				cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn));
 
 			pVtx[nIdxCnt].col = D3DCOLOR_RGBA(255, 255, 255, 255);
@@ -278,15 +280,15 @@ void CBarrier::Init(Vector3 pos, float rad, int row, int column)
 	// 変数定義
 	int x, y, cnt;
 
-	for (y = 0, cnt = 0; y < m_MeshDome.nRowBlock * 2; y++)
+	for (y = 0, cnt = 0; y < m_MeshDome.nRowBlock; y++)
 	{
-		for (x = 0; x < m_MeshDome.nColumnNumVtx; x++, cnt += 2, pIdx += 2)
+		for (x = 0; x < m_MeshDome.nColumnNumVtx; x++, cnt++, pIdx += 2)
 		{
 			pIdx[0] = x + (y + 1) * m_MeshDome.nColumnNumVtx;
 			pIdx[1] = x + (y + 0) * m_MeshDome.nColumnNumVtx;
-			if (x == m_MeshDome.nColumnNumVtx - 1 && y != m_MeshDome.nRowBlock * 2 - 1)
+			if (x == m_MeshDome.nColumnNumVtx - 1 && cnt * 2 < m_MeshDome.nNumIdx - 2)
 			{
-				cnt += 2;
+				cnt++;
 				pIdx += 2;
 				pIdx[0] = x + (y + 0) * m_MeshDome.nColumnNumVtx;
 				pIdx[1] = (y + 1 + 1) * m_MeshDome.nColumnNumVtx;

@@ -214,7 +214,7 @@ void CBullet::Update(void)
 			Vector3 pos = ((CEnemy*)scene)->GetTargetPos();
 			Vector3 diff = pos - m_Pos;
 			float length = diff.Length();
-			int search = ((CEnemy*)scene)->GetCollisionLength();
+			float search = ((CEnemy*)scene)->GetCollisionLength();
 			if (length < search)
 			{
 				CEnemy *enemy = (CEnemy*)scene;

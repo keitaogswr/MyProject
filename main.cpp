@@ -186,8 +186,10 @@ void Uninit( void )
 *******************************************************************************/
 void Update( void )
 {
-	CManager::Update();
+#ifdef _DEBUG
 	CDebugProc::Print("FPS:%d\n\n", g_nCountFPS);
+#endif
+	CManager::Update();
 }
 
 /*******************************************************************************

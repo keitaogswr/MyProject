@@ -848,6 +848,13 @@ void CPlayer::UpdateMode(void)
 	{
 		/* ‰e‚ÌˆÊ’uXV */
 		m_Shadow->Set(Vector3(m_Pos.x, field, m_Pos.z), m_Pos, SHADOW_RADIUS, SHADOW_HEIGHT);
+		if (m_bMove == true)
+		{
+			if (m_bJump == false)
+			{
+				CSmoke::Create(m_Pos, D3DXCOLOR(0.5f, 0.3f, 0.2f, 0.2f), 20, 20);
+			}
+		}
 		break;
 	}
 	case PLAYERMODE_VEHICLE:

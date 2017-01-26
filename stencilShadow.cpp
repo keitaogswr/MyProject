@@ -15,6 +15,7 @@
 #include "renderer.h"
 #include "scene.h"
 #include "stencilShadow.h"
+#include "debugProc.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -84,8 +85,8 @@ void CStencilShadow::Init(Vector3 pos)
 	m_fHeight = 100.0f;
 	m_nNumVtxMax = m_nRowNumVtx * m_nColumnNumVtx;
 
-	m_nNumIdx = m_nColumnNumVtx * m_nRowBlock * 2 + (m_nRowBlock - 1) * 1;
-	m_nNumPrim = (((m_nColumnBlock * 2 + 1) * m_nRowBlock) + (m_nRowBlock - 1) * 2);
+	m_nNumIdx = m_nColumnNumVtx * m_nRowBlock * 2 + (m_nRowBlock - 1) * 2;
+	m_nNumPrim = (m_nColumnBlock * m_nRowBlock * 2) + (m_nRowBlock - 1) * 4;
 
 	// デバイスの取得
 	CRenderer *renderer = CManager::GetRenderer();
@@ -140,15 +141,16 @@ void CStencilShadow::Init(Vector3 pos)
 
 	for (y = 0, cnt = 0; y < m_nRowBlock; y++)
 	{
-		for (x = 0; x < m_nColumnNumVtx; x++, cnt += 2, pIdx += 2)
+		for (x = 0; x < m_nColumnNumVtx; x++, cnt++, pIdx += 2)
 		{
 			pIdx[0] = x + (y + 1) * m_nColumnNumVtx;
 			pIdx[1] = x + (y + 0) * m_nColumnNumVtx;
-			if (x == m_nColumnNumVtx - 1 && y != m_nRowBlock - 1)
+			if (x == m_nColumnNumVtx - 1 && cnt * 2 < m_nNumIdx - 2)
 			{
+				cnt++;
+				pIdx += 2;
 				pIdx[0] = x + (y + 1) * m_nColumnNumVtx;
-				pIdx[1] = x + (y + 0) * m_nColumnNumVtx;
-				cnt += 2;
+				pIdx[1] = (y + 1 + 1) * m_nColumnNumVtx;
 			}
 		}
 	}

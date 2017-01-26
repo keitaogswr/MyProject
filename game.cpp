@@ -110,7 +110,7 @@ void CGame::Init(void)
 	// 各オブジェクト生成処理
 	//scene = CField::Create( Vector3( 0.0f, 0.0f, 0.0f ) );
 	m_MeshField = CMeshField::Create(Vector3(0.0f, 0.0f, 0.0f), 100, 100, 64, 64);
-	scene = CSkySphere::Create(Vector3(0.0f, 0.0f, 0.0f), 7000.0f, 8, 16);
+	scene = CSkySphere::Create(Vector3(0.0f, 0.0f, 0.0f), 7000.0f, 16, 16);
 	m_Player = CPlayer::Create(Vector3(10.0f, 1000.0f, 100.0f));
 
 	CEnemy::Load();

@@ -64,6 +64,7 @@ const int SEARCH_CNT = 10;				// õ“GƒJƒEƒ“ƒ^
 *******************************************************************************/
 CEnemySpeed::CEnemySpeed(DRAWORDER DrawOrder, OBJTYPE ObjType) :CEnemy(DrawOrder, ObjType)
 {
+	m_Scl = Vector3(1.5f, 1.5f, 1.5f);
 }
 
 /*******************************************************************************
@@ -288,17 +289,17 @@ void CEnemySpeed::UpdateMove(void)
 *******************************************************************************/
 bool CEnemySpeed::CheckCollision(Vector3 pos, float collision)
 {
-	/*if (m_Pos.x + m_fCollisionLength > pos.x - collision && m_Pos.x - m_fCollisionLength < pos.x + collision &&
+	if (m_Pos.x + m_fCollisionLength > pos.x - collision && m_Pos.x - m_fCollisionLength < pos.x + collision &&
 		m_Pos.y + m_fCollisionLength > pos.y - collision && m_Pos.y - m_fCollisionLength < pos.y + collision &&
 		m_Pos.z + m_fCollisionLength > pos.z - collision && m_Pos.z - m_fCollisionLength < pos.z + collision)
-	{*/
+	{
 		Vector3 diff = pos - m_Pos;
 		float length = diff.Length();
 		if (length < (collision + m_fCollisionLength))
 		{
 			return true;
 		}
-	//}
+	}
 	
 	return false;
 }
