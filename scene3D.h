@@ -44,10 +44,13 @@ class CScene3D : public CScene
 	public:
 		CScene3D( DRAWORDER DrawOrder = DRAWORDER_3D, OBJTYPE ObjType = OBJTYPE_NONE );
 		~CScene3D();
-		void Init( Vector3 pos );
-		void Uninit( void );
-		void Update( void );
-		void Draw( void );
+		void Init(Vector3 pos);
+		void Uninit(void);
+		void Update(void);
+		void Draw(void);
+
+		void SetRenderStateBegin(void) {}
+		void SetRenderStateEnd(void) {}
 
 		static CScene3D *Create( Vector3 pos );
 };

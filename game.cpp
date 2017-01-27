@@ -47,6 +47,7 @@
 #include "playerLifeGauge.h"
 #include "texture.h"
 #include "sound.h"
+#include "meshCylinder.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -120,6 +121,7 @@ void CGame::Init(void)
 	m_pPlayerLifeGauge = CPlayerLifeGauge::Create(Vector3(300.0f, 50.0f, 0.0f));
 	CScene2D::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT, TEXTURE_TYPE_GAMEUI_000);
 	m_pLogo = CScene2D::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), 600.0f, 200.0f, TEXTURE_TYPE_GAME_START_000);
+	CMeshCylinder::Create(Vector3(0.0f, 0.0f, 0.0f));
 	// カメラ生成
 	m_Camera = CCamera::Create();
 	// ライト生成

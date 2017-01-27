@@ -28,15 +28,15 @@
 /*******************************************************************************
 * マクロ定義
 *******************************************************************************/
-#define WIDTH				( 30 )		// ポリゴン幅
-#define HEIGHT				( 30 )		// ポリゴン高さ
-#define TEXTURE_ROW			( 1 )		// テクスチャ列分割数
-#define TEXTURE_COLUMN		( 8 )		// テクスチャ行分割数
-#define MOVE_SPEED			( 10.0f )	// 移動速度
-#define LIFE_MAX			( 1000 )	// 寿命
-#define ATTEN_DEF			( 0.0001f )	// 初期減衰係数
-#define ATTEN_RISE			( 2.0f )	// 減衰係数の上昇倍率
-#define DRAW_SPEED			( 5 )		// 描画速度
+const float	WIDTH = 30.0f;			// ポリゴン幅
+const float	HEIGHT = 30.0f;			// ポリゴン高さ
+const int	TEXTURE_ROW = 1;		// テクスチャ列分割数
+const int	TEXTURE_COLUMN = 8;		// テクスチャ行分割数
+const float	MOVE_SPEED = 10.0f;		// 移動速度
+const int	LIFE_MAX = 1000;		// 寿命
+const float	ATTEN_DEF = 0.0001f;	// 初期減衰係数
+const float	ATTEN_RISE = 2.0f;		// 減衰係数の上昇倍率
+const int	DRAW_SPEED = 5;			// 描画速度
 
 /*******************************************************************************
 * グローバル変数
@@ -56,6 +56,7 @@ CAnimationBoard::CAnimationBoard(DRAWORDER DrawOrder, OBJTYPE ObjType) : CEffect
 	m_nRowAnim = 0;
 	m_nTexColumn = TEXTURE_COLUMN;
 	m_nTexRow = TEXTURE_ROW;
+	m_nLoopCnt = 0;
 }
 
 /*******************************************************************************
@@ -121,14 +122,14 @@ void CAnimationBoard::Init(Vector3 pos, D3DXCOLOR col, float width, float height
 		0.0f);
 
 	pVtx[0].nor =
-		pVtx[1].nor =
-		pVtx[2].nor =
-		pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pVtx[1].nor =
+	pVtx[2].nor =
+	pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 	pVtx[0].col =
-		pVtx[1].col =
-		pVtx[2].col =
-		pVtx[3].col = m_Col;
+	pVtx[1].col =
+	pVtx[2].col =
+	pVtx[3].col = m_Col;
 
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
 	pVtx[1].tex = D3DXVECTOR2(1.0f / TEXTURE_COLUMN, 0.0f);
@@ -205,20 +206,7 @@ void CAnimationBoard::Draw(void)
 	CCamera *camera = game->GetCamera();
 
 	// 各種設定 /////
-	// ライトのOFF
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	// フォグのOFF
-	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
-	// ZテストのON
-	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	// アルファテストのON
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
-	// 加算合成によるアルファブレンドのレンダーステートの設定
-	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+	SetRenderStateBegin();
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
@@ -266,21 +254,7 @@ void CAnimationBoard::Draw(void)
 		2);							//描画するプリミティブ数
 
 	// 設定を元に戻す /////
-	// ライトのON
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	// フォグのON
-	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
-	// アルファテストのOFF
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
-	// ZテストのOFF
-	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-	// 元のアルファブレンドの設定に戻す
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	SetRenderStateEnd();
 }
 
 /*******************************************************************************
@@ -339,5 +313,63 @@ void CAnimationBoard::SetVertex(void)
 	pVtx[3].tex.y = m_nRowAnim * (1.0f / m_nTexRow) + (1.0f / m_nTexRow);
 
 	m_VtxBuff->Unlock();
+}
 
+/*******************************************************************************
+* 関数名：void CAnimationBoard::SetRenderStateBegin( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：レンダラーステート設定開始処理
+*******************************************************************************/
+void CAnimationBoard::SetRenderStateBegin(void)
+{
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// ライトのOFF
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	// フォグのOFF
+	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	// ZテストのOFF
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	// アルファテストのON
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+	// 加算合成によるアルファブレンドのレンダーステートの設定
+	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+}
+
+/*******************************************************************************
+* 関数名：void CAnimationBoard::SetRenderStateEnd( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：レンダラーステート設定終了処理
+*******************************************************************************/
+void CAnimationBoard::SetRenderStateEnd(void)
+{
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// ライトのON
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	// フォグのON
+	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
+	// アルファテストのOFF
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
+	// ZテストのOFF
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	// 元のアルファブレンドの設定に戻す
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 }

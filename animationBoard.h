@@ -34,11 +34,12 @@ class CEffect;
 class CAnimationBoard : public CEffect
 {
 protected:
-	int m_nCntAnim;
-	int m_nPatternAnim;
-	int m_nRowAnim;
-	int m_nTexColumn;
-	int m_nTexRow;
+	int m_nCntAnim;			// アニメーションカウンタ
+	int m_nPatternAnim;		// パターンカウンタ
+	int m_nRowAnim;			// 行カウンタ
+	int m_nTexColumn;		// テクスチャ列分割数
+	int m_nTexRow;			// テクスチャ行分割数
+	int m_nLoopCnt;			// ループカウンタ
 
 	void SetVertex(void);
 public:
@@ -49,6 +50,9 @@ public:
 	virtual void Uninit(void);
 	virtual void Update(void);
 	virtual void Draw(void);
+
+	virtual void SetRenderStateBegin(void);
+	virtual void SetRenderStateEnd(void);
 
 	static CAnimationBoard *Create(Vector3 pos, D3DXCOLOR col, float width, float height);
 };

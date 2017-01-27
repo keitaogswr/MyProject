@@ -169,6 +169,9 @@ void CScene3D::Draw( void )
 	CRenderer *renderer = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
 
+	// レンダラーステートの設定
+	SetRenderStateBegin();
+
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity( &m_MtxWorld );
 	// スケールを反映
@@ -204,6 +207,9 @@ void CScene3D::Draw( void )
 					D3DPT_TRIANGLESTRIP,		//プリミティブの種類
 					0,							//最初の頂点のインデックス
 					2 );						//描画するプリミティブ数
+
+	// レンダラーステートの設定
+	SetRenderStateEnd();
 }
 
 /*******************************************************************************

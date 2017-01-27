@@ -61,7 +61,7 @@ public:
 	void SetDamage(int nDamage) { m_nLife -= nDamage; }
 	Vector3 GetTargetPos(void) { return m_TargetPos; }
 	float GetCollisionLength(void) { return m_fCollisionLength; }
-	void SetState(int state) { m_State = state; m_nStateCnt = 0; }
+	void SetState(int state) { m_State = state; m_nStateCnt = 0; m_nAttCnt = 0; }
 	int GetState(void) { return m_State; }
 
 protected:

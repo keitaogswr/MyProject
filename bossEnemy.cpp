@@ -35,6 +35,8 @@
 #include "animationBoard.h"
 #include "explosion.h"
 #include "input.h"
+#include "chargeEffect.h"
+#include "meshCylinder.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -57,7 +59,10 @@ const float SHADOW_HEIGHT = 100.0f;		// 影の高さ
 const int COLLISION_LENGTH = 400;		// 当たり判定
 const int DAMAGE_CNT = 60;				// 被弾カウンタ
 const int STATE_CHANGE = 150;			// 状態変化カウンタ
-const int STATE_CHANGE_ATTACK = 300;	// 状態変化カウンタ(攻撃時)
+const int STATE_CHANGE_ATTACK_0 = 300;	// 状態変化カウンタ(攻撃時)
+const int STATE_CHANGE_ATTACK_1 = 300;	// 状態変化カウンタ(攻撃時)
+
+const int LIFE_PHASE_1 = 8000;			// ライフ段階1
 
 /*******************************************************************************
 * グローバル変数
@@ -160,9 +165,6 @@ void CBossEnemy::Update(void)
 		m_Pos.y = field;
 	}
 	m_TargetPos = m_Pos + Vector3(0.0f, 250.0f, 0.0f);
-
-	/* 回転角の更新 */
-	//m_RotN.y = camera->m_Rot.y + D3DX_PI;	// TPS視点
 
 	// 索敵処理
 	CScene *scene = CScene::GetList(DRAWORDER_3D);
@@ -306,20 +308,19 @@ void CBossEnemy::UpdateState(void)
 {
 	CScene *scene = CScene::GetList(DRAWORDER_3D);
 	CScene *next = NULL;
+	// 状態カウンタの更新
 	m_nStateCnt++;
 	switch (m_State)
 	{
 	case STATE_NORMAL:
 		m_MotionManager->SetMotion(0);
-		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		m_MotionManager->SetModelColFlgAll(false);
 		// バリア(透明)をセット
 		m_pBarrier->Set(m_TargetPos, 0.0f);
 		if (m_nStateCnt > STATE_CHANGE)
 		{
 			if (m_bSearch)
 			{// 索敵フラグがtrue
-				SetState(STATE_ATTACK);
+				SetState(STATE_ATTACK_0);
 			}
 			else
 			{// 索敵フラグがfalse
@@ -329,18 +330,16 @@ void CBossEnemy::UpdateState(void)
 		break;
 	case STATE_DAMAGE:
 		m_MotionManager->SetMotion(0);
-		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 		if (m_nStateCnt >= DAMAGE_CNT)
 		{
 			SetState(STATE_NORMAL);
 		}
 		break;
-	case STATE_ATTACK:
+	case STATE_ATTACK_0:
 		m_MotionManager->SetMotion(1);
 		m_nAttCnt++;
-		if (m_nAttCnt > ATTACK_CNT)
+		if ((m_nAttCnt % ATTACK_CNT) == 0)
 		{
-			m_nAttCnt = 0;
 			scene = CScene::GetList(DRAWORDER_3D);
 			next = NULL;
 			while (scene != NULL)
@@ -356,11 +355,27 @@ void CBossEnemy::UpdateState(void)
 				scene = next;
 			}
 		}
-		if (m_nStateCnt >= STATE_CHANGE_ATTACK)
+		if (m_nStateCnt >= STATE_CHANGE_ATTACK_0)
+		{
+			if (m_nLife <= LIFE_PHASE_1)
+			{
+				CChargeEffect::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f);
+				SetState(STATE_ATTACK_1);
+			}
+			else
+			{
+				// ガード状態に移行
+				SetState(STATE_GUARD);
+			}
+		}
+		break;
+	case STATE_ATTACK_1:
+		m_MotionManager->SetMotion(1);
+		m_nAttCnt++;
+		if (m_nStateCnt >= STATE_CHANGE_ATTACK_1)
 		{
 			// ガード状態に移行
 			SetState(STATE_GUARD);
-			m_nAttCnt = 0;
 		}
 		break;
 	case STATE_GUARD:

@@ -85,6 +85,7 @@
     <ClCompile Include="bossEnemy.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="chargeEffect.cpp" />
     <ClCompile Include="debugProc.cpp" />
     <ClCompile Include="diffusionBullet.cpp" />
     <ClCompile Include="dynamicModel.cpp" />
@@ -98,12 +99,14 @@
     <ClCompile Include="field.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="lazer.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="load.cpp" />
     <ClCompile Include="logo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
+    <ClCompile Include="meshCylinder.cpp" />
     <ClCompile Include="meshField.cpp" />
     <ClCompile Include="mode.cpp" />
     <ClCompile Include="model.cpp" />
@@ -142,6 +145,7 @@
     <ClInclude Include="bossEnemy.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="chargeEffect.h" />
     <ClInclude Include="debugProc.h" />
     <ClInclude Include="diffusionBullet.h" />
     <ClInclude Include="dynamicModel.h" />
@@ -155,12 +159,14 @@
     <ClInclude Include="field.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="lazer.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="load.h" />
     <ClInclude Include="logo.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="meshCylinder.h" />
     <ClInclude Include="meshField.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="model.h" />

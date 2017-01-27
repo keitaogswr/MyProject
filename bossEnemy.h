@@ -35,6 +35,17 @@ class CBarrier;
 class CBossEnemy : public CEnemy
 {
 public:
+	typedef enum
+	{
+		STATE_NORMAL,		// ’Êí
+		STATE_MOVE,			// ˆÚ“®
+		STATE_ATTACK_0,		// UŒ‚1
+		STATE_ATTACK_1,		// UŒ‚2
+		STATE_DAMAGE,		// ”í’e
+		STATE_DEATH,		// €–S
+		STATE_GUARD,		// ƒK[ƒh
+		STATE_MAX
+	}STATE;
 	CBossEnemy(DRAWORDER DrawOrder = DRAWORDER_3D, OBJTYPE ObjType = OBJTYPE_ENEMY);
 	~CBossEnemy();
 	void Init(Vector3 pos);

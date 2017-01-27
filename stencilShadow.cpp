@@ -123,7 +123,7 @@ void CStencilShadow::Init(Vector3 pos)
 		for (int nCntColumn = m_nColumnNumVtx - 1; nCntColumn >= 0; nCntColumn--, nIdxCnt++)
 		{
 			pVtx[nIdxCnt].pos.x = sinf(-D3DX_PI + 360.0f / m_nColumnBlock * RAD * nCntColumn) * m_fRadius;
-			pVtx[nIdxCnt].pos.y = m_fHeight * (m_nRowBlock - nCntRow - 0.5f);
+			pVtx[nIdxCnt].pos.y = m_fHeight * (m_nRowBlock * 0.5f - nCntRow);
 			pVtx[nIdxCnt].pos.z = cosf(-D3DX_PI + 360.0f / m_nColumnBlock * RAD * nCntColumn) * m_fRadius;
 		}
 	}
@@ -469,7 +469,7 @@ void CStencilShadow::SetVertex(void)
 		for (int nCntColumn = m_nColumnNumVtx - 1; nCntColumn >= 0; nCntColumn--, nIdxCnt++)
 		{
 			pVtx[nIdxCnt].pos.x = sinf(-D3DX_PI + 360.0f / m_nColumnBlock * RAD * nCntColumn) * m_fRadius;
-			pVtx[nIdxCnt].pos.y = m_fHeight * (m_nRowBlock - nCntRow - 0.5f);
+			pVtx[nIdxCnt].pos.y = m_fHeight * (m_nRowBlock * 0.5f - nCntRow);
 			pVtx[nIdxCnt].pos.z = cosf(-D3DX_PI + 360.0f / m_nColumnBlock * RAD * nCntColumn) * m_fRadius;
 		}
 	}
