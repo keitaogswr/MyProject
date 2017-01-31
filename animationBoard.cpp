@@ -363,7 +363,6 @@ void CAnimationBoard::SetRenderStateEnd(void)
 	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
 	// アルファテストのOFF
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 	// ZテストのOFF
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);

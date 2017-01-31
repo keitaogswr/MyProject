@@ -337,7 +337,7 @@ void CMeshCylinder::SetRenderStateBegin(void)
 	// アルファテストのON
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 50);
 }
 
 /*******************************************************************************

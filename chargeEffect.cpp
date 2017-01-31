@@ -173,7 +173,7 @@ void CChargeEffect::SetRenderStateBegin(void)
 	pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
 	// アルファテストのON
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
 }
 
@@ -196,9 +196,7 @@ void CChargeEffect::SetRenderStateEnd(void)
 	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
 	// アルファテストのOFF
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 	// ZテストのOFF
 	pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 }

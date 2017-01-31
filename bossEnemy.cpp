@@ -192,6 +192,14 @@ void CBossEnemy::Update(void)
 		}
 		scene = next;
 	}
+#ifdef _DEBUG
+	if (CInput::GetKeyboardTrigger(DIK_B))
+	{
+		// ˆÚs
+		CChargeEffect::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f);
+		SetState(STATE_ATTACK_1);
+	}
+#endif
 
 	// –Ú“I‚ÌŠp“x‚Ì•â³
 	CManager::CheckRot(&m_RotN.y);
