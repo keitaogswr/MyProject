@@ -332,12 +332,6 @@ void CMeshCylinder::SetRenderStateBegin(void)
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	// フォグのOFF
 	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
-	// ZテストのOFF
-	pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
-	// アルファテストのON
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 50);
 }
 
 /*******************************************************************************
