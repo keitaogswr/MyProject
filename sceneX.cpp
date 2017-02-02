@@ -45,6 +45,7 @@ CSceneX::CSceneX( DRAWORDER DrawOrder, OBJTYPE ObjType ):CScene( DrawOrder, ObjT
 {
 	m_Scl = D3DXVECTOR3( 1.0f, 1.0f, 1.0f );
 	m_Texture = NULL;
+	m_fCollision = 0.0f;
 }
 
 /*******************************************************************************
@@ -193,4 +194,51 @@ CSceneX *CSceneX::Create( Vector3 pos )
 	sceneX = new CSceneX;
 	sceneX->Init( pos );
 	return sceneX;
+}
+
+/*******************************************************************************
+* 関数名：void CMeshCylinder::SetWorldMatrix( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：ワールドマトリックス設定処理
+*******************************************************************************/
+void CSceneX::SetWorldMatrix(void)
+{
+	/* 変数定義 */
+	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
+
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
+
+	// スケールを反映
+	D3DXMatrixScaling(&mtxScl,
+		m_Scl.x,
+		m_Scl.y,
+		m_Scl.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxScl);
+
+	// 回転を反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot,
+		m_Rot.y,
+		m_Rot.x,
+		m_Rot.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxRot);
+
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans,
+		m_Pos.x,
+		m_Pos.y,
+		m_Pos.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxTrans);
 }

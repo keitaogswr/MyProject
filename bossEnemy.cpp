@@ -37,6 +37,7 @@
 #include "input.h"
 #include "chargeEffect.h"
 #include "meshCylinder.h"
+#include "lazer.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -80,6 +81,7 @@ CBossEnemy::CBossEnemy(DRAWORDER DrawOrder, OBJTYPE ObjType) :CEnemy(DrawOrder, 
 	m_nLife = LIFE_MAX;
 	m_fCollisionLength = COLLISION_LENGTH;
 	m_pBarrier = NULL;
+	m_pCharge = NULL;
 	m_State = STATE_NORMAL;
 }
 
@@ -196,7 +198,7 @@ void CBossEnemy::Update(void)
 	if (CInput::GetKeyboardTrigger(DIK_B))
 	{
 		// 移行
-		CChargeEffect::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f);
+		m_pCharge = CChargeEffect::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f);
 		SetState(STATE_ATTACK_1);
 	}
 #endif
@@ -364,10 +366,10 @@ void CBossEnemy::UpdateState(void)
 			}
 		}
 		if (m_nStateCnt >= STATE_CHANGE_ATTACK_0)
-		{
+		{// 規定の時間が経過したら行動変化
 			if (m_nLife <= LIFE_PHASE_1)
-			{
-				CChargeEffect::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f);
+			{// ライフが一定以下だったら
+				m_pCharge = CChargeEffect::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f);
 				SetState(STATE_ATTACK_1);
 			}
 			else
@@ -380,6 +382,16 @@ void CBossEnemy::UpdateState(void)
 	case STATE_ATTACK_1:
 		m_MotionManager->SetMotion(1);
 		m_nAttCnt++;
+		if (m_pCharge)
+		{// チャージしていたら
+			if ((m_nAttCnt % 140) == 0)
+			{
+				SetWorldMatrix();
+				CLazer::Create(m_TargetPos, Vector3(-D3DX_PI * 0.8f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 0.5f, 0.5f, 0.5f), 100.0f, &m_MtxWorld);
+				m_pCharge = NULL;
+			}
+		}
+			
 		if (m_nStateCnt >= STATE_CHANGE_ATTACK_1)
 		{
 			// ガード状態に移行

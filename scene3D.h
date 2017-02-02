@@ -35,12 +35,15 @@
 class CScene3D : public CScene
 {
 	protected:
-		LPDIRECT3DTEXTURE9	*m_pTexture;			// テクスチャへのポインタ
+		LPDIRECT3DTEXTURE9	*m_pTexture;		// テクスチャへのポインタ
 		LPDIRECT3DVERTEXBUFFER9 m_VtxBuff;		// 頂点バッファへのポインタ
 
 		D3DXVECTOR3 m_Scl;						// スケール値
 		D3DXVECTOR3 m_Trans;					// 平行移動
 		D3DXMATRIX m_MtxWorld;					// ワールドマトリックス
+
+		virtual void SetRenderStateBegin(void) {}	// レンダラーステート設定開始
+		virtual void SetRenderStateEnd(void) {}		// レンダラーステート設定終了
 	public:
 		CScene3D( DRAWORDER DrawOrder = DRAWORDER_3D, OBJTYPE ObjType = OBJTYPE_NONE );
 		~CScene3D();
@@ -49,10 +52,9 @@ class CScene3D : public CScene
 		void Update(void);
 		void Draw(void);
 
-		void SetRenderStateBegin(void) {}
-		void SetRenderStateEnd(void) {}
-
 		static CScene3D *Create( Vector3 pos );
+
+		virtual void SetWorldMatrix(void);			// ワールドマトリックス設定
 };
 
 #endif

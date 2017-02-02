@@ -226,3 +226,50 @@ CScene3D *CScene3D::Create( Vector3 pos )
 	scene3D->Init( pos );
 	return scene3D;
 }
+
+/*******************************************************************************
+* 関数名：void CScene3D::SetWorldMatrix( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：ワールドマトリックス設定処理
+*******************************************************************************/
+void CScene3D::SetWorldMatrix(void)
+{
+	/* 変数定義 */
+	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
+
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
+
+	// スケールを反映
+	D3DXMatrixScaling(&mtxScl,
+		m_Scl.x,
+		m_Scl.y,
+		m_Scl.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxScl);
+
+	// 回転を反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot,
+		m_Rot.y,
+		m_Rot.x,
+		m_Rot.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxRot);
+
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans,
+		m_Pos.x,
+		m_Pos.y,
+		m_Pos.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxTrans);
+}

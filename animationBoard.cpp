@@ -336,7 +336,7 @@ void CAnimationBoard::SetRenderStateBegin(void)
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	// アルファテストのON
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 50);
 	// 加算合成によるアルファブレンドのレンダーステートの設定
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
@@ -363,7 +363,8 @@ void CAnimationBoard::SetRenderStateEnd(void)
 	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
 	// アルファテストのOFF
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	// ZテストのOFF
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
+	// ZテストのON
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 	// 元のアルファブレンドの設定に戻す

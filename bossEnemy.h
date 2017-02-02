@@ -28,6 +28,7 @@
 * ‘O•ûéŒ¾
 *******************************************************************************/
 class CBarrier;
+class CChargeEffect;
 
 /*******************************************************************************
 * ƒNƒ‰ƒXéŒ¾
@@ -55,6 +56,7 @@ public:
 	static CBossEnemy *Create(Vector3 pos);
 protected:
 	CBarrier *m_pBarrier;
+	CChargeEffect *m_pCharge;
 	void SetBullet(CScene *scene);
 	void UpdateState(void);
 };

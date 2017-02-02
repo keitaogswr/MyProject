@@ -45,6 +45,8 @@ class CSceneX : public CScene
 
 		LPDIRECT3DTEXTURE9	m_Texture;			// テクスチャ情報
 
+		float m_fCollision;						// 当たり判定距離
+
 		char *m_ModelFileName;
 	public:
 		CSceneX( DRAWORDER DrawOrder = DRAWORDER_3D, OBJTYPE ObjType = OBJTYPE_NONE );
@@ -55,6 +57,9 @@ class CSceneX : public CScene
 		void Draw( void );
 
 		static CSceneX *Create( Vector3 pos );
+
+		virtual void SetWorldMatrix(void);			// ワールドマトリックス設定
+		float GetCollision(void) { return m_fCollision; }
 };
 
 #endif

@@ -176,7 +176,6 @@ void CChargeEffect::SetRenderStateBegin(void)
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 50);
-
 	// 加算合成によるアルファブレンドのレンダーステートの設定
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -203,7 +202,7 @@ void CChargeEffect::SetRenderStateEnd(void)
 	// アルファテストのOFF
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
-	// ZテストのOFF
+	// ZテストのON
 	pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);

@@ -93,12 +93,16 @@ class CScene
 
 		void SetObjType( OBJTYPE type ){ m_ObjType = type; }
 		OBJTYPE GetObjType( void ){ return m_ObjType; }
-		//int GetTexType( void ){ return m_nTexType;}
 		
 		void SetDrawOrder( DRAWORDER type ){ m_DrawOrder = type; }
 		void SetDeleteFlg(bool flg) { m_Delete = flg; }
+		bool GetDeleteFlg(void) { return m_Delete; }
 		void SetPauseFlg(bool flg) { m_bPause = flg; }
 		void SetDrawFlg(bool flg) { m_bDraw = flg; }
+
+		virtual float GetCollision(void) { return NULL; }
+		virtual void SetDamage(int damage){}
+		virtual void SetKeep(int keep){}
 
 		CScene *m_Prev;			// 前のポインタ
 		CScene *m_Next;			// 次のポインタ

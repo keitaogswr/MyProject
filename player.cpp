@@ -69,6 +69,8 @@ const int LIFE_MAX = 1000;
 const int EXPLOSION_CNT = 30;
 const int KEEP_MAX = 30;
 
+const float COLLISION = 40.0f;
+
 /*******************************************************************************
 * ÉOÉçÅ[ÉoÉãïœêî
 *******************************************************************************/
@@ -96,6 +98,7 @@ CPlayer::CPlayer(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder,
 	m_TargetPos = Vector3(0.0f, 0.0f, 0.0f);
 	m_nExplosionCnt = 0;
 	m_nKeep = KEEP_MAX;
+	m_fCollision = COLLISION;
 }
 
 /*******************************************************************************
@@ -838,7 +841,7 @@ void CPlayer::Operate(void)
 *******************************************************************************/
 void CPlayer::UpdateMode(void)
 {
-	CGame *game = (CGame*)CManager::GetMode();
+	CGame *game = dynamic_cast<CGame*>(CManager::GetMode());
 	CCamera *camera = game->GetCamera();
 	CMeshField *meshField = game->GetMeshField();
 	float field = meshField->GetHeight(m_Pos);

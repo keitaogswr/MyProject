@@ -205,6 +205,19 @@ float Vector3::Length(void)
 	return length;
 }
 
+//-----------------------------------------------------------------------
+// Name : Length()
+// Desc : 長さを求める
+//-----------------------------------------------------------------------
+float Vector3::LengthSq(void)
+{
+	float length;
+
+	length = this->x * this->x + this->y * this->y + this->z * this->z;
+
+	return length;
+}
+
 // Vector2
 // コンストラクタ
 Vector2::Vector2(float x, float y)
@@ -379,6 +392,19 @@ float Vector2::Length(void)
 	float length;
 
 	length = sqrtf(this->x * this->x + this->y * this->y);
+
+	return length;
+}
+
+//-----------------------------------------------------------------------
+// Name : Length()
+// Desc : 長さを求める
+//-----------------------------------------------------------------------
+float Vector2::LengthSq(void)
+{
+	float length;
+
+	length = this->x * this->x + this->y * this->y;
 
 	return length;
 }

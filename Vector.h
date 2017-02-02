@@ -58,6 +58,7 @@ public:
 	operator const float* () const;
 
 	float Length(void);
+	float LengthSq(void);
 };
 
 class Vector2 : public D3DXVECTOR2
@@ -92,6 +93,7 @@ public:
 	operator const float* () const;
 
 	float Length(void);
+	float LengthSq(void);
 };
 
 #endif
