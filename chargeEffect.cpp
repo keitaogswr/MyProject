@@ -55,6 +55,8 @@ CChargeEffect::CChargeEffect(DRAWORDER DrawOrder, OBJTYPE ObjType) : CAnimationB
 {
 	m_nTexColumn = TEXTURE_COLUMN;
 	m_nTexRow = TEXTURE_ROW;
+	m_pParentMtx = NULL;
+	m_PosOffset = Vector3(0.0f, 0.0f, 0.0f);
 }
 
 /*******************************************************************************
@@ -75,12 +77,14 @@ CChargeEffect::~CChargeEffect()
 * 戻り値：
 * 説明	：初期化処理
 *******************************************************************************/
-void CChargeEffect::Init(Vector3 pos, D3DXCOLOR col, float width, float height)
+void CChargeEffect::Init(Vector3 pos, D3DXCOLOR col, float width, float height, D3DXMATRIX *matrix)
 {
 	m_Pos = pos;
+	m_PosOffset = pos;
 	m_Col = col;
 	m_fWidth = width;
 	m_fHeight = height;
+	m_pParentMtx = matrix;
 
 	// デバイスの取得
 	CRenderer *renderer = CManager::GetRenderer();
@@ -114,6 +118,12 @@ void CChargeEffect::Init(Vector3 pos, D3DXCOLOR col, float width, float height)
 *******************************************************************************/
 void CChargeEffect::Update(void)
 {
+	// 座標変換
+	if (m_pParentMtx)
+	{
+		D3DXVec3TransformCoord(&m_Pos, &m_PosOffset, m_pParentMtx);
+	}
+	
 	// パターン描画更新
 	m_nCntAnim++;
 	if ((m_nCntAnim % DRAW_SPEED) == 0)
@@ -137,18 +147,18 @@ void CChargeEffect::Update(void)
 }
 
 /*******************************************************************************
-* 関数名：CChargeEffect *CChargeEffect::Create(Vector3 pos, D3DXCOLOR col, float width, float height)
+* 関数名：CChargeEffect *CChargeEffect::Create(Vector3 pos, D3DXCOLOR col, float width, float height, D3DXMATRIX matrix)
 *
 * 引数	：
 * 戻り値：
 * 説明	：生成処理
 *******************************************************************************/
-CChargeEffect *CChargeEffect::Create(Vector3 pos, D3DXCOLOR col, float width, float height)
+CChargeEffect *CChargeEffect::Create(Vector3 pos, D3DXCOLOR col, float width, float height, D3DXMATRIX *matrix)
 {
 	CChargeEffect *effect;
 	effect = new CChargeEffect;
 
-	effect->Init(pos, col, width, height);
+	effect->Init(pos, col, width, height, matrix);
 	return effect;
 }
 
@@ -211,4 +221,49 @@ void CChargeEffect::SetRenderStateEnd(void)
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+}
+
+/*******************************************************************************
+* 関数名：void CMeshCylinder::SetWorldMatrix( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：ワールドマトリックス設定処理
+*******************************************************************************/
+void CChargeEffect::SetWorldMatrix(void)
+{
+	/* 変数定義 */
+	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
+	D3DXMATRIX mtxView;
+
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
+
+	// ビューマトリックスを取得
+	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+
+	// ビューマトリックスの逆行列を求める
+	D3DXMatrixInverse(&m_MtxWorld,
+		NULL,
+		&mtxView);
+
+	// マトリクスの移動に関する変数クリア
+	m_MtxWorld._41 = 0.0f;
+	m_MtxWorld._42 = 0.0f;
+	m_MtxWorld._43 = 0.0f;
+
+	// スケールを反映
+	D3DXMatrixScaling(&mtxScl, m_Scl.x, m_Scl.y, m_Scl.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxScl);
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxTrans);
 }

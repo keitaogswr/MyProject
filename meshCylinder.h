@@ -67,5 +67,6 @@ public:
 	static CMeshCylinder *Create(Vector3 pos, Vector3 rot, D3DXCOLOR col, float radius, D3DXMATRIX* matrix);
 
 	virtual void SetWorldMatrix(void);				// ワールドマトリックス設定
+	void SetRadiusNext(float radius) { m_fRadiusN = radius; }
 };
 

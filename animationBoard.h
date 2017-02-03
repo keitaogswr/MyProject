@@ -55,5 +55,7 @@ public:
 	virtual void SetRenderStateEnd(void);
 
 	static CAnimationBoard *Create(Vector3 pos, D3DXCOLOR col, float width, float height);
+
+	virtual void SetWorldMatrix(void);				// ワールドマトリックス設定
 };
 

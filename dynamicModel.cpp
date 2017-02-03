@@ -35,8 +35,8 @@
 #define MOVE_SPEED		( 1.0f )		// ˆÚ“®—Ê
 #define ROT_SPEED		( 0.05f )		// ‰ñ“]—Ê
 
-#define ROT_ATEEN		( 0.1f )		// ‰ñ“]—ÊŒ¸ŠŒW”
-#define MOVE_ATEEN		( 0.15f )		// ˆÚ“®—ÊŒ¸ŠŒW”
+#define ROT_ATTEN		( 0.1f )		// ‰ñ“]—ÊŒ¸ŠŒW”
+#define MOVE_ATTEN		( 0.15f )		// ˆÚ“®—ÊŒ¸ŠŒW”
 
 /*******************************************************************************
 * ƒOƒ[ƒoƒ‹•Ï”

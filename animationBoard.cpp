@@ -196,7 +196,6 @@ void CAnimationBoard::Draw(void)
 {
 	/* 変数定義 */
 	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
-	D3DXMATRIX mtxView;
 
 	// デバイスの取得
 	CRenderer *renderer = CManager::GetRenderer();
@@ -208,34 +207,10 @@ void CAnimationBoard::Draw(void)
 	// 各種設定 /////
 	SetRenderStateBegin();
 
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_MtxWorld);
-
-	// ビューマトリックスを取得
-	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
-
-	// ビューマトリックスの逆行列を求める
-	D3DXMatrixInverse(&m_MtxWorld,
-		NULL,
-		&mtxView);
-
-	// マトリクスの移動に関する変数クリア
-	m_MtxWorld._41 = 0.0f;
-	m_MtxWorld._42 = 0.0f;
-	m_MtxWorld._43 = 0.0f;
-
-	// スケールを反映
-	D3DXMatrixScaling(&mtxScl, m_Scl.x, m_Scl.y, m_Scl.z);
-	D3DXMatrixMultiply(&m_MtxWorld,
-		&m_MtxWorld,
-		&mtxScl);
-	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
-	D3DXMatrixMultiply(&m_MtxWorld,
-		&m_MtxWorld,
-		&mtxTrans);
-
 	// ワールドマトリックスを設定
+	SetWorldMatrix();
+
+	// ワールドマトリックスをバインド
 	pDevice->SetTransform(D3DTS_WORLD, &m_MtxWorld);
 
 	// ストリームにバインド
@@ -371,4 +346,49 @@ void CAnimationBoard::SetRenderStateEnd(void)
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+}
+
+/*******************************************************************************
+* 関数名：void CAnimationBoard::SetWorldMatrix( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：ワールドマトリックス設定処理
+*******************************************************************************/
+void CAnimationBoard::SetWorldMatrix(void)
+{
+	/* 変数定義 */
+	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
+	D3DXMATRIX mtxView;
+
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
+
+	// ビューマトリックスを取得
+	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+
+	// ビューマトリックスの逆行列を求める
+	D3DXMatrixInverse(&m_MtxWorld,
+		NULL,
+		&mtxView);
+
+	// マトリクスの移動に関する変数クリア
+	m_MtxWorld._41 = 0.0f;
+	m_MtxWorld._42 = 0.0f;
+	m_MtxWorld._43 = 0.0f;
+
+	// スケールを反映
+	D3DXMatrixScaling(&mtxScl, m_Scl.x, m_Scl.y, m_Scl.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxScl);
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxTrans);
 }

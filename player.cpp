@@ -53,8 +53,8 @@
 #define ROT_SPEED				( 0.05f )		// 回転量
 #define ROT_AGREE				( 0.05f )
 
-#define ROT_ATEEN				( 0.3f )		// 回転量減衰係数
-#define MOVE_ATEEN				( 0.08f )		// 移動量減衰係数
+#define ROT_ATTEN				( 0.3f )		// 回転量減衰係数
+#define MOVE_ATTEN				( 0.08f )		// 移動量減衰係数
 
 #define SEARCH_LENG				( 1500 )		// ロックオン距離
 
@@ -178,9 +178,9 @@ void CPlayer::Update(void)
 
 	/* 移動量、位置の更新 */
 	// 移動量の減衰
-	m_Move.x += (0.0f - m_Move.x) * MOVE_ATEEN;
-	//m_Move.y += (0.0f - m_Move.y) * MOVE_ATEEN;
-	m_Move.z += (0.0f - m_Move.z) * MOVE_ATEEN;
+	m_Move.x += (0.0f - m_Move.x) * MOVE_ATTEN;
+	//m_Move.y += (0.0f - m_Move.y) * MOVE_ATTEN;
+	m_Move.z += (0.0f - m_Move.z) * MOVE_ATTEN;
 
 	// 接触している地面の法線を取得
 	Vector3 normal = meshField->GetNormal(&m_Pos);
@@ -261,8 +261,8 @@ void CPlayer::Update(void)
 	m_Rad.y = m_RotN.y - m_Rot.y;
 	CManager::CheckRot(&m_Rad);
 	// 向きを更新
-	m_Rot.x += m_Rad.x * ROT_ATEEN;
-	m_Rot.y += m_Rad.y * ROT_ATEEN;
+	m_Rot.x += m_Rad.x * ROT_ATTEN;
+	m_Rot.y += m_Rad.y * ROT_ATTEN;
 	CManager::CheckRot(&m_Rot);
 
 	/* 仰け反り耐久値の更新 */

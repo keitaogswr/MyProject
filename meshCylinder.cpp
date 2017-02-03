@@ -23,9 +23,9 @@
 * ƒ}ƒNƒ’è‹`
 *******************************************************************************/
 const float MAGNI = 0.005f;			// ‚‚³‚É‚æ‚é‰e‚Ì”{—¦
-const float RADIUS_ATEEN = 0.01f;	// ”¼Œa‚ÌŠµ«Œ¸ŠŒW”
+const float RADIUS_ATTEN = 0.05f;	// ”¼Œa‚ÌŠµ«Œ¸ŠŒW”
 const float HEIGHT = 5000.0f;		// ‚‚³
-const float HEIGHT_ATEEN = 0.1f;	// ‚‚³‚ÌŠµ«Œ¸ŠŒW”
+const float HEIGHT_ATTEN = 0.1f;	// ‚‚³‚ÌŠµ«Œ¸ŠŒW”
 const float ROT_ATTEN = 0.05f;		// ‰ñ“]‚ÌŠµ«Œ¸ŠŒW”
 
 /*******************************************************************************
@@ -204,8 +204,8 @@ void CMeshCylinder::Uninit(void)
 *******************************************************************************/
 void CMeshCylinder::Update(void)
 {
-	m_fRadius += (m_fRadiusN - m_fRadius) * RADIUS_ATEEN;
-	m_fHeight += (m_fHeightN - m_fHeight) * HEIGHT_ATEEN;
+	m_fRadius += (m_fRadiusN - m_fRadius) * RADIUS_ATTEN;
+	m_fHeight += (m_fHeightN - m_fHeight) * HEIGHT_ATTEN;
 	m_Rot.x += (-D3DX_PI * 0.55f - m_Rot.x) * ROT_ATTEN;
 	//m_Rot.x += 0.1f;
 	SetVertex();

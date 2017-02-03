@@ -56,8 +56,11 @@ public:
 	static CBossEnemy *Create(Vector3 pos);
 protected:
 	CBarrier *m_pBarrier;
-	CChargeEffect *m_pCharge;
+
 	void SetBullet(CScene *scene);
 	void UpdateState(void);
+	void UpdateRot(void);
+	void SetCharge(void);
+	void SetLazer(void);
 };
 

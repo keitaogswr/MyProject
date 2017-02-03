@@ -34,16 +34,16 @@
 #define DISTANCE	( 150.0f )				// カメラ視点と注視点の初期距離
 #define HEIGHT		( 35.0f )				// カメラ視点の初期高さ
 
-#define ROT_ATEEN			( 0.1f )		// カメラの回転減衰係数
-#define MOVE_ATEEN_V		( 0.05f )		// 視点の速度減衰係数
-#define MOVE_ATEEN_R		( 0.05f )		// 注視点の速度減衰係数
+#define ROT_ATTEN			( 0.1f )		// カメラの回転減衰係数
+#define MOVE_ATTEN_V		( 0.05f )		// 視点の速度減衰係数
+#define MOVE_ATTEN_R		( 0.05f )		// 注視点の速度減衰係数
 #define MOVE_COEFF_V		( 15.0f )		// 視点移動距離の倍率係数
 #define MOVE_COEFF_R		( 8.0f )		// 注視点移動距離の倍率係数
 
 #define TPS_ANGLE			( 0.3f )		// TPSモード時のカメラの位置角度
-#define ROT_TPS_ATEEN		( 0.1f )		// カメラの回転減衰係数(TPS)
-//#define MOVE_TPS_ATEEN_V	( 0.15f )		// 視点の速度減衰係数(TPS)
-//#define MOVE_TPS_ATEEN_R	( 0.15f )		// 注視点の速度減衰係数(TPS)
+#define ROT_TPS_ATTEN		( 0.1f )		// カメラの回転減衰係数(TPS)
+//#define MOVE_TPS_ATTEN_V	( 0.15f )		// 視点の速度減衰係数(TPS)
+//#define MOVE_TPS_ATTEN_R	( 0.15f )		// 注視点の速度減衰係数(TPS)
 //#define MOVE_TPS_COEFF_V	( 8.0f )		// 視点移動距離の倍率係数(TPS)
 //#define MOVE_TPS_COEFF_R	( 4.0f )		// 注視点移動距離の倍率係数(TPS)
 

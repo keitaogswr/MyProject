@@ -35,18 +35,18 @@
 #define DISTANCE_V	( 220.0f )				// カメラ視点と初期距離
 #define HEIGHT		( 50.0f )				// カメラ視点の初期高さ
 
-#define ROT_ATEEN			( 0.1f )		// カメラの回転減衰係数
-#define MOVE_ATEEN_V		( 0.05f )		// 視点の速度減衰係数
-#define MOVE_ATEEN_R		( 0.05f )		// 注視点の速度減衰係数
+#define ROT_ATTEN			( 0.1f )		// カメラの回転減衰係数
+#define MOVE_ATTEN_V		( 0.05f )		// 視点の速度減衰係数
+#define MOVE_ATTEN_R		( 0.05f )		// 注視点の速度減衰係数
 #define MOVE_COEFF_V		( 15.0f )		// 視点移動距離の倍率係数
 #define MOVE_COEFF_R		( 8.0f )		// 注視点移動距離の倍率係数
-#define ROT_ATEEN_ROCKON	( 0.5f )		// カメラの回転減衰係数(ロックオンモード時)
-#define MOVE_ATEEN_R_ROCKON	( 0.4f )		// 注視点の速度減衰係数(ロックオンモード時)
+#define ROT_ATTEN_ROCKON	( 0.5f )		// カメラの回転減衰係数(ロックオンモード時)
+#define MOVE_ATTEN_R_ROCKON	( 0.4f )		// 注視点の速度減衰係数(ロックオンモード時)
 
 #define TPS_ANGLE			( 0.3f )		// TPSモード時のカメラの位置角度
-#define ROT_TPS_ATEEN		( 0.1f )		// カメラの回転減衰係数(TPS)
-//#define MOVE_TPS_ATEEN_V	( 0.15f )		// 視点の速度減衰係数(TPS)
-//#define MOVE_TPS_ATEEN_R	( 0.15f )		// 注視点の速度減衰係数(TPS)
+#define ROT_TPS_ATTEN		( 0.1f )		// カメラの回転減衰係数(TPS)
+//#define MOVE_TPS_ATTEN_V	( 0.15f )		// 視点の速度減衰係数(TPS)
+//#define MOVE_TPS_ATTEN_R	( 0.15f )		// 注視点の速度減衰係数(TPS)
 //#define MOVE_TPS_COEFF_V	( 8.0f )		// 視点移動距離の倍率係数(TPS)
 //#define MOVE_TPS_COEFF_R	( 4.0f )		// 注視点移動距離の倍率係数(TPS)
 
@@ -205,16 +205,16 @@ void CCamera::Update( void )
 		// 回転角の更新
 		rad = m_RotN - m_Rot;
 		CManager::CheckRot(&rad);	// 円周率チェック
-		m_Rot += rad * ROT_ATEEN;
+		m_Rot += rad * ROT_ATTEN;
 		CManager::CheckRot(&m_Rot); // 円周率チェック
 
 		// 注視点移動量の更新
 		// 速度によって次の目的地を伸ばす
 		m_MoveR.x = (move.x * MOVE_COEFF_V + pos.x
-			- sinf(m_Rot.y + D3DX_PI) * DISTANCE_R - m_PosR.x) * MOVE_ATEEN_R;
-		m_MoveR.y = (pos.y + HEIGHT - m_PosR.y) * MOVE_ATEEN_R;
+			- sinf(m_Rot.y + D3DX_PI) * DISTANCE_R - m_PosR.x) * MOVE_ATTEN_R;
+		m_MoveR.y = (pos.y + HEIGHT - m_PosR.y) * MOVE_ATTEN_R;
 		m_MoveR.z = (move.z * MOVE_COEFF_V + pos.z
-			- cosf(m_Rot.y + D3DX_PI) * DISTANCE_R - m_PosR.z) * MOVE_ATEEN_R;
+			- cosf(m_Rot.y + D3DX_PI) * DISTANCE_R - m_PosR.z) * MOVE_ATTEN_R;
 
 		// 注視点の位置更新
 		m_PosR.x += m_MoveR.x;
@@ -226,10 +226,10 @@ void CCamera::Update( void )
 
 		// 視点移動量の更新
 		m_MoveV.x = ((move.x * MOVE_COEFF_R + pos.x
-			- sinf(radTps) * DISTANCE_V) - m_Pos.x) * MOVE_ATEEN_V;
-		m_MoveV.y = (pos.y + HEIGHT - m_Pos.y) * MOVE_ATEEN_R;
+			- sinf(radTps) * DISTANCE_V) - m_Pos.x) * MOVE_ATTEN_V;
+		m_MoveV.y = (pos.y + HEIGHT - m_Pos.y) * MOVE_ATTEN_R;
 		m_MoveV.z = ((move.z * MOVE_COEFF_R + pos.z
-			- cosf(radTps) * DISTANCE_V) - m_Pos.z) * MOVE_ATEEN_V;
+			- cosf(radTps) * DISTANCE_V) - m_Pos.z) * MOVE_ATTEN_V;
 
 		// 視点位置の更新
 		m_Pos.x += m_MoveV.x;
@@ -244,16 +244,16 @@ void CCamera::Update( void )
 		CManager::CheckRot(&m_RotN);	// 円周率チェック
 		rad = m_RotN - m_Rot;
 		CManager::CheckRot(&rad);		// 円周率チェック
-		m_Rot += rad * ROT_ATEEN;
+		m_Rot += rad * ROT_ATTEN;
 		CManager::CheckRot(&m_Rot);		// 円周率チェック
 
 		// ターゲットの位置取得
 		targetPos = player->GetTargetPos();
 		// 注視点移動量の更新
 		// 速度によって次の目的地を伸ばす
-		m_MoveR.x = (targetPos.x - m_PosR.x) * MOVE_ATEEN_R_ROCKON;
-		m_MoveR.y = (targetPos.y - m_PosR.y) * MOVE_ATEEN_R_ROCKON;
-		m_MoveR.z = (targetPos.z - m_PosR.z) * MOVE_ATEEN_R_ROCKON;
+		m_MoveR.x = (targetPos.x - m_PosR.x) * MOVE_ATTEN_R_ROCKON;
+		m_MoveR.y = (targetPos.y - m_PosR.y) * MOVE_ATTEN_R_ROCKON;
+		m_MoveR.z = (targetPos.z - m_PosR.z) * MOVE_ATTEN_R_ROCKON;
 
 		// 注視点の位置更新
 		m_PosR.x += m_MoveR.x;
@@ -264,9 +264,9 @@ void CCamera::Update( void )
 		CManager::CheckRot(&radTps); // 円周率チェック
 
 		// 視点移動量の更新
-		m_MoveV.x = ((pos.x - DISTANCE_V * sinf(radTps)) - m_Pos.x) * ROT_ATEEN_ROCKON;
-		m_MoveV.y = (pos.y + HEIGHT - m_Pos.y) * ROT_ATEEN_ROCKON;
-		m_MoveV.z = ((pos.z - DISTANCE_V * cosf(radTps)) - m_Pos.z) * ROT_ATEEN_ROCKON;
+		m_MoveV.x = ((pos.x - DISTANCE_V * sinf(radTps)) - m_Pos.x) * ROT_ATTEN_ROCKON;
+		m_MoveV.y = (pos.y + HEIGHT - m_Pos.y) * ROT_ATTEN_ROCKON;
+		m_MoveV.z = ((pos.z - DISTANCE_V * cosf(radTps)) - m_Pos.z) * ROT_ATTEN_ROCKON;
 
 		// 視点位置の更新
 		m_Pos.x += m_MoveV.x;

@@ -40,6 +40,7 @@ protected:
 
 	CMeshCylinder *m_pCylinder;
 	int m_nDeleteCnt;								// 消滅カウンタ
+	Vector3 m_PosOffset;							// オフセットの座標
 public:
 	CLazer(DRAWORDER DrawOrder = DRAWORDER_EFFECT, OBJTYPE ObjType = OBJTYPE_EFFECT);
 	~CLazer();

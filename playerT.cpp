@@ -47,8 +47,8 @@
 #define ROT_SPEED				( 0.05f )		// ‰ñ“]—Ê
 #define ROT_AGREE				( 0.05f )
 
-#define ROT_ATEEN				( 0.1f )		// ‰ñ“]—ÊŒ¸ŠŒW”
-#define MOVE_ATEEN				( 0.08f )		// ˆÚ“®—ÊŒ¸ŠŒW”
+#define ROT_ATTEN				( 0.1f )		// ‰ñ“]—ÊŒ¸ŠŒW”
+#define MOVE_ATTEN				( 0.08f )		// ˆÚ“®—ÊŒ¸ŠŒW”
 
 #define SHADOW_RADIUS			( 30 )			// ‰e‚Ì”¼Œa
 #define SHADOW_HEIGHT			( 100 )			// ‰e‚Ì‚‚³
@@ -143,9 +143,9 @@ void CPlayerT::Update(void)
 
 	/* ˆÚ“®—ÊAˆÊ’u‚ÌXV */
 	// ˆÚ“®—Ê‚ÌŒ¸Š
-	m_Move.x += (0.0f - m_Move.x) * MOVE_ATEEN;
-	//m_Move.y += (0.0f - m_Move.y) * MOVE_ATEEN;
-	m_Move.z += (0.0f - m_Move.z) * MOVE_ATEEN;
+	m_Move.x += (0.0f - m_Move.x) * MOVE_ATTEN;
+	//m_Move.y += (0.0f - m_Move.y) * MOVE_ATTEN;
+	m_Move.z += (0.0f - m_Move.z) * MOVE_ATTEN;
 
 	// ÚG‚µ‚Ä‚¢‚é’n–Ê‚Ì–@ü‚ğæ“¾
 	Vector3 normal = meshField->GetNormal(&m_Pos);
@@ -210,7 +210,7 @@ void CPlayerT::Update(void)
 	m_Rad.y = m_RotN.y - m_Rot.y;
 	CManager::CheckRot(&m_Rad.y);
 	// Œü‚«‚ğXV
-	m_Rot.y += m_Rad.y * ROT_ATEEN;
+	m_Rot.y += m_Rad.y * ROT_ATTEN;
 	CManager::CheckRot(&m_Rot.y);
 
 	// ƒ‚[ƒh‚²‚Æ‚Ìˆ—

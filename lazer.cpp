@@ -23,9 +23,9 @@
 * マクロ定義
 *******************************************************************************/
 const float MAGNI = 0.005f;			// 高さによる影の倍率
-const float RADIUS_ATEEN = 0.1f;	// 半径の慣性減衰係数
+const float RADIUS_ATTEN = 0.3f;	// 半径の慣性減衰係数
 const float HEIGHT = 5000.0f;		// 高さ
-const int	DELETE_CNT = 150;		// 消滅カウンタ
+const int	DELETE_CNT = 300;		// 消滅カウンタ
 const int	DAMAGE_VALUE = 1;		// ダメージ
 const int	KEEP_VALUE = 20;		// 被耐久値
 
@@ -196,6 +196,12 @@ void CLazer::Update(void)
 	CMeshCylinder::Update();
 	Collision();
 	m_nDeleteCnt++;
+	if ((m_nDeleteCnt % (DELETE_CNT / 2)) == 0)
+	{
+		m_fRadiusN = 0.0f;
+		m_pCylinder->SetRadiusNext(0.0f);
+	}
+
 	if ((m_nDeleteCnt % DELETE_CNT) == 0)
 	{
 		SetDeleteFlg(true);
@@ -354,19 +360,22 @@ void CLazer::SetWorldMatrix(void)
 void CLazer::Collision(void)
 {
 	/* 変数定義 */
-	Vector3 pos, out;
+	Vector3 start, head, out;
 	Vector3 vec0, vec1;
 	float length;
 	float work;
 
 	// 座標変換
 	SetWorldMatrix();
-	D3DXVec3TransformCoord(&pos,
+	D3DXVec3TransformCoord(&start,
+		&Vector3(0.0f, 0.0f, 0.0f),
+		&m_MtxWorld);
+	D3DXVec3TransformCoord(&head,
 		&Vector3(0.0f, m_fHeight, 0.0f),
 		&m_MtxWorld);
 
 	// ベクトル計算
-	vec0 = pos - m_Pos;				// レーザーのベクトル
+	vec0 = head - start;			// レーザーのベクトル
 	length = vec0.LengthSq();		// レーザーの長さ
 
 	// 当たり判定処理
@@ -380,12 +389,12 @@ void CLazer::Collision(void)
 			if (scene->GetObjType() == OBJTYPE_PLAYER)
 			{
 				// ベクトル計算
-				vec1 = scene->GetPosition() - m_Pos;					// レーザーとプレイヤーの距離
+				vec1 = scene->GetPosition() - start;					// レーザーとプレイヤーの距離
 				// 割合の計算
 				work = D3DXVec3Dot(&vec1, &vec0) / length;				// レーザーの長さに対する最短距離の割合
 				work = work < 0.0f ? 0.0f : work > 1.0f ? 1.0f : work;	// レーザーの長さの外の場合修正
 				// 近似点の計算
-				out = m_Pos + (vec0 * work);
+				out = start + (vec0 * work);
 				// 衝突判定
 				if ((scene->GetPosition() - out).Length() < m_fRadius + scene->GetCollision())
 				{

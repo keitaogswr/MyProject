@@ -31,14 +31,14 @@
 #define DISTANCE			( 1000.0f )		// カメラ視点と注視点の初期距離
 #define HEIGHT				( 500.0f )		// カメラ視点の初期高さ
 
-#define ROT_ATEEN			( 0.1f )		// カメラの回転減衰係数
-#define MOVE_ATEEN_V		( 0.5f )		// 視点の速度減衰係数
-#define MOVE_ATEEN_R		( 0.05f )		// 注視点の速度減衰係数
+#define ROT_ATTEN			( 0.1f )		// カメラの回転減衰係数
+#define MOVE_ATTEN_V		( 0.5f )		// 視点の速度減衰係数
+#define MOVE_ATTEN_R		( 0.05f )		// 注視点の速度減衰係数
 #define MOVE_COEFF_V		( 15.0f )		// 視点移動距離の倍率係数
 #define MOVE_COEFF_R		( 8.0f )		// 注視点移動距離の倍率係数
 
 #define TPS_ANGLE			( 0.3f )		// TPSモード時のカメラの位置角度
-#define ROT_TPS_ATEEN		( 0.1f )		// カメラの回転減衰係数(TPS)
+#define ROT_TPS_ATTEN		( 0.1f )		// カメラの回転減衰係数(TPS)
 
 #define SHAKE_CNT			( 10 )			// 振動カウンタ
 
@@ -208,8 +208,8 @@ void CEditorCamera::Update(void)
 
 	/* 移動量、位置の更新 */
 	// 移動量の減衰
-	m_MoveV += (Vector3(0.0f, 0.0f, 0.0f) - m_MoveV) * MOVE_ATEEN_V;
-	m_MoveR += (Vector3(0.0f, 0.0f, 0.0f) - m_MoveR) * MOVE_ATEEN_V;
+	m_MoveV += (Vector3(0.0f, 0.0f, 0.0f) - m_MoveV) * MOVE_ATTEN_V;
+	m_MoveR += (Vector3(0.0f, 0.0f, 0.0f) - m_MoveR) * MOVE_ATTEN_V;
 
 	// 視点、注視点位置の更新
 	m_Pos += m_MoveV;
