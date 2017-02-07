@@ -78,6 +78,8 @@ CCamera::CCamera()
 
 	m_MoveV = Vector3(0.0f, 0.0f, 0.0f);
 	m_MoveR = Vector3(0.0f, 0.0f, 0.0f);
+	m_fAmplitude = AMPLITUDE;
+	m_nShakeTime = SHAKE_CNT;
 }
 
 /*******************************************************************************
@@ -183,11 +185,11 @@ void CCamera::Update( void )
 	{
 		m_nCnt++;
 
-		m_PosR.x += AMPLITUDE * sinf(m_nCnt * D3DX_PI * 0.5f) * sinf(m_Rot.y + D3DX_PI);
-		m_PosR.y += AMPLITUDE * sinf(m_nCnt * D3DX_PI * 0.5f);
-		m_PosR.z += AMPLITUDE * sinf(m_nCnt * D3DX_PI * 0.5f) * cosf(m_Rot.y + D3DX_PI);
+		m_PosR.x += m_fAmplitude * sinf(m_nCnt * D3DX_PI * 0.5f) * sinf(m_Rot.y + D3DX_PI);
+		m_PosR.y += m_fAmplitude * sinf(m_nCnt * D3DX_PI * 0.5f);
+		m_PosR.z += m_fAmplitude * sinf(m_nCnt * D3DX_PI * 0.5f) * cosf(m_Rot.y + D3DX_PI);
 	}
-	if (m_nCnt == SHAKE_CNT)
+	if (m_nCnt == m_nShakeTime)
 	{
 		m_bShake = false;
 		m_nCnt = 0;
@@ -392,16 +394,18 @@ D3DXVECTOR3 CCamera::GetVecRV( void )
 }
 
 /*******************************************************************************
-* 関数名：void CCamera::SetShake(void)
+* 関数名：void CCamera::SetShake(float amplitudeint, int time)
 *
 * 引数	：
 * 戻り値：
 * 説明	：カメラを揺らす
 *******************************************************************************/
-void CCamera::SetShake(void)
+void CCamera::SetShake(float amplitudeint, int time)
 {
 	m_nCnt = 0;
 	m_bShake = true;
+	m_fAmplitude = amplitudeint;
+	m_nShakeTime = time;
 }
 
 /*******************************************************************************

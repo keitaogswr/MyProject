@@ -48,7 +48,10 @@
 #define EXPLOSION_RAND		( 50 )			// 爆発範囲
 const int PLAYER_BULLET_DAMAGE = 100;		// 弾のダメージ(プレイヤー)
 const int ENEMY_BULLET_DAMAGE = 20;			// 弾のダメージ(エネミー)
-const int BOSS_BULLET_DAMAGE = 30;			// 弾のダメージ(ボス)
+const int BOSS_BULLET_DAMAGE = 10;			// 弾のダメージ(ボス)
+const int PLAYER_BULLET_LENGTH = 100;		// 弾のダメージ(プレイヤー)
+const int ENEMY_BULLET_LENGTH = 20;			// 弾の当たり判定(エネミー)
+const int BOSS_BULLET_LENGTH = 50;			// 弾の当たり判定(ボス)
 
 /*******************************************************************************
 * グローバル変数
@@ -223,7 +226,7 @@ void CBullet::Update(void)
 					enemy->SetDamage(PLAYER_BULLET_DAMAGE);
 					CGame *game = (CGame*)CManager::GetMode();
 					CCamera *camera = game->GetCamera();
-					camera->SetShake();
+					camera->SetShake(30.0f, 10);
 				}
 				Uninit();
 			}
@@ -282,7 +285,7 @@ CEnemyBullet::CEnemyBullet(DRAWORDER DrawOrder, OBJTYPE ObjType) :CBullet(DrawOr
 void CEnemyBullet::Update(void)
 {
 	// エフェクトの生成
-	CEffect *effect = CEffect::Create(m_Pos, m_Col, 20, 20);
+	CEffect *effect = CEffect::Create(m_Pos, m_Col, (float)ENEMY_BULLET_LENGTH, (float)ENEMY_BULLET_LENGTH);
 	m_Pos += m_Vec * MOVE_SPEED_ENEMY;
 	// フィールドの取得
 	CGame *game = (CGame*)CManager::GetMode();
@@ -312,14 +315,14 @@ void CEnemyBullet::Update(void)
 			Vector3 pos = scene->GetPosition();
 			Vector3 diff = pos - m_Pos;
 			float length = diff.Length();
-			if (length < 40)
+			if (length < ENEMY_BULLET_LENGTH)
 			{
 				CPlayer *player = (CPlayer*)scene;
 				player->SetDamage(ENEMY_BULLET_DAMAGE);
 				player->SetKeep(ENEMY_BULLET_DAMAGE);
 				CGame *game = (CGame*)CManager::GetMode();
 				CCamera *camera = game->GetCamera();
-				camera->SetShake();
+				camera->SetShake(30.0f, 10);
 				Uninit();
 			}
 		}
@@ -366,7 +369,7 @@ CBossBullet::CBossBullet(DRAWORDER DrawOrder, OBJTYPE ObjType) :CBullet(DrawOrde
 void CBossBullet::Update(void)
 {
 	// エフェクトの生成
-	CEffect *effect = CEffect::Create(m_Pos, m_Col, 100, 100);
+	CEffect *effect = CEffect::Create(m_Pos, m_Col, BOSS_BULLET_LENGTH, BOSS_BULLET_LENGTH);
 	m_Pos += m_Vec * MOVE_SPEED_BOSS;
 	// フィールドの取得
 	CGame *game = (CGame*)CManager::GetMode();
@@ -396,13 +399,13 @@ void CBossBullet::Update(void)
 			Vector3 pos = scene->GetPosition();
 			Vector3 diff = pos - m_Pos;
 			float length = diff.Length();
-			if (length < 100)
+			if (length < BOSS_BULLET_LENGTH)
 			{
 				CPlayer *player = (CPlayer*)scene;
 				player->SetDamage(BOSS_BULLET_DAMAGE);
 				CGame *game = (CGame*)CManager::GetMode();
 				CCamera *camera = game->GetCamera();
-				camera->SetShake();
+				camera->SetShake(30.0f, 10);
 				Uninit();
 			}
 		}

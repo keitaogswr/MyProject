@@ -38,6 +38,8 @@
 #include "chargeEffect.h"
 #include "meshCylinder.h"
 #include "lazer.h"
+#include "enemySpeed.h"
+#include "camera.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -51,7 +53,6 @@ const float  MOVE_ATTEN = 0.15f;		// 移動量減衰係数
 
 const int LIFE_MAX = 10000;				// 最大ライフ
 const float SEARCH_LENG = 2000.0f;		// 索敵範囲
-const int ATTACK_CNT = 30;				// 攻撃カウンタ
 
 const float GRAVITY = 0.5f;				// 重力
 
@@ -59,12 +60,15 @@ const float SHADOW_RADIUS = 400.0f;		// 影の半径
 const float SHADOW_HEIGHT = 100.0f;		// 影の高さ
 
 const int COLLISION_LENGTH = 400;		// 当たり判定
+const int ATTACK_CNT = 10;				// 攻撃カウンタ
 const int DAMAGE_CNT = 60;				// 被弾カウンタ
 const int STATE_CHANGE = 150;			// 状態変化カウンタ
-const int STATE_CHANGE_ATTACK_0 = 300;	// 状態変化カウンタ(攻撃時)
-const int STATE_CHANGE_ATTACK_1 = 450;	// 状態変化カウンタ(攻撃時)
+const int STATE_CHANGE_ATTACK_0 = 300;	// 状態変化カウンタ(攻撃0時)
+const int STATE_CHANGE_ATTACK_1 = 450;	// 状態変化カウンタ(攻撃1時)
 
 const int LIFE_PHASE_1 = 8000;			// ライフ段階1
+
+const int SUMMON_MAX = 5;				// 召喚最大数
 
 /*******************************************************************************
 * グローバル変数
@@ -200,6 +204,10 @@ void CBossEnemy::Update(void)
 		SetCharge();
 		SetState(STATE_ATTACK_1);
 	}
+	if (CInput::GetKeyboardTrigger(DIK_N))
+	{
+		SetState(STATE_SUMMON);
+	}
 #endif
 
 	// 回転角の更新
@@ -207,6 +215,7 @@ void CBossEnemy::Update(void)
 
 	// 状態遷移
 	UpdateState();
+
 	// 影の位置更新
 	m_Shadow->Set(Vector3(m_Pos.x, m_Pos.y, m_Pos.z), m_Pos, SHADOW_RADIUS, SHADOW_HEIGHT);
 
@@ -373,16 +382,19 @@ void CBossEnemy::UpdateState(void)
 	case STATE_ATTACK_1:
 		m_MotionManager->SetMotion(0);
 		m_nAttCnt++;
-		if (m_nAttCnt == 140)
-		{
+		if (m_nStateCnt == 140)
+		{// レーザーの発射
 			SetWorldMatrix();
 			SetLazer();
+			CGame *game = (CGame*)CManager::GetMode();
+			CCamera *camera = game->GetCamera();
+			camera->SetShake(10.0f, 150);
 		}
 			
 		if (m_nStateCnt >= STATE_CHANGE_ATTACK_1)
 		{
-			// ガード状態に移行
-			SetState(STATE_GUARD);
+			// 召喚状態に移行
+			SetState(STATE_SUMMON);
 		}
 		break;
 	case STATE_GUARD:
@@ -394,6 +406,10 @@ void CBossEnemy::UpdateState(void)
 		{
 			SetState(STATE_NORMAL);
 		}
+		break;
+	case STATE_SUMMON:
+		SetSummon();
+		SetState(STATE_GUARD);
 		break;
 	default:
 		break;
@@ -409,6 +425,7 @@ void CBossEnemy::UpdateState(void)
 *******************************************************************************/
 void CBossEnemy::UpdateRot(void)
 {
+	// 減衰係数の分岐
 	float rotAtten = 0.0f;
 
 	if (m_State == STATE_ATTACK_1)
@@ -441,6 +458,7 @@ void CBossEnemy::UpdateRot(void)
 *******************************************************************************/
 void CBossEnemy::SetCharge(void)
 {
+	// エフェクトの生成
 	CChargeEffect::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f, NULL);
 
 	/* 左腕 */
@@ -448,8 +466,7 @@ void CBossEnemy::SetCharge(void)
 	CModel *model = m_MotionManager->GetModel(7);
 	D3DXMATRIX *matrix = model->GetMatrix();
 	Vector3	pos = Vector3(0.0f, 0.0f, 0.0f);
-	//D3DXVec3TransformCoord(&pos, &pos, matrix);
-	// 弾の生成
+	// エフェクトの生成
 	CChargeEffect::Create(pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f, matrix);
 
 	/* 右腕 */
@@ -457,13 +474,12 @@ void CBossEnemy::SetCharge(void)
 	model = m_MotionManager->GetModel(8);
 	matrix = model->GetMatrix();
 	pos = Vector3(0.0f, 0.0f, 0.0f);
-	//D3DXVec3TransformCoord(&pos, &pos, matrix);
-	// 弾の生成
+	// エフェクトの生成
 	CChargeEffect::Create(pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150.0f, 150.0f, matrix);
 }
 
 /*******************************************************************************
-* 関数名：void CBossEnemy::SetCharge( void )
+* 関数名：void CBossEnemy::SetLazer( void )
 *
 * 引数	：
 * 戻り値：
@@ -471,6 +487,7 @@ void CBossEnemy::SetCharge(void)
 *******************************************************************************/
 void CBossEnemy::SetLazer(void)
 {
+	// レーザーの生成
 	CLazer::Create(m_TargetPos, Vector3(-D3DX_PI * 0.8f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 0.5f, 0.5f, 0.5f), 80.0f, &m_MtxWorld);
 
 	/* 左腕 */
@@ -478,8 +495,7 @@ void CBossEnemy::SetLazer(void)
 	CModel *model = m_MotionManager->GetModel(9);
 	D3DXMATRIX *matrix = model->GetMatrix();
 	Vector3	pos = Vector3(0.0f, 0.0f, -250.0f);
-	//D3DXVec3TransformCoord(&pos, &pos, matrix);
-	// 弾の生成
+	// レーザーの生成
 	CLazer::Create(pos, Vector3(-D3DX_PI * 0.5f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 0.5f, 0.5f, 0.5f), 40.0f, matrix);
 
 	/* 右腕 */
@@ -487,7 +503,53 @@ void CBossEnemy::SetLazer(void)
 	model = m_MotionManager->GetModel(10);
 	matrix = model->GetMatrix();
 	pos = Vector3(0.0f, 0.0f, -250.0f);
-	//D3DXVec3TransformCoord(&pos, &pos, matrix);
-	// 弾の生成
+	// レーザーの生成
 	CLazer::Create(pos, Vector3(-D3DX_PI * 0.5f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 0.5f, 0.5f, 0.5f), 40.0f, matrix);
+}
+
+/*******************************************************************************
+* 関数名：void CBossEnemy::SetSummon( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：召喚設定処理
+*******************************************************************************/
+void CBossEnemy::SetSummon(void)
+{
+	// 変数定義
+	int cnt = 0;
+	CScene *scene = CScene::GetList(DRAWORDER_3D);
+	CScene *next = NULL;
+	// エネミーのカウント
+	while (scene != NULL)
+	{
+		next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
+		if (scene->GetObjType() == OBJTYPE_ENEMY)
+		{
+			cnt++;
+		}
+		scene = next;
+	}
+	// エネミーの召喚
+	if (cnt <= 1)
+	{
+		Vector3 pos;
+		D3DXCOLOR col = D3DXCOLOR(0.1f, 0.8f, 0.8f, 0.9f);
+		
+		D3DXVec3TransformCoord(&pos, &Vector3(500.0f, 250.0f, 0.0f), &m_MtxWorld);
+		CEnemySpeed::Create(pos);
+		CEffect::Create(pos, col, 100.0f, 100.0f);
+
+		D3DXVec3TransformCoord(&pos, &Vector3(-500.0f, 250.0f, 0.0f), &m_MtxWorld);
+		CEnemySpeed::Create(pos);
+		CEffect::Create(pos, col, 100.0f, 100.0f);
+
+		D3DXVec3TransformCoord(&pos, &Vector3(700.0f, 150.0f, 0.0f), &m_MtxWorld);
+		CEnemySpeed::Create(pos);
+		CEffect::Create(pos, col, 100.0f, 100.0f);
+
+		D3DXVec3TransformCoord(&pos, &Vector3(-700.0f, 150.0f, 0.0f), &m_MtxWorld);
+		CEnemySpeed::Create(pos);
+		CEffect::Create(pos, col, 100.0f, 100.0f);
+	}
 }

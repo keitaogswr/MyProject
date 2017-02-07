@@ -54,7 +54,9 @@ class CCamera
 		Vector3 m_RotN;					// 次の向き
 
 		bool m_bShake;					// 画面を揺らすかどうか
-		int m_nCnt;
+		int m_nCnt;						// 振動カウンタ
+		float m_fAmplitude;				// 振動幅
+		int m_nShakeTime;				// 振動時間
 		int m_nMode;					// カメラのモード
 	public:
 		CCamera();
@@ -72,7 +74,7 @@ class CCamera
 		D3DXMATRIX *GetMtxView( void );
 		D3DXVECTOR3 GetVecRV( void );
 
-		void SetShake(void);
+		void SetShake(float amplitudeint, int time);
 		void SetCameraMode(int id);
 		void UpdateMode(void);
 

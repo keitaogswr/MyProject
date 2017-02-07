@@ -63,54 +63,55 @@ typedef enum
 // シーンクラス
 class CScene
 {
-	protected:
-		static CScene *m_Top[ DRAWORDER_MAX ];	// 先頭
-		static CScene *m_Cur[ DRAWORDER_MAX ];	// 現在
+protected:
+	static CScene *m_Top[DRAWORDER_MAX];	// 先頭
+	static CScene *m_Cur[DRAWORDER_MAX];	// 現在
 
-		Vector3 m_Pos;			// 位置
-		Vector3 m_Rot;			// 回転値
-		bool m_Delete;			// 削除フラグ
-		bool m_bPause;			// ポーズフラグ
-		bool m_bDraw;			// 描画フラグ
+	Vector3 m_Pos;			// 位置
+	Vector3 m_Rot;			// 回転値
+	bool m_Delete;			// 削除フラグ
+	bool m_bPause;			// ポーズフラグ
+	bool m_bDraw;			// 描画フラグ
 
-		OBJTYPE m_ObjType;
-		DRAWORDER m_DrawOrder;
-	public:
-		CScene( DRAWORDER DrawOrder = DRAWORDER_3D, OBJTYPE ObjType = OBJTYPE_NONE );
-		~CScene();
-		virtual void Init( void ){}
-		virtual void Uninit( void ) = 0;
-		virtual void Update( void ){}
-		virtual void Draw( void ) = 0;
+	OBJTYPE m_ObjType;
+	DRAWORDER m_DrawOrder;
+public:
+	CScene(DRAWORDER DrawOrder = DRAWORDER_3D, OBJTYPE ObjType = OBJTYPE_NONE);
+	~CScene();
+	virtual void Init(void) {}
+	virtual void Uninit(void) = 0;
+	virtual void Update(void) {}
+	virtual void Draw(void) = 0;
 
-		static void UninitAll( void );
-		static void UpdateAll( void );
-		static void DrawAll( void );
-		void SetPosition( Vector3 pos );
-		void Release( DRAWORDER DrawOrder );
-		Vector3 GetPosition( void ){ return m_Pos; }
-		Vector3 GetRotation( void ){ return m_Rot; }
+	static void UninitAll(void);
+	static void UpdateAll(void);
+	static void DrawAll(void);
+	void SetPosition(Vector3 pos);
+	void Release(DRAWORDER DrawOrder);
+	Vector3 GetPosition(void) { return m_Pos; }
+	Vector3 GetRotation(void) { return m_Rot; }
 
-		void SetObjType( OBJTYPE type ){ m_ObjType = type; }
-		OBJTYPE GetObjType( void ){ return m_ObjType; }
-		
-		void SetDrawOrder( DRAWORDER type ){ m_DrawOrder = type; }
-		void SetDeleteFlg(bool flg) { m_Delete = flg; }
-		bool GetDeleteFlg(void) { return m_Delete; }
-		void SetPauseFlg(bool flg) { m_bPause = flg; }
-		void SetDrawFlg(bool flg) { m_bDraw = flg; }
+	void SetObjType(OBJTYPE type) { m_ObjType = type; }
+	OBJTYPE GetObjType(void) { return m_ObjType; }
 
-		virtual float GetCollision(void) { return NULL; }
-		virtual void SetDamage(int damage){}
-		virtual void SetKeep(int keep){}
+	void SetDrawOrder(DRAWORDER type) { m_DrawOrder = type; }
+	void SetDeleteFlg(bool flg) { m_Delete = flg; }
+	bool GetDeleteFlg(void) { return m_Delete; }
+	void SetPauseFlg(bool flg) { m_bPause = flg; }
+	void SetDrawFlg(bool flg) { m_bDraw = flg; }
 
-		CScene *m_Prev;			// 前のポインタ
-		CScene *m_Next;			// 次のポインタ
+	virtual float GetCollision(void) { return NULL; }
+	virtual void SetDamage(int damage) {}
+	virtual void SetKeep(int keep) {}
+	virtual Vector3 GetTargetPos(void) { return m_Pos; }
 
-		static CScene *GetList( DRAWORDER DrawOrder );
-		static CScene *GetCur( DRAWORDER DrawOrder );
+	CScene *m_Prev;			// 前のポインタ
+	CScene *m_Next;			// 次のポインタ
 
-		CScene *GetNext( void );
+	static CScene *GetList(DRAWORDER DrawOrder);
+	static CScene *GetCur(DRAWORDER DrawOrder);
+
+	CScene *GetNext(void);
 };
 
 #endif

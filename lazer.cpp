@@ -18,6 +18,7 @@
 #include "debugProc.h"
 #include "texture.h"
 #include "lazer.h"
+#include "explosion.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -27,7 +28,7 @@ const float RADIUS_ATTEN = 0.3f;	// 半径の慣性減衰係数
 const float HEIGHT = 5000.0f;		// 高さ
 const int	DELETE_CNT = 300;		// 消滅カウンタ
 const int	DAMAGE_VALUE = 1;		// ダメージ
-const int	KEEP_VALUE = 20;		// 被耐久値
+const int	KEEP_VALUE = 5;			// 被耐久値
 
 /*******************************************************************************
 * グローバル変数
@@ -400,6 +401,7 @@ void CLazer::Collision(void)
 				{
 					scene->SetDamage(DAMAGE_VALUE);
 					scene->SetKeep(KEEP_VALUE);
+					CExplosion::Create(scene->GetPosition() + Vector3(0.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 40.0f, 40.0f);
 				}
 			}
 			scene = next;

@@ -45,6 +45,7 @@ public:
 		STATE_DAMAGE,		// îÌíe
 		STATE_DEATH,		// éÄñSéû
 		STATE_GUARD,		// ÉKÅ[Éhéû
+		STATE_SUMMON,		// è¢ä´éû
 		STATE_MAX
 	}STATE;
 	CBossEnemy(DRAWORDER DrawOrder = DRAWORDER_3D, OBJTYPE ObjType = OBJTYPE_ENEMY);
@@ -62,5 +63,6 @@ protected:
 	void UpdateRot(void);
 	void SetCharge(void);
 	void SetLazer(void);
+	void SetSummon(void);
 };
 
