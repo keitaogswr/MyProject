@@ -69,7 +69,7 @@ CEffect::~CEffect()
 }
 
 /*******************************************************************************
-* 関数名：void CEffect::Init( Vector3 pos )
+* 関数名：void CEffect::Init(Vector3 pos, D3DXCOLOR col, float width, float height)
 *
 * 引数	：
 * 戻り値：
@@ -181,105 +181,6 @@ void CEffect::Update(void)
 }
 
 /*******************************************************************************
-* 関数名：void CEffect::Draw( void )
-*
-* 引数	：
-* 戻り値：
-* 説明	：描画処理
-*******************************************************************************/
-void CEffect::Draw(void)
-{
-	/* 変数定義 */
-	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
-	D3DXMATRIX mtxView;
-
-	// デバイスの取得
-	CRenderer *renderer = CManager::GetRenderer();
-	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
-	// カメラの取得
-	CGame *game = (CGame*)CManager::GetMode();
-	CCamera *camera = game->GetCamera();
-
-	// 各種設定 /////
-	// ライトのOFF
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	// フォグのOFF
-	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
-	// ZテストのOFF
-	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	// アルファテストのON
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
-	// 加算合成によるアルファブレンドのレンダーステートの設定
-	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_MtxWorld);
-
-	// ビューマトリックスを取得
-	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
-
-	// ビューマトリックスの逆行列を求める
-	D3DXMatrixInverse(&m_MtxWorld,
-		NULL,
-		&mtxView);
-
-	// マトリクスの移動に関する変数クリア
-	m_MtxWorld._41 = 0.0f;
-	m_MtxWorld._42 = 0.0f;
-	m_MtxWorld._43 = 0.0f;
-
-	// スケールを反映
-	D3DXMatrixScaling(&mtxScl, m_Scl.x, m_Scl.y, m_Scl.z);
-	D3DXMatrixMultiply(&m_MtxWorld,
-		&m_MtxWorld,
-		&mtxScl);
-	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
-	D3DXMatrixMultiply(&m_MtxWorld,
-		&m_MtxWorld,
-		&mtxTrans);
-
-	// ワールドマトリックスを設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_MtxWorld);
-
-	// ストリームにバインド
-	pDevice->SetStreamSource(0, m_VtxBuff, 0, sizeof(VERTEX_3D));
-
-	//頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_3D);
-
-	//テクスチャの設定
-	pDevice->SetTexture(0, *m_pTexture);
-
-	//ポリゴンの描画
-	pDevice->DrawPrimitive(
-		D3DPT_TRIANGLESTRIP,		//プリミティブの種類
-		0,							//最初の頂点のインデックス
-		2);							//描画するプリミティブ数
-
-	// 設定を元に戻す /////
-	// ライトのON
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	// フォグのON
-	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
-	// アルファテストのOFF
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
-	// ZテストのOF
-	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-	// 元のアルファブレンドの設定に戻す
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-}
-
-/*******************************************************************************
 * 関数名：CEffect *CEffect::Create( Vector3 pos, D3DXCOLOR col )
 *
 * 引数	：
@@ -330,4 +231,109 @@ void CEffect::SetVertex(void)
 	pVtx[3].tex = D3DXVECTOR2(1.0f / TEXTURE_ROW, 1.0f / TEXTURE_COLUMN);
 
 	m_VtxBuff->Unlock();
+}
+
+/*******************************************************************************
+* 関数名：void CEffect::SetRenderStateBegin( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：レンダラーステート設定開始処理
+*******************************************************************************/
+void CEffect::SetRenderStateBegin(void)
+{
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// 各種設定 /////
+	// ライトのOFF
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	// フォグのOFF
+	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	// ZテストのOFF
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	// アルファテストのON
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+	// 加算合成によるアルファブレンドのレンダーステートの設定
+	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+}
+
+/*******************************************************************************
+* 関数名：void CEffect::SetRenderStateEnd( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：レンダラーステート設定終了処理
+*******************************************************************************/
+void CEffect::SetRenderStateEnd(void)
+{
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// 設定を元に戻す /////
+	// ライトのON
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	// フォグのON
+	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
+	// アルファテストのOFF
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
+	// ZテストのOF
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	// 元のアルファブレンドの設定に戻す
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+}
+
+/*******************************************************************************
+* 関数名：void CEffect::SetWorldMatrix( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：ワールドマトリックス設定処理
+*******************************************************************************/
+void CEffect::SetWorldMatrix(void)
+{
+	/* 変数定義 */
+	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
+	D3DXMATRIX mtxView;
+
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
+
+	// ビューマトリックスを取得
+	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+
+	// ビューマトリックスの逆行列を求める
+	D3DXMatrixInverse(&m_MtxWorld,
+		NULL,
+		&mtxView);
+
+	// マトリクスの移動に関する変数クリア
+	m_MtxWorld._41 = 0.0f;
+	m_MtxWorld._42 = 0.0f;
+	m_MtxWorld._43 = 0.0f;
+
+	// スケールを反映
+	D3DXMatrixScaling(&mtxScl, m_Scl.x, m_Scl.y, m_Scl.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxScl);
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxTrans);
 }

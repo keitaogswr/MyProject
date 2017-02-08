@@ -31,6 +31,7 @@
 class CSceneX;
 class CDynamicModel;
 class CStencilShadow;
+class CAfterBurner;
 
 /*******************************************************************************
 * クラス宣言
@@ -74,6 +75,7 @@ protected:
 	int m_State;					// 状態
 	int m_nStateCnt;				// 状態カウンタ
 	int m_nSearchCnt;				// 索敵カウンタ
+	CAfterBurner *m_pAfterBurner;
 
 	void UpdateState(void);			// 状態更新
 	void UpdateSearch(void);		// 索敵更新

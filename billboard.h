@@ -36,14 +36,15 @@ class CScene3D;
 class CBillboard : public CScene3D
 {
 	private:
-
+		virtual void SetRenderStateBegin(void);		// レンダラーステート設定開始
+		virtual void SetRenderStateEnd(void);		// レンダラーステート設定終了
+		virtual void SetWorldMatrix(void);			// ワールドマトリックス設定
 	public:
 		CBillboard( DRAWORDER DrawOrder = DRAWORDER_3DLATE, OBJTYPE ObjType = OBJTYPE_BILLBOARD );
 		~CBillboard();
 		void Init( Vector3 pos );
 		void Uninit( void );
 		void Update( void );
-		void Draw( void );
 
 		static CBillboard *Create( Vector3 pos );
 };

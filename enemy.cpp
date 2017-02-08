@@ -23,6 +23,7 @@
 #include "dynamicModel.h"
 #include "shadow.h"
 #include "stencilShadow.h"
+#include "afterBurner.h"
 #include "enemy.h"
 #include "billboard.h"
 #include "bullet.h"
@@ -49,6 +50,7 @@ const int SEARCH_LENG = 1600;			// 索敵範囲
 const int ATTACK_CNT = 60;				// 攻撃カウンタ
 const float COLLISION_LENGTH = 20.0f;	// あたり判定
 const int DAMAGE_CNT = 60;				// 被弾カウンタ
+const int BURNER_CNT = 20;
 
 #define TEXTFILENAME	( "data\\EDITDATA\\EnemyData.txt" )
 
@@ -75,6 +77,7 @@ CEnemy::CEnemy(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder, O
 	m_State = STATE_NORMAL;
 	m_nStateCnt = 0;
 	m_nSearchCnt = 0;
+	m_pAfterBurner = NULL;
 }
 
 /*******************************************************************************
@@ -102,6 +105,7 @@ void CEnemy::Init(Vector3 pos)
 	m_Shadow = CStencilShadow::Create(m_Pos);
 	m_MotionManager = CMotionManager::Create(DYNAMICMODEL_TYPE_ENEMY_00, &m_MtxWorld);
 	m_MotionManager->SetMotion(0);
+	m_pAfterBurner = CAfterBurner::Create(m_Pos, Vector3(0.0f, -2.0f, 0.0f), &m_MtxWorld);
 }
 
 /*******************************************************************************
@@ -122,6 +126,7 @@ void CEnemy::Uninit(void)
 	m_Shadow->SetDeleteFlg(true);
 	// エフェクトの生成
 	CExplosion::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 500.0f, 500.0f);
+	SAFE_DELETE(m_pAfterBurner);
 }
 
 /*******************************************************************************
@@ -177,6 +182,11 @@ void CEnemy::Update(void)
 	{
 		// 削除フラグ
 		SetDeleteFlg(true);
+	}
+
+	if ((m_nStateCnt % 30) == 0)
+	{
+		m_pAfterBurner->Set(Vector3(0.0f, 10.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f));
 	}
 }
 
@@ -248,6 +258,7 @@ int CEnemy::Load(void)
 *******************************************************************************/
 void CEnemy::UpdateState(void)
 {
+	m_nStateCnt++;
 	switch (m_State)
 	{
 	case STATE_NORMAL:
@@ -257,7 +268,6 @@ void CEnemy::UpdateState(void)
 		break;
 	case STATE_DAMAGE:
 		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-		m_nStateCnt++;
 		if (m_nStateCnt >= DAMAGE_CNT)
 		{
 			m_State = STATE_NORMAL;

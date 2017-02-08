@@ -32,6 +32,7 @@
 #include "explosion.h"
 #include "enemySpeed.h"
 #include "player.h"
+#include "afterBurner.h"
 
 /*******************************************************************************
 * ƒ}ƒNƒ’è‹`
@@ -92,6 +93,7 @@ void CEnemySpeed::Init(Vector3 pos)
 	m_Shadow = CStencilShadow::Create(m_Pos);
 	m_MotionManager = CMotionManager::Create(DYNAMICMODEL_TYPE_ENEMY_01, &m_MtxWorld);
 	m_MotionManager->SetMotion(0);
+	m_pAfterBurner = CAfterBurner::Create(m_Pos, Vector3(0.0f, 0.0f, 0.0f), &m_MtxWorld);
 }
 
 /*******************************************************************************
@@ -184,6 +186,7 @@ CEnemySpeed *CEnemySpeed::Create(Vector3 pos)
 *******************************************************************************/
 void CEnemySpeed::UpdateState(void)
 {
+	m_nStateCnt++;
 	switch (m_State)
 	{
 	case STATE_NORMAL:
@@ -191,10 +194,25 @@ void CEnemySpeed::UpdateState(void)
 		{
 			SetState(STATE_ATTACK);
 		}
+		if ((m_nStateCnt % 30) == 0)
+		{
+			m_pAfterBurner->Set(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f));
+		}
+		break;
+	case STATE_MOVE:
+		if ((m_nStateCnt % 30) == 0)
+		{
+			m_pAfterBurner->Set(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f));
+		}
+		break;
+	case STATE_ATTACK:
+		if ((m_nStateCnt % 30) == 0)
+		{
+			m_pAfterBurner->Set(Vector3(0.0f, 20.0f, 30.0f), Vector3(0.0f, 0.0f, 1.0f));
+		}
 		break;
 	case STATE_DAMAGE:
 		m_MotionManager->SetModelColorAll(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-		m_nStateCnt++;
 		if (m_nStateCnt >= DAMAGE_CNT)
 		{
 			SetState(STATE_NORMAL);

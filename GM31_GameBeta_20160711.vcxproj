@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="afterBurner.cpp" />
     <ClCompile Include="barrier.cpp" />
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="billboard.cpp" />
@@ -120,6 +121,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="reticle.cpp" />
+    <ClCompile Include="scalingEffect.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="scene2D.cpp" />
     <ClCompile Include="scene3D.cpp" />
@@ -139,6 +141,7 @@
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="afterBurner.h" />
     <ClInclude Include="barrier.h" />
     <ClInclude Include="bg.h" />
     <ClInclude Include="billboard.h" />
@@ -178,8 +181,10 @@
     <ClInclude Include="playerLifeGauge.h" />
     <ClInclude Include="playerT.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="reticle.h" />
+    <ClInclude Include="scalingEffect.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="scene2D.h" />
     <ClInclude Include="scene3D.h" />
@@ -197,6 +202,9 @@
     <ClInclude Include="titleCamera.h" />
     <ClInclude Include="treeObject.h" />
     <ClInclude Include="Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GM31_GameBeta_20160711.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

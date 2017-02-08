@@ -34,8 +34,6 @@
 class CEffect : public CBillboard
 {
 protected:
-	LPDIRECT3DTEXTURE9	*m_pTexture;		// テクスチャへのポインタ
-
 	int m_nLife;									// 寿命
 	float m_fWidth;									// 幅
 	float m_fHeight;								// 高さ
@@ -43,6 +41,9 @@ protected:
 	float m_fAtten;									// 減衰係数
 
 	void SetVertex(void);
+	virtual void SetRenderStateBegin(void);		// レンダラーステート設定開始
+	virtual void SetRenderStateEnd(void);		// レンダラーステート設定終了
+	virtual void SetWorldMatrix(void);			// ワールドマトリックス設定
 public:
 	CEffect(DRAWORDER DrawOrder = DRAWORDER_EFFECT, OBJTYPE ObjType = OBJTYPE_EFFECT);
 	~CEffect();
@@ -50,8 +51,9 @@ public:
 	void Init(Vector3 pos, D3DXCOLOR col, float width, float height);
 	void Uninit(void);
 	void Update(void);
-	void Draw(void);
 
 	static CEffect *Create(Vector3 pos, D3DXCOLOR col, float width, float height);
+
+	void SetLife(int life) { m_nLife = life; }
 };
 

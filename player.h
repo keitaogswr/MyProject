@@ -35,6 +35,7 @@ class CShadow;
 class COrbit;
 class CStencilShadow;
 class CPlayerLifeGauge;
+class CAfterBurner;
 
 /*******************************************************************************
 * ƒNƒ‰ƒXéŒ¾

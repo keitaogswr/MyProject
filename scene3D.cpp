@@ -74,12 +74,6 @@ void CScene3D::Init( Vector3 pos )
 	CRenderer *renderer = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
 
-	// テクスチャの読み込み
-	D3DXCreateTextureFromFile(
-		pDevice,
-		"data\\TEXTURE\\ore.jpg",
-		m_pTexture);
-
 	// 頂点バッファの生成
 	if( FAILED( pDevice->CreateVertexBuffer(
 							sizeof( VERTEX_3D ) * VERTEX_MAX,
@@ -91,7 +85,7 @@ void CScene3D::Init( Vector3 pos )
 	{
 		return;
 	}
-
+	
 	// 頂点バッファの設定
 	VERTEX_3D *pVtx;
 
@@ -172,25 +166,10 @@ void CScene3D::Draw( void )
 	// レンダラーステートの設定
 	SetRenderStateBegin();
 
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity( &m_MtxWorld );
-	// スケールを反映
-	D3DXMatrixScaling( &mtxScl, m_Scl.x, m_Scl.y, m_Scl.z );
-	D3DXMatrixMultiply( &m_MtxWorld,
-						&m_MtxWorld,
-						&mtxScl );
-	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll( &mtxRot, m_Rot.y, m_Rot.x, m_Rot.z );
-	D3DXMatrixMultiply( &m_MtxWorld,
-						&m_MtxWorld,
-						&mtxRot );
-	// 位置を反映
-	D3DXMatrixTranslation( &mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z );
-	D3DXMatrixMultiply( &m_MtxWorld,
-						&m_MtxWorld,
-						&mtxTrans );
+	// ワールドマトリックスの設定
+	SetWorldMatrix();
 	
-	// ワールドマトリックスを設定
+	// ワールドマトリックスをバインド
 	pDevice->SetTransform( D3DTS_WORLD, &m_MtxWorld );
 
 	// ストリームにバインド
@@ -200,7 +179,14 @@ void CScene3D::Draw( void )
 	pDevice->SetFVF( FVF_VERTEX_3D );
 
 	//テクスチャの設定
-	pDevice->SetTexture( 0, *m_pTexture);
+	if (m_pTexture)
+	{
+		pDevice->SetTexture(0, *m_pTexture);
+	}
+	else
+	{
+		pDevice->SetTexture(0, NULL);
+	}
 
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(

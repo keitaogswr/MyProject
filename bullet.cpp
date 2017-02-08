@@ -369,7 +369,7 @@ CBossBullet::CBossBullet(DRAWORDER DrawOrder, OBJTYPE ObjType) :CBullet(DrawOrde
 void CBossBullet::Update(void)
 {
 	// エフェクトの生成
-	CEffect *effect = CEffect::Create(m_Pos, m_Col, BOSS_BULLET_LENGTH, BOSS_BULLET_LENGTH);
+	CEffect *effect = CEffect::Create(m_Pos, m_Col, (float)BOSS_BULLET_LENGTH, (float)BOSS_BULLET_LENGTH);
 	m_Pos += m_Vec * MOVE_SPEED_BOSS;
 	// フィールドの取得
 	CGame *game = (CGame*)CManager::GetMode();

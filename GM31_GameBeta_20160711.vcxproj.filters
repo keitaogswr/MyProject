@@ -261,6 +261,12 @@
     <ClCompile Include="meshCylinder.cpp">
       <Filter>ソース ファイル\Scene\3D</Filter>
     </ClCompile>
+    <ClCompile Include="scalingEffect.cpp">
+      <Filter>ソース ファイル\Scene\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="afterBurner.cpp">
+      <Filter>ソース ファイル\Scene\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="light.h">
@@ -437,5 +443,19 @@
     <ClInclude Include="meshCylinder.h">
       <Filter>ヘッダー ファイル\Scene\3D</Filter>
     </ClInclude>
+    <ClInclude Include="scalingEffect.h">
+      <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="afterBurner.h">
+      <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GM31_GameBeta_20160711.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

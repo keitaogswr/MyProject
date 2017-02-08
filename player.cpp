@@ -41,6 +41,7 @@
 #include "playerLifeGauge.h"
 #include "explosion.h"
 #include "sound.h"
+#include "afterBurner.h"
 
 /*******************************************************************************
 * É}ÉNÉçíËã`
