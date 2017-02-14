@@ -123,13 +123,13 @@ void COrbit::Update(void)
 
 	// ç¿ïWïœä∑
 	D3DXVec3TransformCoord(&m_ParentPos,
-		&m_ParentPos,
-		&m_ParentMtx);
+							&m_ParentPos,
+							&m_ParentMtx);
 	m_OldPos[ORBIT_VERTEX - 1] = m_ParentPos;
 	// ç¿ïWïœä∑
 	D3DXVec3TransformCoord(&m_HeadPos,
-		&m_HeadPos,
-		&m_ParentMtx);
+							&m_HeadPos,
+							&m_ParentMtx);
 	m_OldPos[ORBIT_VERTEX - 2] = m_HeadPos;
 
 	SetVertex();

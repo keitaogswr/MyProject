@@ -64,6 +64,7 @@ public:
 	float GetCollisionLength(void) { return m_fCollisionLength; }
 	void SetState(int state) { m_State = state; m_nStateCnt = 0; m_nAttCnt = 0; }
 	int GetState(void) { return m_State; }
+	void SetTarget(bool flg) { m_bTarget = flg; }
 
 protected:
 	CStencilShadow *m_Shadow;		// 影
@@ -75,11 +76,13 @@ protected:
 	int m_State;					// 状態
 	int m_nStateCnt;				// 状態カウンタ
 	int m_nSearchCnt;				// 索敵カウンタ
-	CAfterBurner *m_pAfterBurner;
+	CAfterBurner *m_pAfterBurner;	// アフターバーナーポインタ
+	bool m_bTarget;					// ターゲットされているか
 
 	void UpdateState(void);			// 状態更新
 	void UpdateSearch(void);		// 索敵更新
 	void UpdateAttack(void);		// 攻撃更新
+	void DeleteTarget(void);		// ターゲット削除
 };
 
 #endif

@@ -58,7 +58,6 @@ CDynamicModel::CDynamicModel( DRAWORDER DrawOrder, OBJTYPE ObjType ):CSceneX( Dr
 	m_Rad = Vector3( 0.0f, 0.0f, 0.0f );
 	m_Texture = NULL;
 	D3DXQuaternionIdentity( &m_Quaternion );
-	D3DXQuaternionIdentity( &m_QuaterN );
 
 	m_MotionManager = NULL;
 }

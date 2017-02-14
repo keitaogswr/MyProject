@@ -267,6 +267,9 @@
     <ClCompile Include="afterBurner.cpp">
       <Filter>ソース ファイル\Scene\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="missile.cpp">
+      <Filter>ソース ファイル\Scene\Billboard\Bullet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="light.h">
@@ -451,6 +454,9 @@
     </ClInclude>
     <ClInclude Include="afterBurner.h">
       <Filter>ヘッダー ファイル\Scene\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="missile.h">
+      <Filter>ヘッダー ファイル\Scene\Billboard\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

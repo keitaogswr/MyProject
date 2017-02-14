@@ -109,6 +109,7 @@
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="meshCylinder.cpp" />
     <ClCompile Include="meshField.cpp" />
+    <ClCompile Include="missile.cpp" />
     <ClCompile Include="mode.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="motionManager.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="manager.h" />
     <ClInclude Include="meshCylinder.h" />
     <ClInclude Include="meshField.h" />
+    <ClInclude Include="missile.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="motionManager.h" />

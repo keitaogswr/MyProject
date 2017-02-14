@@ -33,6 +33,7 @@
 #include "explosion.h"
 #include "enemySpeed.h"
 #include "player.h"
+#include "camera.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -50,7 +51,7 @@ const int SEARCH_LENG = 1600;			// 索敵範囲
 const int ATTACK_CNT = 60;				// 攻撃カウンタ
 const float COLLISION_LENGTH = 20.0f;	// あたり判定
 const int DAMAGE_CNT = 60;				// 被弾カウンタ
-const int BURNER_CNT = 20;
+const int BURNER_CNT = 20;				// バーナーカウンタ
 
 #define TEXTFILENAME	( "data\\EDITDATA\\EnemyData.txt" )
 
@@ -182,11 +183,12 @@ void CEnemy::Update(void)
 	{
 		// 削除フラグ
 		SetDeleteFlg(true);
+		DeleteTarget();
 	}
 
-	if ((m_nStateCnt % 30) == 0)
+	if ((m_nStateCnt % BURNER_CNT) == 0)
 	{
-		m_pAfterBurner->Set(Vector3(0.0f, 10.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f));
+		m_pAfterBurner->Set(Vector3(0.0f, 20.0f, 0.0f), Vector3(0.0f, -0.5f, 0.0f));
 	}
 }
 
@@ -329,6 +331,35 @@ void CEnemy::UpdateAttack(void)
 			Vector3 diff = pos - m_Pos;
 			diff.Normalize();
 			CEnemyBullet::Create(m_Pos, diff, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+		}
+	}
+}
+
+/*******************************************************************************
+* 関数名：void CEnemy::DeleteTarget(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：ターゲット削除処理
+*******************************************************************************/
+void CEnemy::DeleteTarget(void)
+{
+	// ターゲットされてたら
+	if (m_bTarget)
+	{// プレイヤーのターゲットを外す
+	 /* 敵の索敵 */
+		CScene *scene = CScene::GetList(DRAWORDER_3D);
+		CScene *next = NULL;
+		while (scene != NULL)
+		{
+			next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
+			if (scene->GetObjType() == OBJTYPE_PLAYER)
+			{
+				dynamic_cast<CPlayer*>(scene)->SetTarget(NULL);
+				CCamera *camera = dynamic_cast<CGame*>(CManager::GetMode())->GetCamera();
+				camera->SetCameraMode(CAMERAMODE_SNEAK);
+			}
+			scene = next;
 		}
 	}
 }

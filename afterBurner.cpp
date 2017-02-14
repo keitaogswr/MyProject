@@ -97,7 +97,7 @@ void CAfterBurner::Uninit(void)
 *******************************************************************************/
 void CAfterBurner::Set(Vector3 pos, Vector3 vec)
 {
-	CScalingEffect::Create(pos, vec, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 10.0f, 10.0f, -0.01f, 50, m_pParentMtx);
+	CScalingEffect::Create(pos, vec, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 15.0f, 15.0f, -0.01f, 50, m_pParentMtx);
 	CScalingEffect::Create(pos, vec, D3DXCOLOR(0.2f, 0.1f, 0.7f, 0.2f), 40.0f, 40.0f, 0.01f, 50, m_pParentMtx);
 }
 

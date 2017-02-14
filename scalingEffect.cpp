@@ -132,6 +132,7 @@ CScalingEffect *CScalingEffect::Create(Vector3 pos, Vector3 vec, D3DXCOLOR col, 
 	effect->SetScalingValue(scale);
 	effect->SetVec(vec);
 	effect->SetParentMtx(matrix);
+
 	return effect;
 }
 

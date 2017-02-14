@@ -41,10 +41,10 @@ public:
 		STATE_NORMAL,		// ’Êí
 		STATE_MOVE,			// ˆÚ“®
 		STATE_ATTACK_0,		// UŒ‚1
-		STATE_ATTACK_1,		// UŒ‚2
 		STATE_DAMAGE,		// ”í’e
 		STATE_DEATH,		// Ž€–SŽž
 		STATE_GUARD,		// ƒK[ƒhŽž
+		STATE_ATTACK_1,		// UŒ‚2
 		STATE_SUMMON,		// ¢Š«Žž
 		STATE_MAX
 	}STATE;

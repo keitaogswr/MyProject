@@ -199,6 +199,7 @@ void CCamera::Update( void )
 	Vector3 move = player->GetMove();
 	Vector3 rad;
 	float radTps;
+	CScene *target;
 	Vector3 targetPos;
 	float x, z;
 	switch (m_nMode)
@@ -250,7 +251,8 @@ void CCamera::Update( void )
 		CManager::CheckRot(&m_Rot);		// 円周率チェック
 
 		// ターゲットの位置取得
-		targetPos = player->GetTargetPos();
+		target = player->GetTarget();
+		targetPos = target->GetTargetPos();
 		// 注視点移動量の更新
 		// 速度によって次の目的地を伸ばす
 		m_MoveR.x = (targetPos.x - m_PosR.x) * MOVE_ATTEN_R_ROCKON;

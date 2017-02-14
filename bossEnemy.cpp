@@ -40,6 +40,7 @@
 #include "lazer.h"
 #include "enemySpeed.h"
 #include "camera.h"
+#include "player.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -227,6 +228,7 @@ void CBossEnemy::Update(void)
 	{
 		// 削除フラグ
 		SetDeleteFlg(true);
+		DeleteTarget();
 	}
 }
 

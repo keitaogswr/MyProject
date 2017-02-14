@@ -40,7 +40,6 @@ class CDynamicModel : public CSceneX
 		Vector3	m_Rad;					// 目的と自分の向きの差分
 		Vector3	m_RotN;					// 目的の向き
 		D3DXQUATERNION m_Quaternion;	// 現在のクォータニオン
-		D3DXQUATERNION m_QuaterN;		// 目的のクォータニオン
 
 		CMotionManager *m_MotionManager;
 

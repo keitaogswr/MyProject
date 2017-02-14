@@ -103,7 +103,8 @@ public:
 	virtual float GetCollision(void) { return NULL; }
 	virtual void SetDamage(int damage) {}
 	virtual void SetKeep(int keep) {}
-	virtual Vector3 GetTargetPos(void) { return m_Pos; }
+	virtual Vector3 GetTargetPos(void) { return Vector3(0.0f, 0.0f, 0.0f); }
+	virtual CScene *GetTarget(void) { return NULL; }
 
 	CScene *m_Prev;			// 前のポインタ
 	CScene *m_Next;			// 次のポインタ

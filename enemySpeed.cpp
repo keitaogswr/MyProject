@@ -33,6 +33,7 @@
 #include "enemySpeed.h"
 #include "player.h"
 #include "afterBurner.h"
+#include "camera.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -51,6 +52,7 @@ const int ATTACK_CNT = 60;				// 攻撃カウンタ
 const int COLLISION_LENGTH = 20;		// あたり判定
 const int DAMAGE_CNT = 60;				// 被弾カウンタ
 const int SEARCH_CNT = 10;				// 索敵カウンタ
+const int BURNER_CNT = 15;				// バーナーカウンタ
 
 /*******************************************************************************
 * グローバル変数
@@ -114,6 +116,7 @@ void CEnemySpeed::Uninit(void)
 	m_Shadow->SetDeleteFlg(true);
 	// エフェクトの生成
 	CExplosion::Create(m_TargetPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 500.0f, 500.0f);
+	SAFE_DELETE(m_pAfterBurner);
 }
 
 /*******************************************************************************
@@ -159,6 +162,7 @@ void CEnemySpeed::Update(void)
 	{
 		// 削除フラグ
 		SetDeleteFlg(true);
+		DeleteTarget();
 	}
 }
 
@@ -194,21 +198,21 @@ void CEnemySpeed::UpdateState(void)
 		{
 			SetState(STATE_ATTACK);
 		}
-		if ((m_nStateCnt % 30) == 0)
+		if ((m_nStateCnt % BURNER_CNT) == 0)
 		{
-			m_pAfterBurner->Set(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f));
+			m_pAfterBurner->Set(Vector3(0.0f, 20.0f, 0.0f), Vector3(0.0f, -0.5f, 0.0f));
 		}
 		break;
 	case STATE_MOVE:
-		if ((m_nStateCnt % 30) == 0)
+		if ((m_nStateCnt % BURNER_CNT) == 0)
 		{
-			m_pAfterBurner->Set(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f));
+			m_pAfterBurner->Set(Vector3(0.0f, 20.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f));
 		}
 		break;
 	case STATE_ATTACK:
-		if ((m_nStateCnt % 30) == 0)
+		if ((m_nStateCnt % BURNER_CNT) == 0)
 		{
-			m_pAfterBurner->Set(Vector3(0.0f, 20.0f, 30.0f), Vector3(0.0f, 0.0f, 1.0f));
+			m_pAfterBurner->Set(Vector3(0.0f, 20.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f));
 		}
 		break;
 	case STATE_DAMAGE:
@@ -276,6 +280,8 @@ void CEnemySpeed::UpdateMove(void)
 	m_Move += (Vector3(0.0f, 0.0f, 0.0f) - m_Move) * MOVE_ATTEN;
 	// 位置の更新
 	m_Pos += m_Move;
+
+	// 敵同士の当たり判定
 	CScene *scene = CScene::GetList(DRAWORDER_3D);
 	CScene *next = NULL;
 	while (scene != NULL)
@@ -292,6 +298,14 @@ void CEnemySpeed::UpdateMove(void)
 			}
 		}
 		scene = next;
+	}
+
+	// フィールドの当たり判定
+	CGame *game = (CGame*)CManager::GetMode();
+	CMeshField *mesh = game->GetMeshField();
+	if (mesh->GetHeight(m_Pos) > m_Pos.y)
+	{// 寿命が尽きたら、またはフィールドの外に出たら、もしくはフィールドの中に入ったら破棄
+		m_Pos -= m_Move;
 	}
 	
 	// ターゲット位置を更新

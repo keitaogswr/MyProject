@@ -28,6 +28,7 @@
 /*******************************************************************************
 * 前方宣言
 *******************************************************************************/
+class CScene;
 class CSceneX;
 class CDynamicModel;
 class CMotionManager;
@@ -78,7 +79,7 @@ protected:
 	CStencilShadow *m_Shadow;			// 影ポインタ
 	COrbit *m_Orbit[2];					// オービットポインタ
 	int m_nLife;						// ライフ
-	Vector3 m_TargetPos;				// ターゲットされる位置
+	CScene *m_Target;					// ターゲットしているオブジェクト
 	int m_nExplosionCnt;				// 爆発カウンタ
 	int m_nKeep;						// 仰け反り耐久値
 
@@ -104,7 +105,8 @@ public:
 	static CPlayer *Create(Vector3 pos);
 	virtual void SetDamage(int nDamage) { m_nLife -= nDamage; }
 	virtual void SetKeep(int keep) { m_nKeep -= keep; }
-	Vector3 GetTargetPos(void) { return m_TargetPos; }
+	CScene *GetTarget(void) { return m_Target; }
+	void SetTarget(CScene *scene) { m_Target = scene; }
 };
 
 #endif

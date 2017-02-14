@@ -49,7 +49,7 @@
 const int PLAYER_BULLET_DAMAGE = 100;		// 弾のダメージ(プレイヤー)
 const int ENEMY_BULLET_DAMAGE = 20;			// 弾のダメージ(エネミー)
 const int BOSS_BULLET_DAMAGE = 10;			// 弾のダメージ(ボス)
-const int PLAYER_BULLET_LENGTH = 100;		// 弾のダメージ(プレイヤー)
+const int PLAYER_BULLET_LENGTH = 70;		// 弾のダメージ(プレイヤー)
 const int ENEMY_BULLET_LENGTH = 20;			// 弾の当たり判定(エネミー)
 const int BOSS_BULLET_LENGTH = 50;			// 弾の当たり判定(ボス)
 
@@ -189,50 +189,11 @@ void CBullet::Update(void)
 		CEffect *effect = CEffect::Create(m_Pos, m_Col, 30, 30);
 	}
 
-	// フィールドの取得
-	CGame *game = (CGame*)CManager::GetMode();
-	CMeshField *mesh = game->GetMeshField();
-
-	float width, depth;
-	width = mesh->GetWidthAll() * 0.5f;
-	depth = mesh->GetDepthAll() * 0.5f;
-
-	// 寿命を減らす
-	m_nLife--;
-	// 寿命チェック
-	if (m_nLife <= 0
-		|| m_Pos.x < -width || m_Pos.x > width
-		|| m_Pos.z < -depth || m_Pos.z > depth
-		|| mesh->GetHeight(m_Pos) > m_Pos.y)
-	{// 寿命が尽きたら、またはフィールドの外に出たら、もしくはフィールドの中に入ったら破棄
-		Uninit();
-	}
-	CScene *scene = CScene::GetList(DRAWORDER_3D);
-	CScene *next = NULL;
-	while (scene != NULL)
-	{
-		next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
-		if (scene->GetObjType() == OBJTYPE_ENEMY)
-		{
-			Vector3 pos = ((CEnemy*)scene)->GetTargetPos();
-			Vector3 diff = pos - m_Pos;
-			float length = diff.Length();
-			float search = ((CEnemy*)scene)->GetCollisionLength();
-			if (length < search)
-			{
-				CEnemy *enemy = (CEnemy*)scene;
-				if (enemy->GetState() != CEnemy::STATE_GUARD)
-				{
-					enemy->SetDamage(PLAYER_BULLET_DAMAGE);
-					CGame *game = (CGame*)CManager::GetMode();
-					CCamera *camera = game->GetCamera();
-					camera->SetShake(30.0f, 10);
-				}
-				Uninit();
-			}
-		}
-		scene = next;
-	}
+	// 消去判定
+	DeleteCheak();
+	
+	// 当たり判定
+	UpdateCollision();
 }
 
 /*******************************************************************************
@@ -261,6 +222,72 @@ CBullet *CBullet::Create(Vector3 pos, Vector3 vec, D3DXCOLOR col)
 
 	bullet->Init(pos, vec, col);
 	return bullet;
+}
+
+/*******************************************************************************
+* 関数名：void CBullet::UpdateCollision( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：当たり判定処理
+*******************************************************************************/
+void CBullet::UpdateCollision(void)
+{
+	CScene *scene = CScene::GetList(DRAWORDER_3D);
+	CScene *next = NULL;
+	while (scene != NULL)
+	{
+		next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
+		if (scene->GetObjType() == OBJTYPE_ENEMY)
+		{
+			Vector3 pos = ((CEnemy*)scene)->GetTargetPos();
+			Vector3 diff = pos - m_Pos;
+			float length = diff.Length();
+			float search = ((CEnemy*)scene)->GetCollisionLength();
+			if (length < search + PLAYER_BULLET_LENGTH)
+			{
+				CEnemy *enemy = (CEnemy*)scene;
+				if (enemy->GetState() != CEnemy::STATE_GUARD)
+				{
+					enemy->SetDamage(PLAYER_BULLET_DAMAGE);
+					CGame *game = (CGame*)CManager::GetMode();
+					CCamera *camera = game->GetCamera();
+					camera->SetShake(30.0f, 10);
+				}
+				Uninit();
+			}
+		}
+		scene = next;
+	}
+}
+
+/*******************************************************************************
+* 関数名：void CBullet::DeleteCheak(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：消去判定処理
+*******************************************************************************/
+void CBullet::DeleteCheak(void)
+{
+	// フィールドの取得
+	CGame *game = (CGame*)CManager::GetMode();
+	CMeshField *mesh = game->GetMeshField();
+
+	float width, depth;
+	width = mesh->GetWidthAll() * 0.5f;
+	depth = mesh->GetDepthAll() * 0.5f;
+
+	// 寿命を減らす
+	m_nLife--;
+	// 寿命チェック
+	if (m_nLife <= 0
+		|| m_Pos.x < -width || m_Pos.x > width
+		|| m_Pos.z < -depth || m_Pos.z > depth
+		|| mesh->GetHeight(m_Pos) > m_Pos.y)
+	{// 寿命が尽きたら、またはフィールドの外に出たら、もしくはフィールドの中に入ったら破棄
+		Uninit();
+	}
 }
 
 /*******************************************************************************

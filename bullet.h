@@ -40,6 +40,9 @@ protected:
 	OBJTYPE m_ObjType;								// ’e‚Ì‘®«
 	D3DXCOLOR m_Col;
 	Vector3 m_Vec;
+
+	virtual void UpdateCollision(void);	// “–‚½‚è”»’è
+	virtual void DeleteCheak(void);		// Á‹”»’è
 public:
 	CBullet(DRAWORDER DrawOrder = DRAWORDER_3DLATE, OBJTYPE ObjType = OBJTYPE_BILLBOARD);
 	~CBullet();
