@@ -157,29 +157,10 @@ void CCamera::Update( void )
 	// モデル構造体の取得
 	CGame *game = ( CGame* )CManager::GetMode();
 	CPlayer *player = game->GetPlayer();
+	CInput *input = CManager::GetInput();
 
-	// 視点旋回
-	if (CInput::GetKeyboardPress(DIK_LEFT))
-	{
-		m_RotN.y -= ROT_SPEED;
-		CManager::CheckRot(&m_RotN.y); // 円周率チェック
-	}
-	// 視点旋回
-	if (CInput::GetKeyboardPress(DIK_RIGHT))
-	{
-		m_RotN.y += ROT_SPEED;
-		CManager::CheckRot(&m_RotN.y); // 円周率チェック
-	}
-
-	// 注視点上下
-	if (CInput::GetKeyboardPress(DIK_T))
-	{
-		m_PosR.y += 30.0f;
-	}
-	if (CInput::GetKeyboardPress(DIK_G))
-	{
-		m_PosR.y -= 30.0f;
-	}
+	Operate();
+	
 	// 画面を揺らす
 	if (m_bShake)
 	{
@@ -440,4 +421,71 @@ void CCamera::SetCameraMode(int id)
 void CCamera::UpdateMode(void)
 {
 
+}
+
+/*******************************************************************************
+* 関数名：void CCamera::Operate(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：カメラの操作設定
+*******************************************************************************/
+void CCamera::Operate(void)
+{
+	CInput *input = CManager::GetInput();
+
+	if (input->GetJoyStickConnected())
+	{
+		OperateJoyStick();
+		return;
+	}
+
+	// 視点旋回
+	if (input->GetKeyboardPress(DIK_LEFT))
+	{
+		m_RotN.y -= ROT_SPEED;
+		CManager::CheckRot(&m_RotN.y); // 円周率チェック
+	}
+	// 視点旋回
+	if (input->GetKeyboardPress(DIK_RIGHT))
+	{
+		m_RotN.y += ROT_SPEED;
+		CManager::CheckRot(&m_RotN.y); // 円周率チェック
+	}
+
+	// 注視点上下
+	if (input->GetKeyboardPress(DIK_T))
+	{
+		m_PosR.y += 30.0f;
+	}
+	if (input->GetKeyboardPress(DIK_G))
+	{
+		m_PosR.y -= 30.0f;
+	}
+}
+
+/*******************************************************************************
+* 関数名：void CCamera::Operate(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：カメラの操作設定
+*******************************************************************************/
+void CCamera::OperateJoyStick(void)
+{
+	CInput *input = CManager::GetInput();
+	XINPUT_STATE *stateX = input->GetPressState();
+
+	// 視点旋回
+	if (stateX->Gamepad.sThumbRX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	{
+		m_RotN.y -= ROT_SPEED;
+		CManager::CheckRot(&m_RotN.y); // 円周率チェック
+	}
+	// 視点旋回
+	if (stateX->Gamepad.sThumbRX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	{
+		m_RotN.y += ROT_SPEED;
+		CManager::CheckRot(&m_RotN.y); // 円周率チェック
+	}
 }

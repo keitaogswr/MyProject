@@ -304,7 +304,7 @@ CTreeObject *CTreeObject::Create(Vector3 pos, int num)
 *******************************************************************************/
 void CTreeObject::Set(Vector3 pos, int num)
 {
-	CScene *scene = NULL;
+	/*CScene *scene = NULL;
 	if (CManager::GetOperateMode() == CManager::OPMODE_PLAYER)
 	{
 		if (CInput::GetMouseTrigger(DIM_LEFT))
@@ -319,7 +319,7 @@ void CTreeObject::Set(Vector3 pos, int num)
 				m_nTexNum = 0;
 			}
 		}
-	}
+	}*/
 }
 
 /*******************************************************************************

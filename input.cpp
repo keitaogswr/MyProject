@@ -1,384 +1,440 @@
-/*******************************************************************************
-* タイトル名：
-* ファイル名：input.cpp
-* 作成者	：AT13B284 10 小笠原啓太
-* 作成日	：
-********************************************************************************
-* 更新履歴	：
-*
-*******************************************************************************/
-/*******************************************************************************
-* インクルードファイル
-*******************************************************************************/
+/******************************************************************************
+	タイトル名 :インプットクラス
+	ファイル名 : input.cpp
+	作成者     : AT-13C-284 36 深澤佑太
+	作成日     : 2016/04/26
+	更新日     :
+******************************************************************************/
+/******************************************************************************
+	インクルードファイル
+******************************************************************************/
+#include "renderer.h"
 #include "main.h"
 #include "input.h"
 
-/*******************************************************************************
-* マクロ定義
-*******************************************************************************/
-#define WAIT_COUNT_REPEAT	( 20 )		// リピート開始までの待ち時間
-
-/*******************************************************************************
-* 構造体
-*******************************************************************************/
-
-/*******************************************************************************
-* グローバル変数
-*******************************************************************************/
-LPDIRECTINPUT8	CInput::m_pInput;
-LPDIRECTINPUTDEVICE8 CInput::m_pDevKeyboard;
-LPDIRECTINPUTDEVICE8 CInput::m_pDevMouse;
-
-KEYSTATE CInput::m_aKeyState[ 256 ];
-MOUSESTATE CInput::m_aMouseState;
-
-/*******************************************************************************
-* 関数名：HRESULT CInput::Init( HINSTANCE hInstance, HWND hWnd )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：初期化処理
-*******************************************************************************/
-HRESULT CInput::Init( HINSTANCE hInstance, HWND hWnd )
+/******************************************************************************
+	関数名 : CInput::CInput()
+	説明   : コンストラクタ
+			 変数の初期化と、ポインタにNULLを代入
+******************************************************************************/
+CInput::CInput()
 {
-	if( m_pInput == NULL )
-	{
-		// DirectInputオブジェクトの作成
-		if( FAILED(
-			DirectInput8Create
-			(
-				hInstance,
-				DIRECTINPUT_VERSION,
-				IID_IDirectInput8,
-				( void** )&m_pInput,
-				NULL
-			) ) )
-		{
-			MessageBox( hWnd, "DirectInput8オブジェクトの作成ができませんでした。", "警告！", MB_ICONWARNING );
+	m_pInput       = NULL;
+	m_pDevKeyBoard = NULL;
+	m_Connected = false;
+
+	for (int nCntKey = 0; nCntKey < MAX_KEY; nCntKey++) {
+		m_aKeyState[nCntKey]          = 0;
+		m_aKeyStateTrigger[nCntKey]   = 0;
+		m_aKeyStateRelease[nCntKey]   = 0;
+		m_aKeyStateRepeat[nCntKey]    = 0;
+		m_aKeystateRepeatCnt[nCntKey] = 0;
+	}
+
+	for (int i = 0; i < MAX_MOUSE_KEY; i++) {
+		m_aMouseKeyState.rgbButtons[i]  = 0;
+		m_aMouseKeyStateTrigger[i]      = 0;
+		m_aMouseKeyStateRelease[i]      = 0;
+		m_aMouseKeyStateRepeat[i]       = 0;
+		m_aMouseKeyStateRepeatCnt[i]    = 0;
+	}
+}
+
+/******************************************************************************
+	関数名 : CInput::~CInput()
+	説明   : デストラクタ
+******************************************************************************/
+CInput::~CInput()
+{
+
+}
+
+/******************************************************************************
+	関数名 : HRESULT CInput::Init(void)
+	引数   : void
+	戻り値 : E_FAIL, S_OK
+	説明   : DirectInputオブジェクトの生成
+******************************************************************************/
+HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
+{
+	if (m_pInput == NULL) {
+		//DirectInputオブジェクトの生成
+		if (FAILED(DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_pInput, NULL))) {
 			return E_FAIL;
 		}
 	}
+
 	return S_OK;
 }
 
-/*******************************************************************************
-* 関数名：void CInput::Uninit( void )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：終了処理
-*******************************************************************************/
-void CInput::Uninit( void )
+/******************************************************************************
+	関数名 : void CInput::Uninit(void)
+	引数   : void
+	戻り値 : なし
+	説明   : ポインタの解放処理。
+******************************************************************************/
+void CInput::Uninit(void)
 {
-	UninitKeyboard();
-	SAFE_RELEASE( m_pInput );
-}
-
-/*******************************************************************************
-* 関数名：void CInput::Update( void )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：更新処理
-*******************************************************************************/
-void CInput::Update( void )
-{
-
-}
-
-/*******************************************************************************
-* 関数名：HRESULT CInput::InitKeyboard( HINSTANCE hInstance, HWND hWnd )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：キーボード初期化処理
-*******************************************************************************/
-HRESULT CInput::InitKeyboard( HINSTANCE hInstance, HWND hWnd )
-{
-	if( FAILED( Init( hInstance, hWnd ) ) )
-	{
-		return E_FAIL;
-	}
-	if( FAILED( m_pInput->CreateDevice( GUID_SysKeyboard, &m_pDevKeyboard, NULL ) ) )
-	{
-		return E_FAIL;
-	}
-	if( FAILED( m_pDevKeyboard->SetDataFormat( &c_dfDIKeyboard ) ) )
-	{
-		return E_FAIL;
-	}
-	if( FAILED( m_pDevKeyboard->SetCooperativeLevel( hWnd, ( DISCL_FOREGROUND | DISCL_NONEXCLUSIVE ) ) ) )
-	{
-		return S_OK;
-	}
-	m_pDevKeyboard->Acquire();
-	return S_OK;
-}
-
-/*******************************************************************************
-* 関数名：void CInput::UninitKeyboard( void )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：キーボード終了処理
-*******************************************************************************/
-void CInput::UninitKeyboard( void )
-{
-	if( m_pDevKeyboard != NULL )
-	{
-		m_pDevKeyboard->Unacquire();
-		m_pDevKeyboard->Release();
-		m_pDevKeyboard = NULL;
+	if (m_pInput != NULL) {
+		m_pInput->Release();
+		m_pInput = NULL;
 	}
 }
 
-/*******************************************************************************
-* 関数名：void UpdateKeyboard( void )
-* 
-* 引数	：
-
-* 戻り値：
-* 説明	：キーボード更新処理
-*******************************************************************************/
-void CInput::UpdateKeyboard( void )
+/******************************************************************************
+	関数名 : void CInput::Update(void)
+	引数   : void
+	戻り値 : なし
+	説明   : 特になし
+******************************************************************************/
+void CInput::Update(void)
 {
-	BYTE aKeyState[ 256 ];
 
-	if( SUCCEEDED( m_pDevKeyboard->GetDeviceState( sizeof( aKeyState ) , &aKeyState[ 0 ] ) ) )
-	{
-		for( int nCntKey = 0; nCntKey < 256 ; nCntKey++ )
-		{
-			m_aKeyState[ nCntKey ].trigger =  m_aKeyState[ nCntKey ].press ^ ( m_aKeyState[ nCntKey ].press | aKeyState[ nCntKey ] );
-			m_aKeyState[ nCntKey ].release =  aKeyState[ nCntKey ] ^ ( m_aKeyState[ nCntKey ].press | aKeyState[ nCntKey ] );
-			m_aKeyState[ nCntKey ].press = aKeyState[ nCntKey ];
+}
 
-			if( m_aKeyState[ nCntKey ].press )
-			{
-				m_aKeyState[ nCntKey ].repeatCnt++;
-				if( m_aKeyState[ nCntKey ].repeatCnt >= WAIT_COUNT_REPEAT )
-				{
-					m_aKeyState[ nCntKey ].repeat = m_aKeyState[ nCntKey ].press;
-				}
-			}
-			else
-			{
-				m_aKeyState[ nCntKey ].repeatCnt = 0;
-				m_aKeyState[ nCntKey ].repeat = 0;
-			}
+/******************************************************************************
+	関数名 : HRESULT CInput::InitKeyboard(HINSTANCE hInstance, HWND hWnd)
+	引数   : hInstance, hWnd
+	戻り値 : E_FAIL, S_OK
+	説明   : Keyboardの初期化, デバイスの設定, データフォーマットの設定, 協調モードの設定, アクセス権を取得
+******************************************************************************/
+HRESULT CInput::InitKeyboard(HINSTANCE hInstance, HWND hWnd)
+{
+	int nKeyID;
+
+	//Keyboardの初期化
+	if (FAILED(Init(hInstance, hWnd))) {
+		nKeyID = MessageBox(hWnd, " 初期化に失敗しました。 ", "  ", MB_YESNO + MB_ICONQUESTION);
+
+		if (nKeyID == IDYES) {
+			DestroyWindow(hWnd);//ウィンドウを破棄
 		}
-	}
-	else
-	{
-		m_pDevKeyboard->Acquire();
-	}
-}
 
-/*******************************************************************************
-* 関数名：bool CInput::GetKeyBoardPress( int nKey )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：プレス処理(押しっぱなし)
-*******************************************************************************/
-bool CInput::GetKeyboardPress( int nKey )
-{
-	return ( m_aKeyState[ nKey ].press&0x80 )? true: false;
-}
-
-/*******************************************************************************
-* 関数名：bool CInput::GetKeyboardTrigger( int nKey )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：トリガー処理(押したとき)
-*******************************************************************************/
-bool CInput::GetKeyboardTrigger( int nKey )
-{
-	return ( m_aKeyState[ nKey ].trigger&0x80 )? true: false;
-}
-
-/*******************************************************************************
-* 関数名：bool CInput::GetKeyboardRelease( int nKey )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：リリース処理(離したとき)
-*******************************************************************************/
-bool CInput::GetKeyboardRelease( int nKey )
-{
-	return ( m_aKeyState[ nKey ].release&0x80 )? true: false;
-}
-
-/*******************************************************************************
-* 関数名：bool CInput::GetKeyboardRepeat( int nKey )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：リピート処理(押してる間繰り返し)
-*******************************************************************************/
-bool CInput::GetKeyboardRepeat( int nKey )
-{
-	return ( m_aKeyState[ nKey ].repeat&0x80 )? true: false;
-}
-
-/*******************************************************************************
-* 関数名：HRESULT CInput::InitMouse( HINSTANCE hInstance, HWND hWnd )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：マウス初期化
-*******************************************************************************/
-HRESULT CInput::InitMouse( HINSTANCE hInstance, HWND hWnd )
-{
-	// デバイス・オブジェクトを作成
-	if( FAILED( m_pInput->CreateDevice( GUID_SysMouse, &m_pDevMouse, NULL ) ) )
-	{
-		MessageBox( NULL,"DirectInputDevice8オブジェクトのの作成に失敗","Direct Input Error", MB_OK );
-		return E_FAIL;
-	}
-	// データ・フォーマットを設定
-	if( FAILED( m_pDevMouse->SetDataFormat( &c_dfDIMouse2 ) ) )
-	{
-		MessageBox( NULL,"c_dfDIMouse2 形式の設定に失敗", "Direct Input Error", MB_OK );
-		return E_FAIL;
-	}
-	// 協調モードを設定（フォアグラウンド＆非排他モード）
-	if( FAILED( m_pDevMouse->SetCooperativeLevel( hWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND ) ) )
-	{
-		MessageBox( NULL, "フォアグラウンド＆非排他モードの設定に失敗", "Direct Input Error", MB_OK );
-		return E_FAIL;
-	}
-	
-	// 軸モードを設定（相対値モードに設定）
-	DIPROPDWORD diprop;
-	diprop.diph.dwSize  = sizeof(diprop); 
-	diprop.diph.dwHeaderSize    = sizeof(diprop.diph); 
-	diprop.diph.dwObj   = 0;
-	diprop.diph.dwHow   = DIPH_DEVICE;
-	diprop.dwData       = DIPROPAXISMODE_REL;
-	//diprop.dwData       = DIPROPAXISMODE_ABS; // 絶対値モードの場合
-	if ( FAILED( m_pDevMouse->SetProperty( DIPROP_AXISMODE, &diprop.diph ) ) )
-	{	
-		MessageBox( NULL, "軸モードの設定に失敗", "Direct Input Error", MB_OK);
 		return E_FAIL;
 	}
 
+	//デバイスの設定(KeyBoard)
+	if (FAILED(m_pInput->CreateDevice(GUID_SysKeyboard, &m_pDevKeyBoard, NULL))) {
+		nKeyID = MessageBox(hWnd, " デバイスの設定に失敗しました。 ", "  ", MB_YESNO + MB_ICONQUESTION);
 
-	
-	// 入力制御開始
+		if (nKeyID == IDYES) {
+			DestroyWindow(hWnd);//ウィンドウを破棄
+		}
+
+		return E_FAIL;
+	}
+
+	//デバイスの設定(Mouse)
+	if (FAILED(m_pInput->CreateDevice(GUID_SysMouse, &m_pDevMouse, NULL))) {
+		nKeyID = MessageBox(hWnd, " デバイスの設定に失敗しました。 ", "  ", MB_YESNO + MB_ICONQUESTION);
+
+		if (nKeyID == IDYES) {
+			DestroyWindow(hWnd);//ウィンドウを破棄
+		}
+
+		return E_FAIL;
+	}
+
+	//データフォーマットの設定(KeyBoard)
+	if (FAILED(m_pDevKeyBoard->SetDataFormat(&c_dfDIKeyboard))) {
+		nKeyID = MessageBox(hWnd, " データフォーマットの設定に失敗しました。 ", "  ", MB_YESNO + MB_ICONQUESTION);
+
+		if (nKeyID == IDYES) {
+			DestroyWindow(hWnd);//ウィンドウを破棄
+		}
+
+		return E_FAIL;
+	}
+
+	//データフォーマットの設定(Mouse)
+	if (FAILED(m_pDevMouse->SetDataFormat(&c_dfDIMouse2))) {
+		nKeyID = MessageBox(hWnd, " データフォーマットの設定に失敗しました。 ", "  ", MB_YESNO + MB_ICONQUESTION);
+
+		if (nKeyID == IDYES) {
+			DestroyWindow(hWnd);//ウィンドウを破棄
+		}
+
+		return E_FAIL;
+	}
+
+	//協調モードの設定(KeyBoard)
+	if (FAILED(m_pDevKeyBoard->SetCooperativeLevel(hWnd, (DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))) {
+		nKeyID = MessageBox(hWnd, " 協調モードの設定に失敗しました。 ", "  ", MB_YESNO + MB_ICONQUESTION);
+
+		if (nKeyID == IDYES) {
+			DestroyWindow(hWnd);//ウィンドウを破棄
+		}
+
+		return E_FAIL;
+	}
+
+	//協調モードの設定(Mouse)
+	if (FAILED(m_pDevMouse->SetCooperativeLevel(hWnd, (DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))) {
+		nKeyID = MessageBox(hWnd, " 協調モードの設定に失敗しました。 ", "  ", MB_YESNO + MB_ICONQUESTION);
+
+		if (nKeyID == IDYES) {
+			DestroyWindow(hWnd);//ウィンドウを破棄
+		}
+
+		return E_FAIL;
+	}
+
+	//アクセス権を取得
+	m_pDevKeyBoard->Acquire();
 	m_pDevMouse->Acquire();
-
-	m_aMouseState.hWnd = hWnd;		// マウスローカル座標取得用にウィンドウハンドルを保存
-	m_aMouseState.bWindow = true;
-	
+	InitJoyStick();
 	return S_OK;
 }
 
-/*******************************************************************************
-* 関数名：void CInput::UninitMouse( void )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：マウス終了処理
-*******************************************************************************/
-void CInput::UninitMouse( void )
+/******************************************************************************
+	関数名 : void CInput::UninitKeyboard(void)
+	引数   : void
+	戻り値 : なし
+	説明   : 取得したアクセス権の開放
+******************************************************************************/
+void CInput::UninitKeyboard(void)
 {
-	if( m_pDevMouse != NULL )
-	{
-		m_pDevMouse->Unacquire();
+	//	キーボード
+	if (m_pDevKeyBoard != NULL) {
+		m_pDevKeyBoard->Unacquire();		//アクセス権の開放
+		m_pDevKeyBoard->Release();
+		m_pDevKeyBoard = NULL;
+	}
+
+	//	マウスの解放
+	UninitMouse();
+	UninitJoyStick();
+	Uninit();
+}
+
+/******************************************************************************
+	関数名 : void CInput::UninitMouse(void)
+	引数   : void
+	戻り値 : なし
+	説明   : 取得したアクセス権の開放
+******************************************************************************/
+void CInput::UninitMouse(void)
+{
+	//	マウス
+	if (m_pDevMouse != NULL) {
+		m_pDevMouse->Unacquire();		//アクセス権の開放
 		m_pDevMouse->Release();
 		m_pDevMouse = NULL;
 	}
 }
 
-/*******************************************************************************
-* 関数名：void CInput::UpdateMouse( void )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：マウス更新処理
-*******************************************************************************/
-HRESULT CInput::UpdateMouse( void )
+/******************************************************************************
+	関数名 : void CInput::UpdateKeyboard(void)
+	引数   : void
+	戻り値 : なし
+	説明   : Keyboardの状態を取得
+******************************************************************************/
+void CInput::UpdateKeyboard(void)
 {
-	HRESULT hr;						// 結果ハンドル
-	DIMOUSESTATE2 mouseState;		// マウス入力バッファ
-	int loopMouse;					// マウスループ
+	BYTE aKeyState[MAX_KEY];
+	int nKeyID = 0;
 
-	// マウス入力の取得
-	hr = m_pDevMouse->GetDeviceState( sizeof ( DIMOUSESTATE2 ), &mouseState );
+	if (SUCCEEDED(m_pDevKeyBoard->GetDeviceState(sizeof(aKeyState), &aKeyState[0]))) {
+		for (int nCntKey = 0; nCntKey < MAX_KEY; nCntKey++) {
+			//Trigger
+			m_aKeyStateTrigger[nCntKey] = (m_aKeyState[nCntKey] | aKeyState[nCntKey]) ^ m_aKeyState[nCntKey];
 
-	if ( SUCCEEDED( hr ) )
-	{
-		if ( m_aMouseState.bWindow )
-		{
-			GetCursorPos( &m_aMouseState.localPos ); // マウス座標取得
-			ScreenToClient( m_aMouseState.hWnd, &m_aMouseState.localPos ); // クライアント領域内の相対座標へ変換
+			//Release
+			m_aKeyStateRelease[nCntKey] = (m_aKeyState[nCntKey] | aKeyState[nCntKey]) ^ aKeyState[nCntKey];
+			if (GetKeyboardRelease(nCntKey) == true) {
+				m_aKeystateRepeatCnt[nCntKey] = 0;
+			}
+
+			//Pless処理
+			m_aKeyState[nCntKey] = aKeyState[nCntKey];
+			if (GetKeyboardPress(nCntKey) == true) {
+				m_aKeystateRepeatCnt[nCntKey] += 1;
+			}
+
+			//Repeat
+			m_aKeyStateRepeat[nCntKey] = (m_aKeyState[nCntKey] | aKeyState[nCntKey]) ^ m_aKeyState[nCntKey];
+			if (GetKeyboardTrigger(nCntKey) == true | m_aKeystateRepeatCnt[nCntKey] > 40) {
+				m_aKeyStateRepeat[nCntKey] = aKeyState[nCntKey];
+			}
 		}
-		else
-		{
-			GetCursorPos( &m_aMouseState.localPos );
-		}
-
-		for ( loopMouse = 0; loopMouse < DIM_MAX; loopMouse++ )
-		{
-			m_aMouseState.trigBtns[ loopMouse ]		= ~m_aMouseState.state.rgbButtons[ loopMouse ] & mouseState.rgbButtons[ loopMouse ];
-			m_aMouseState.releaseBtns[ loopMouse ]	=  m_aMouseState.state.rgbButtons[ loopMouse ] & ~mouseState.rgbButtons[ loopMouse ];
-		}
-
-		m_aMouseState.state = mouseState;
 	}
-	else
-	{
-		m_pDevMouse->Acquire(); // アクセス権の再取得
+	else {
+		//アクセス権を取得
+		m_pDevKeyBoard->Acquire();
 	}
-
-	return hr;
 }
 
-/*******************************************************************************
-* 関数名：void CInput::UninitMouse( void )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：マウス終了処理
-*******************************************************************************/
-MOUSESTATE *CInput::GetMouseState( void )
+/******************************************************************************
+	関数名 : void CInput::UpdateMouse(void)
+	引数   : void
+	戻り値 : なし
+	説明   : Mouseの状態を取得
+******************************************************************************/
+void CInput::UpdateMouse(void)
 {
-	return &m_aMouseState;
+	BYTE aKeyState[MAX_MOUSE_KEY];
+	int nKeyID = 0;
+	DIMOUSESTATE2 aMouseState;
+
+	if (SUCCEEDED(m_pDevMouse->GetDeviceState(sizeof(aMouseState), &aMouseState))) {
+		for (int i = 0; i < MAX_MOUSE_KEY; i++) {
+			//Trigger
+			m_aMouseKeyStateTrigger[i] = (m_aMouseKeyState.rgbButtons[i] | aMouseState.rgbButtons[i]) ^ m_aMouseKeyState.rgbButtons[i];
+
+			//Release
+			m_aMouseKeyStateRelease[i] = (m_aMouseKeyState.rgbButtons[i] | aMouseState.rgbButtons[i]) ^ aMouseState.rgbButtons[i];
+			if (GetMouseRelease(i) == true) {
+				m_aMouseKeyStateRepeatCnt[i] = 0;
+			}
+
+			//Pless処理
+			m_aMouseKeyState.rgbButtons[i] = aMouseState.rgbButtons[i];
+			if (GetMousePress(i) == true) {
+				m_aMouseKeyStateRepeatCnt[i] += 1;
+			}
+
+			//Repeat
+			m_aMouseKeyStateRepeat[i] = (m_aMouseKeyState.rgbButtons[i] | aMouseState.rgbButtons[i]) ^ m_aMouseKeyState.rgbButtons[i];
+			if (GetMouseTrigger(i) == true | m_aMouseKeyStateRepeatCnt[i] > 40) {
+				m_aMouseKeyStateRepeat[i] = aMouseState.rgbButtons[i];
+			}
+
+		}
+		m_Mouse = aMouseState;
+	}
+	else {
+		//アクセス権を取得
+		m_pDevMouse->Acquire();
+	}
 }
 
-/*******************************************************************************
-* 関数名：bool CInput::GetMousePress( MOUSESTATE_BUTTONS nMouse )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：マウスのボタンプレスの取得
-*******************************************************************************/
-bool CInput::GetMousePress( MOUSESTATE_BUTTONS nMouse )
+/******************************************************************************
+	関数名 : void CInput::InitJoyStick(void)
+	引数   : void
+	戻り値 : なし
+	説明   : JoyStickの初期化。
+******************************************************************************/
+void CInput::InitJoyStick(void)
 {
-	return ( m_aMouseState.state.rgbButtons[ nMouse ] & 0x80 ) ? true : false;
+	//	作業用変数
+	DWORD dwResult;
+
+	for (DWORD i = 0; i < MAX_CONTROLLERS; i++) {
+		XINPUT_STATE state;
+		ZeroMemory(&state, sizeof(XINPUT_STATE));
+
+		// Simply get the state of the controller from XInput.
+		dwResult = XInputGetState(i, &state);
+
+		//	デヴァイスがあるかどうか
+		if (dwResult == ERROR_SUCCESS) {// Controller is connected
+		 //	Press情報の初期化
+			m_PressState.Gamepad.bLeftTrigger = NULL;
+			m_PressState.Gamepad.bRightTrigger = NULL;
+			m_PressState.Gamepad.sThumbLX = NULL;
+			m_PressState.Gamepad.sThumbLY = NULL;
+			m_PressState.Gamepad.sThumbRX = NULL;
+			m_PressState.Gamepad.sThumbRY = NULL;
+			m_PressState.Gamepad.wButtons = NULL;
+
+			// Trigger情報の初期化
+			m_TriggerState.Gamepad.bLeftTrigger = NULL;
+			m_TriggerState.Gamepad.bRightTrigger = NULL;
+			m_TriggerState.Gamepad.sThumbLX = NULL;
+			m_TriggerState.Gamepad.sThumbLY = NULL;
+			m_TriggerState.Gamepad.sThumbRX = NULL;
+			m_TriggerState.Gamepad.sThumbRY = NULL;
+			m_TriggerState.Gamepad.wButtons = NULL;
+
+			//	Release情報の初期化
+			m_ReleaseState.Gamepad.bLeftTrigger = NULL;
+			m_ReleaseState.Gamepad.bRightTrigger = NULL;
+			m_ReleaseState.Gamepad.sThumbLX = NULL;
+			m_ReleaseState.Gamepad.sThumbLY = NULL;
+			m_ReleaseState.Gamepad.sThumbRX = NULL;
+			m_ReleaseState.Gamepad.sThumbRY = NULL;
+			m_ReleaseState.Gamepad.wButtons = NULL;
+
+			//	Repeat情報の初期化
+			m_RepeatState.Gamepad.bLeftTrigger = NULL;
+			m_RepeatState.Gamepad.bRightTrigger = NULL;
+			m_RepeatState.Gamepad.sThumbLX = NULL;
+			m_RepeatState.Gamepad.sThumbLY = NULL;
+			m_RepeatState.Gamepad.sThumbRX = NULL;
+			m_RepeatState.Gamepad.sThumbRY = NULL;
+			m_RepeatState.Gamepad.wButtons = NULL;
+
+			//	RepeatCntの初期化
+			m_RepeatStateCnt = 0;
+
+			m_Connected = true;
+		}
+		else {// Controller is not connected 
+
+		}
+	}
 }
 
-/*******************************************************************************
-* 関数名：bool CInput::GetMouseTrigger( MOUSESTATE_BUTTONS nMouse )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：マウスのボタンプレスの取得
-*******************************************************************************/
-bool CInput::GetMouseTrigger( MOUSESTATE_BUTTONS nMouse )
+/******************************************************************************
+	関数名 : void CInput::UninitJoyStick(void)
+	引数   : void
+	戻り値 : なし
+	説明   : JoyStickの終了処理。。
+******************************************************************************/
+void CInput::UninitJoyStick(void)
 {
-	return ( m_aMouseState.trigBtns[ nMouse ] & 0x80 ) ? true : false;
 }
 
-/*******************************************************************************
-* 関数名：bool CInput::GetMouseTrigger( MOUSESTATE_BUTTONS nMouse )
-* 
-* 引数	：
-* 戻り値：
-* 説明	：マウスのボタンプレスの取得
-*******************************************************************************/
-bool CInput::GetMouseRelease( MOUSESTATE_BUTTONS nMouse )
+/******************************************************************************
+	関数名 : void CInput::UpdateJoyStick(void)
+	引数   : void
+	戻り値 : なし
+	説明   : JoyStickの更新処理。。
+******************************************************************************/
+void CInput::UpdateJoyStick(void)
 {
-	return ( m_aMouseState.releaseBtns[ nMouse ] & 0x80 ) ? true : false;
+	//	作業用変数
+	DWORD dwResult;
+	XINPUT_STATE state;
+
+	for (DWORD i = 0; i < MAX_CONTROLLERS; i++) {
+		//	0で初期化
+		ZeroMemory(&state, sizeof(XINPUT_STATE));
+
+		//	デヴァイス情報取得
+		dwResult = XInputGetState(i, &state);
+
+		//	デヴァイスがあったら
+		if (dwResult == ERROR_SUCCESS) {
+			//Trigger
+			m_TriggerState.Gamepad.wButtons = (m_PressState.Gamepad.wButtons | state.Gamepad.wButtons) ^ m_PressState.Gamepad.wButtons;
+
+			//Release
+			m_ReleaseState.Gamepad.wButtons = (m_PressState.Gamepad.wButtons | state.Gamepad.wButtons) ^ state.Gamepad.wButtons;
+			if (ReleaseJoyStick((WORD)i) == true) {
+				m_RepeatStateCnt = 0;
+			}
+
+			//Pless処理
+			if (state.Gamepad.sThumbLY <= 0) {
+				m_PressState = state;
+			}
+
+			m_PressState = state;
+			if (PressJoyStick((WORD)i) == true) {
+				m_RepeatStateCnt += 1;
+			}
+
+			//Repeat
+			m_RepeatState.Gamepad.wButtons = (m_PressState.Gamepad.wButtons | state.Gamepad.wButtons) ^ m_PressState.Gamepad.wButtons;
+			if (TriggerJoyStick((WORD)i) == true | m_RepeatStateCnt > REPEAT_STATE_CNT) {
+				m_RepeatState = state;
+			}
+
+			m_Connected = true;
+		}
+		else {		//	デバイスがない。
+			m_Connected = false;
+		}
+	}
 }

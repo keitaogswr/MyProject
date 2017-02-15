@@ -129,73 +129,74 @@ void CEditorCamera::Uninit(void)
 *******************************************************************************/
 void CEditorCamera::Update(void)
 {
+	CInput *input = CManager::GetInput();
 	float rad = 0.0f;
-	if (CInput::GetKeyboardPress(DIK_Q))
+	if (input->GetKeyboardPress(DIK_Q))
 	{
 		m_Rot.y -= ROT_SPEED;
 	}
-	if (CInput::GetKeyboardPress(DIK_E))
+	if (input->GetKeyboardPress(DIK_E))
 	{
 		m_Rot.y += ROT_SPEED;
 	}
-	if (CInput::GetKeyboardPress(DIK_R))
+	if (input->GetKeyboardPress(DIK_R))
 	{
 		m_MoveV.y += MOVE_SPEED;
 		m_MoveR.y += MOVE_SPEED;
 	}
-	if (CInput::GetKeyboardPress(DIK_F))
+	if (input->GetKeyboardPress(DIK_F))
 	{
 		m_MoveV.y -= MOVE_SPEED;
 		m_MoveR.y -= MOVE_SPEED;
 	}
-	if (CInput::GetKeyboardPress(DIK_T))
+	if (input->GetKeyboardPress(DIK_T))
 	{
 		m_MoveR.y += MOVE_SPEED;
 	}
-	if (CInput::GetKeyboardPress(DIK_G))
+	if (input->GetKeyboardPress(DIK_G))
 	{
 		m_MoveR.y -= MOVE_SPEED;
 	}
-	if (CInput::GetKeyboardPress(DIK_W) || CInput::GetKeyboardPress(DIK_D) ||
-		CInput::GetKeyboardPress(DIK_A) || CInput::GetKeyboardPress(DIK_S))
+	if (input->GetKeyboardPress(DIK_W) || input->GetKeyboardPress(DIK_D) ||
+		input->GetKeyboardPress(DIK_A) || input->GetKeyboardPress(DIK_S))
 	{// 移動キーを押していたら
 		// 前移動
-		if (CInput::GetKeyboardPress(DIK_W) && (!CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A)))
+		if (input->GetKeyboardPress(DIK_W) && (!input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A)))
 		{
 			rad = m_Rot.y;
 		}
 		// 斜め右前移動
-		else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_D))
+		else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_D))
 		{
 			rad = m_Rot.y + D3DX_PI * 0.25f;
 		}
 		// 斜め左前移動
-		else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_A))
+		else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_A))
 		{
 			rad = m_Rot.y - D3DX_PI * 0.25f;
 		}
 		// 後ろ移動
-		if (CInput::GetKeyboardPress(DIK_S) && !CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A))
+		if (input->GetKeyboardPress(DIK_S) && !input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A))
 		{
 			rad = m_Rot.y + D3DX_PI;
 		}
 		// 斜め右後ろ移動
-		else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_D))
+		else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_D))
 		{
 			rad = m_Rot.y + D3DX_PI * 0.75f;
 		}
 		// 斜め左後ろ移動
-		else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_A))
+		else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_A))
 		{
 			rad = m_Rot.y - D3DX_PI * 0.75f;
 		}
 		// 右移動
-		if (CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+		if (input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 		{
 			rad = m_Rot.y + D3DX_PI * 0.5f;
 		}
 		// 左移動
-		if (CInput::GetKeyboardPress(DIK_A) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+		if (input->GetKeyboardPress(DIK_A) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 		{
 			rad = m_Rot.y - D3DX_PI * 0.5f;
 		}

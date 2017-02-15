@@ -167,8 +167,9 @@ void CGame::Uninit(void)
 *******************************************************************************/
 void CGame::Update(void)
 {
+	CInput *input = CManager::GetInput();
 	StateUpdate();
-	if (CInput::GetKeyboardTrigger(DIK_P))
+	if (input->GetKeyboardTrigger(DIK_P) || input->TriggerJoyStick(XINPUT_GAMEPAD_START))
 	{
 		m_bPause = m_bPause == true ? false : true;
 	}
@@ -178,14 +179,14 @@ void CGame::Update(void)
 
 		CScene::UpdateAll();
 #ifdef _DEBUG
-		if (CInput::GetKeyboardTrigger(DIK_RETURN))
+		if (input->GetKeyboardTrigger(DIK_RETURN))
 		{
 			CFade::Start(new CResult);
 		}
 		// “G‚ÌÁ‹Ž
 		CScene *scene = CScene::GetList(DRAWORDER_3D);
 		CScene *next = NULL;
-		if (CInput::GetKeyboardTrigger(DIK_DELETE))
+		if (input->GetKeyboardTrigger(DIK_DELETE))
 		{
 			while (scene != NULL)
 			{

@@ -377,6 +377,12 @@ void CPlayer::Unload(void)
 *******************************************************************************/
 void CPlayer::SetState(PLAYERSTATE state)
 {
+	CInput *input = CManager::GetInput();
+	if (input->GetJoyStickConnected())
+	{
+		SetStateJoyStick(state);
+		return;
+	}
 	switch (state)
 	{
 	case PLAYERSTATE_WAIT:
@@ -384,42 +390,149 @@ void CPlayer::SetState(PLAYERSTATE state)
 		break;
 	case PLAYERSTATE_WALK:
 		// 前移動
-		if (CInput::GetKeyboardPress(DIK_W) && (!CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A)))
+		if (input->GetKeyboardPress(DIK_W) && (!input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A)))
 		{
 			m_MotionManager->SetMotion(1);
 		}
 		// 斜め右前移動
-		else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_D))
+		else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_D))
 		{
 			m_MotionManager->SetMotion(1);
 		}
 		// 斜め左前移動
-		else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_A))
+		else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_A))
 		{
 			m_MotionManager->SetMotion(1);
 		}
 		// 後ろ移動
-		if (CInput::GetKeyboardPress(DIK_S) && !CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A))
+		if (input->GetKeyboardPress(DIK_S) && !input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A))
 		{
 			m_MotionManager->SetMotion(6);
 		}
 		// 斜め右後ろ移動
-		else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_D))
+		else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_D))
 		{
 			m_MotionManager->SetMotion(6);
 		}
 		// 斜め左後ろ移動
-		else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_A))
+		else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_A))
 		{
 			m_MotionManager->SetMotion(6);
 		}
 		// 右移動
-		if (CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+		if (input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 		{
 			m_MotionManager->SetMotion(4);
 		}
 		// 左移動
-		if (CInput::GetKeyboardPress(DIK_A) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+		if (input->GetKeyboardPress(DIK_A) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
+		{
+			m_MotionManager->SetMotion(5);
+		}
+		break;
+	case PLAYERSTATE_ATTACK:
+		m_MotionManager->SetMotion(2);
+		break;
+	case PLAYERSTATE_TRANSFORM:
+		if (m_State != state)
+		{
+			m_MotionManager->SetMotion(3);
+		}
+		break;
+	case PLAYERSTATE_JUMP:
+		m_MotionManager->SetMotion(10);
+		break;
+	case PLAYERSTATE_BOMBED:
+		m_MotionManager->SetMotion(11);
+		break;
+	case PLAYERSTATE_VEHICLE_WAIT:
+		m_MotionManager->SetMotion(9);
+		break;
+	case PLAYERSTATE_VEHICLE_WALK:
+		if (m_State != state)
+		{
+			m_MotionManager->SetMotion(7);
+		}
+		break;
+	case PLAYERSTATE_VEHICLE_TRANSFORM:
+		if (m_State != state)
+		{
+			m_MotionManager->SetMotion(8);
+		}
+		break;
+	default:
+		break;
+	}
+
+	m_State = state;
+}
+
+/*******************************************************************************
+* 関数名：void CPlayer::SetState(PLAYERSTATE state)
+*
+* 引数	：
+* 戻り値：
+* 説明	：プレイヤーの状態設定処理
+*******************************************************************************/
+void CPlayer::SetStateJoyStick(PLAYERSTATE state)
+{
+	CInput *input = CManager::GetInput();
+	XINPUT_STATE *stateX = input->GetPressState();
+	switch (state)
+	{
+	case PLAYERSTATE_WAIT:
+		m_MotionManager->SetMotion(0);
+		break;
+	case PLAYERSTATE_WALK:
+		// 前移動
+		if (stateX->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			m_MotionManager->SetMotion(1);
+		}
+		// 斜め右前移動
+		else if (stateX->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			m_MotionManager->SetMotion(1);
+		}
+		// 斜め左前移動
+		else if (stateX->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			m_MotionManager->SetMotion(1);
+		}
+		// 後ろ移動
+		if (stateX->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			m_MotionManager->SetMotion(6);
+		}
+		// 斜め右後ろ移動
+		else if (stateX->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			m_MotionManager->SetMotion(6);
+		}
+		// 斜め左後ろ移動
+		else if (stateX->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			m_MotionManager->SetMotion(6);
+		}
+		// 右移動
+		if (stateX->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			m_MotionManager->SetMotion(4);
+		}
+		// 左移動
+		if (stateX->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			stateX->Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 		{
 			m_MotionManager->SetMotion(5);
 		}
@@ -582,6 +695,12 @@ void CPlayer::UpdateState(void)
 *******************************************************************************/
 void CPlayer::Operate(void)
 {
+	CInput *input = CManager::GetInput();
+	if (input->GetJoyStickConnected())
+	{
+		OperateJoyStick();
+		return;
+	}
 	CGame *game = (CGame*)CManager::GetMode();
 	CCamera *camera = game->GetCamera();
 	if (CManager::GetOperateMode() == CManager::OPMODE_PLAYER)
@@ -591,54 +710,54 @@ void CPlayer::Operate(void)
 		case PLAYERMODE_HUMAN:
 		{// 人型時
 			// 平行移動 //
-			if (CInput::GetKeyboardPress(DIK_W) || CInput::GetKeyboardPress(DIK_D) ||
-				CInput::GetKeyboardPress(DIK_A) || CInput::GetKeyboardPress(DIK_S))
+			if (input->GetKeyboardPress(DIK_W) || input->GetKeyboardPress(DIK_D) ||
+				input->GetKeyboardPress(DIK_A) || input->GetKeyboardPress(DIK_S))
 			{// 移動キーを押していたら
 				float rad = 0.0f;
 				// 前移動
-				if (CInput::GetKeyboardPress(DIK_W) && (!CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A)))
+				if (input->GetKeyboardPress(DIK_W) && (!input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A)))
 				{
 					//m_RotN.y = camera->m_Rot.y + D3DX_PI;
 					rad = camera->m_Rot.y;
 				}
 				// 斜め右前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_D))
 				{
 					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
 				}
 				// 斜め左前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_A))
 				{
 					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
 				}
 				// 後ろ移動
-				if (CInput::GetKeyboardPress(DIK_S) && !CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A))
+				if (input->GetKeyboardPress(DIK_S) && !input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A))
 				{
 					//m_RotN.y = camera->m_Rot.y;
 					rad = camera->m_Rot.y + D3DX_PI;
 				}
 				// 斜め右後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_D))
 				{
 					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
 				}
 				// 斜め左後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_A))
 				{
 					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
 				}
 				// 右移動
-				if (CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
 				}
 				// 左移動
-				if (CInput::GetKeyboardPress(DIK_A) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_A) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
@@ -658,7 +777,7 @@ void CPlayer::Operate(void)
 				m_bMove = false;
 			}
 			// 弾発射
-			if (CInput::GetKeyboardTrigger(DIK_SPACE) && m_State != PLAYERSTATE_ATTACK)
+			if (input->GetKeyboardTrigger(DIK_SPACE) && m_State != PLAYERSTATE_ATTACK)
 			{
 				SetState(PLAYERSTATE_ATTACK);
 				m_bBullet = true;
@@ -670,54 +789,54 @@ void CPlayer::Operate(void)
 		case PLAYERMODE_VEHICLE:
 		{// バイク時
 			// 平行移動 //
-			if (CInput::GetKeyboardPress(DIK_W) || CInput::GetKeyboardPress(DIK_D) ||
-				CInput::GetKeyboardPress(DIK_A) || CInput::GetKeyboardPress(DIK_S))
+			if (input->GetKeyboardPress(DIK_W) || input->GetKeyboardPress(DIK_D) ||
+				input->GetKeyboardPress(DIK_A) || input->GetKeyboardPress(DIK_S))
 			{// 移動キーを押していたら
 				float rad = 0.0f;
 				// 前移動
-				if (CInput::GetKeyboardPress(DIK_W) && (!CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A)))
+				if (input->GetKeyboardPress(DIK_W) && (!input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A)))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI;
 					rad = camera->m_Rot.y;
 				}
 				// 斜め右前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_D))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
 				}
 				// 斜め左前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
 				}
 				// 後ろ移動
-				if (CInput::GetKeyboardPress(DIK_S) && !CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A))
+				if (input->GetKeyboardPress(DIK_S) && !input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y;
 					rad = camera->m_Rot.y + D3DX_PI;
 				}
 				// 斜め右後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_D))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
 				}
 				// 斜め左後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
 				}
 				// 右移動
-				if (CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
 				}
 				// 左移動
-				if (CInput::GetKeyboardPress(DIK_A) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_A) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
@@ -734,7 +853,7 @@ void CPlayer::Operate(void)
 				m_bMove = false;
 			}
 			// 弾発射
-			if (CInput::GetKeyboardTrigger(DIK_SPACE))
+			if (input->GetKeyboardTrigger(DIK_SPACE))
 			{
 				if (CEnemy::Get(m_nTarget))
 				{
@@ -748,54 +867,54 @@ void CPlayer::Operate(void)
 		case PLAYERMODE_TRANSFORM:
 		{// 変形中
 			// 平行移動 //
-			if (CInput::GetKeyboardPress(DIK_W) || CInput::GetKeyboardPress(DIK_D) ||
-				CInput::GetKeyboardPress(DIK_A) || CInput::GetKeyboardPress(DIK_S))
+			if (input->GetKeyboardPress(DIK_W) || input->GetKeyboardPress(DIK_D) ||
+				input->GetKeyboardPress(DIK_A) || input->GetKeyboardPress(DIK_S))
 			{// 移動キーを押していたら
 				float rad = 0.0f;
 				// 前移動
-				if (CInput::GetKeyboardPress(DIK_W) && (!CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A)))
+				if (input->GetKeyboardPress(DIK_W) && (!input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A)))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI;
 					rad = camera->m_Rot.y;
 				}
 				// 斜め右前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_D))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
 				}
 				// 斜め左前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
 				}
 				// 後ろ移動
-				if (CInput::GetKeyboardPress(DIK_S) && !CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A))
+				if (input->GetKeyboardPress(DIK_S) && !input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y;
 					rad = camera->m_Rot.y + D3DX_PI;
 				}
 				// 斜め右後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_D))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
 				}
 				// 斜め左後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
 				}
 				// 右移動
-				if (CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
 				}
 				// 左移動
-				if (CInput::GetKeyboardPress(DIK_A) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_A) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
@@ -816,7 +935,7 @@ void CPlayer::Operate(void)
 			break;
 		}
 		// ジャンプ
-		if (CInput::GetKeyboardTrigger(DIK_UP) && m_bJump == false
+		if (input->GetKeyboardTrigger(DIK_UP) && m_bJump == false
 			&& (m_State == PLAYERSTATE_WAIT || m_State == PLAYERSTATE_WALK))
 		{
 			m_Move.y = JUMP_SPEED;
@@ -825,7 +944,318 @@ void CPlayer::Operate(void)
 		}
 
 		// 変形
-		if (CInput::GetKeyboardTrigger(DIK_DOWN))
+		if (input->GetKeyboardTrigger(DIK_DOWN))
+		{
+			switch (m_Mode)
+			{// モードごとの処理
+			case PLAYERMODE_HUMAN:
+				SetState(PLAYERSTATE_TRANSFORM);
+				SetMode(PLAYERMODE_TRANSFORM);
+				break;
+			case PLAYERMODE_VEHICLE:
+				SetState(PLAYERSTATE_VEHICLE_TRANSFORM);
+				SetMode(PLAYERMODE_TRANSFORM);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+}
+
+/*******************************************************************************
+* 関数名：void CPlayer::OperateJoyStick(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：プレイヤ操作処理
+*******************************************************************************/
+void CPlayer::OperateJoyStick(void)
+{
+	CInput *input = CManager::GetInput();
+
+	CGame *game = (CGame*)CManager::GetMode();
+	CCamera *camera = game->GetCamera();
+
+	XINPUT_STATE *state = input->GetPressState();
+	if (CManager::GetOperateMode() == CManager::OPMODE_PLAYER)
+	{
+		switch (m_Mode)
+		{
+		case PLAYERMODE_HUMAN:
+		{// 人型時
+		 // 平行移動 //
+			if (state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE ||
+				state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+			{// 移動キーを押していたら
+				float rad = 0.0f;
+				// 前移動
+				if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					//m_RotN.y = camera->m_Rot.y + D3DX_PI;
+					rad = camera->m_Rot.y;
+				}
+				// 斜め右前移動
+				else if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
+				}
+				// 斜め左前移動
+				else if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
+				}
+				// 後ろ移動
+				if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					//m_RotN.y = camera->m_Rot.y;
+					rad = camera->m_Rot.y + D3DX_PI;
+				}
+				// 斜め右後ろ移動
+				else if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
+				}
+				// 斜め左後ろ移動
+				else if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
+				}
+				// 右移動
+				if (state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
+				}
+				// 左移動
+				if (state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
+				}
+
+				m_Move.x += sinf(rad) * MOVE_SPEED;
+				m_Move.z += cosf(rad) * MOVE_SPEED;
+				m_bMove = true;
+
+				if (m_State != PLAYERSTATE_ATTACK)
+				{
+					SetState(PLAYERSTATE_WALK);
+				}
+			}
+			else
+			{// 移動キーを押していなかったら
+				m_bMove = false;
+			}
+			// 弾発射
+			if (input->TriggerJoyStick(XINPUT_GAMEPAD_B) && m_State != PLAYERSTATE_ATTACK)
+			{
+				SetState(PLAYERSTATE_ATTACK);
+				m_bBullet = true;
+			}
+			/* 回転角の更新 */
+			m_RotN.y = camera->m_Rot.y + D3DX_PI;	// TPS視点
+			break;
+		}
+		case PLAYERMODE_VEHICLE:
+		{// バイク時
+		 // 平行移動 //
+			if (state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE ||
+				state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+			{// 移動キーを押していたら
+				float rad = 0.0f;
+				// 前移動
+				if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y + D3DX_PI;
+					rad = camera->m_Rot.y;
+				}
+				// 斜め右前移動
+				else if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
+				}
+				// 斜め左前移動
+				else if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
+				}
+				// 後ろ移動
+				if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y;
+					rad = camera->m_Rot.y + D3DX_PI;
+				}
+				// 斜め右後ろ移動
+				else if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
+				}
+				// 斜め左後ろ移動
+				else if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
+				}
+				// 右移動
+				if (state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
+				}
+				// 左移動
+				if (state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
+				}
+
+				m_Move.x += sinf(rad) * MOVE_SPEED_VEHICLE;
+				m_Move.z += cosf(rad) * MOVE_SPEED_VEHICLE;
+				m_bMove = true;
+
+				SetState(PLAYERSTATE_VEHICLE_WALK);
+			}
+			else
+			{// 移動キーを押していなかったら
+				m_bMove = false;
+			}
+			// 弾発射
+			if (input->TriggerJoyStick(XINPUT_GAMEPAD_B))
+			{
+				if (CEnemy::Get(m_nTarget))
+				{
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y + D3DX_PI * 0.5f), 1.0f, cosf(m_Rot.y + D3DX_PI * 0.5f)), m_nTarget);
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y - D3DX_PI * 0.5f), 1.0f, cosf(m_Rot.y - D3DX_PI * 0.5f)), m_nTarget);
+					m_bBullet = true;
+				}
+			}
+			break;
+		}
+		case PLAYERMODE_TRANSFORM:
+		{// 変形中
+		 // 平行移動 //
+			if (state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE ||
+				state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+			{// 移動キーを押していたら
+				float rad = 0.0f;
+				// 前移動
+				if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y + D3DX_PI;
+					rad = camera->m_Rot.y;
+				}
+				// 斜め右前移動
+				else if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
+				}
+				// 斜め左前移動
+				else if (state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
+				}
+				// 後ろ移動
+				if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y;
+					rad = camera->m_Rot.y + D3DX_PI;
+				}
+				// 斜め右後ろ移動
+				else if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
+				}
+				// 斜め左後ろ移動
+				else if (state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
+				}
+				// 右移動
+				if (state->Gamepad.sThumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
+					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
+				}
+				// 左移動
+				if (state->Gamepad.sThumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+					state->Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
+					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
+				}
+
+				m_Move.x += sinf(rad) * MOVE_SPEED;
+				m_Move.z += cosf(rad) * MOVE_SPEED;
+				m_bMove = true;
+
+			}
+			else
+			{// 移動キーを押していなかったら
+				m_bMove = false;
+			}
+			break;
+		}
+		default:
+			break;
+		}
+		// ジャンプ
+		if (input->TriggerJoyStick(XINPUT_GAMEPAD_A) && m_bJump == false
+			&& (m_State == PLAYERSTATE_WAIT || m_State == PLAYERSTATE_WALK))
+		{
+			m_Move.y = JUMP_SPEED;
+			m_bJump = true;
+			SetState(PLAYERSTATE_JUMP);
+		}
+
+		// 変形
+		if (input->TriggerJoyStick(XINPUT_GAMEPAD_X))
 		{
 			switch (m_Mode)
 			{// モードごとの処理
@@ -954,6 +1384,7 @@ void CPlayer::SetOrbit(void)
 *******************************************************************************/
 void CPlayer::UpdateRockOn(void)
 {
+	CInput *input = CManager::GetInput();
 	CCamera *camera = ((CGame*)CManager::GetMode())->GetCamera();
 	Vector3 vec;
 	float nearLeng = SEARCH_LENG * SEARCH_LENG;
@@ -987,7 +1418,7 @@ void CPlayer::UpdateRockOn(void)
 		CEnemy::Get(m_nTarget)->SetTarget(true);
 	}
 
-	if (CInput::GetKeyboardTrigger(DIK_R))
+	if (input->GetKeyboardTrigger(DIK_R) || input->TriggerJoyStick(XINPUT_GAMEPAD_Y))
 	{// ロックオンの切り替え
 		m_bRockOn = m_bRockOn == true ? false : true;
 

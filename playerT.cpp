@@ -438,6 +438,7 @@ void CPlayerT::UpdateState(void)
 *******************************************************************************/
 void CPlayerT::Operate(void)
 {
+	CInput *input = CManager::GetInput();
 	CGame *game = (CGame*)CManager::GetMode();
 	CCamera *camera = game->GetCamera();
 	if (CManager::GetOperateMode() == CManager::OPMODE_PLAYER)
@@ -447,54 +448,54 @@ void CPlayerT::Operate(void)
 		case PLAYERMODE_HUMAN:
 		{// 人型時
 		 // 平行移動 //
-			if (CInput::GetKeyboardPress(DIK_W) || CInput::GetKeyboardPress(DIK_D) ||
-				CInput::GetKeyboardPress(DIK_A) || CInput::GetKeyboardPress(DIK_S))
+			if (input->GetKeyboardPress(DIK_W) || input->GetKeyboardPress(DIK_D) ||
+				input->GetKeyboardPress(DIK_A) || input->GetKeyboardPress(DIK_S))
 			{// 移動キーを押していたら
 				float rad = 0.0f;
 				// 前移動
-				if (CInput::GetKeyboardPress(DIK_W) && (!CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A)))
+				if (input->GetKeyboardPress(DIK_W) && (!input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A)))
 				{
 					//m_RotN.y = camera->m_Rot.y + D3DX_PI;
 					rad = camera->m_Rot.y;
 				}
 				// 斜め右前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_D))
 				{
 					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
 				}
 				// 斜め左前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_A))
 				{
 					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
 				}
 				// 後ろ移動
-				if (CInput::GetKeyboardPress(DIK_S) && !CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A))
+				if (input->GetKeyboardPress(DIK_S) && !input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A))
 				{
 					//m_RotN.y = camera->m_Rot.y;
 					rad = camera->m_Rot.y + D3DX_PI;
 				}
 				// 斜め右後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_D))
 				{
 					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
 				}
 				// 斜め左後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_A))
 				{
 					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
 				}
 				// 右移動
-				if (CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					//m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
 				}
 				// 左移動
-				if (CInput::GetKeyboardPress(DIK_A) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_A) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					//m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
@@ -514,7 +515,7 @@ void CPlayerT::Operate(void)
 				m_bMove = false;
 			}
 			// 弾発射
-			if (CInput::GetKeyboardTrigger(DIK_SPACE) && m_State != PLAYERSTATE_ATTACK)
+			if (input->GetKeyboardTrigger(DIK_SPACE) && m_State != PLAYERSTATE_ATTACK)
 			{
 				SetState(PLAYERSTATE_ATTACK);
 				
@@ -527,54 +528,54 @@ void CPlayerT::Operate(void)
 		case PLAYERMODE_VEHICLE:
 		{// トラック時
 		 // 平行移動 //
-			if (CInput::GetKeyboardPress(DIK_W) || CInput::GetKeyboardPress(DIK_D) ||
-				CInput::GetKeyboardPress(DIK_A) || CInput::GetKeyboardPress(DIK_S))
+			if (input->GetKeyboardPress(DIK_W) || input->GetKeyboardPress(DIK_D) ||
+				input->GetKeyboardPress(DIK_A) || input->GetKeyboardPress(DIK_S))
 			{// 移動キーを押していたら
 				float rad = 0.0f;
 				// 前移動
-				if (CInput::GetKeyboardPress(DIK_W) && (!CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A)))
+				if (input->GetKeyboardPress(DIK_W) && (!input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A)))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI;
 					rad = camera->m_Rot.y;
 				}
 				// 斜め右前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_D))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
 				}
 				// 斜め左前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
 				}
 				// 後ろ移動
-				if (CInput::GetKeyboardPress(DIK_S) && !CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A))
+				if (input->GetKeyboardPress(DIK_S) && !input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y;
 					rad = camera->m_Rot.y + D3DX_PI;
 				}
 				// 斜め右後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_D))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
 				}
 				// 斜め左後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
 				}
 				// 右移動
-				if (CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
 				}
 				// 左移動
-				if (CInput::GetKeyboardPress(DIK_A) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_A) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
@@ -591,7 +592,7 @@ void CPlayerT::Operate(void)
 				m_bMove = false;
 			}
 			// 弾発射
-			if (CInput::GetKeyboardTrigger(DIK_SPACE))
+			if (input->GetKeyboardTrigger(DIK_SPACE))
 			{
 				CDiffusionBullet::Create(Vector3(m_Pos.x, m_Pos.y + HEIGHT, m_Pos.z), m_Rot);
 			}
@@ -600,54 +601,54 @@ void CPlayerT::Operate(void)
 		case PLAYERMODE_TRANSFORM:
 		{// 変形中
 		 // 平行移動 //
-			if (CInput::GetKeyboardPress(DIK_W) || CInput::GetKeyboardPress(DIK_D) ||
-				CInput::GetKeyboardPress(DIK_A) || CInput::GetKeyboardPress(DIK_S))
+			if (input->GetKeyboardPress(DIK_W) || input->GetKeyboardPress(DIK_D) ||
+				input->GetKeyboardPress(DIK_A) || input->GetKeyboardPress(DIK_S))
 			{// 移動キーを押していたら
 				float rad = 0.0f;
 				// 前移動
-				if (CInput::GetKeyboardPress(DIK_W) && (!CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A)))
+				if (input->GetKeyboardPress(DIK_W) && (!input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A)))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI;
 					rad = camera->m_Rot.y;
 				}
 				// 斜め右前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_D))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.25f;
 				}
 				// 斜め左前移動
-				else if (CInput::GetKeyboardPress(DIK_W) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_W) && input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.75f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.25f;
 				}
 				// 後ろ移動
-				if (CInput::GetKeyboardPress(DIK_S) && !CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_A))
+				if (input->GetKeyboardPress(DIK_S) && !input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y;
 					rad = camera->m_Rot.y + D3DX_PI;
 				}
 				// 斜め右後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_D))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_D))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.75f;
 				}
 				// 斜め左後ろ移動
-				else if (CInput::GetKeyboardPress(DIK_S) && CInput::GetKeyboardPress(DIK_A))
+				else if (input->GetKeyboardPress(DIK_S) && input->GetKeyboardPress(DIK_A))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.25f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.75f;
 				}
 				// 右移動
-				if (CInput::GetKeyboardPress(DIK_D) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_D) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					m_RotN.y = camera->m_Rot.y - D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y + D3DX_PI * 0.5f;
 				}
 				// 左移動
-				if (CInput::GetKeyboardPress(DIK_A) && !CInput::GetKeyboardPress(DIK_W) && !CInput::GetKeyboardPress(DIK_S))
+				if (input->GetKeyboardPress(DIK_A) && !input->GetKeyboardPress(DIK_W) && !input->GetKeyboardPress(DIK_S))
 				{
 					m_RotN.y = camera->m_Rot.y + D3DX_PI * 0.5f;
 					rad = camera->m_Rot.y - D3DX_PI * 0.5f;
@@ -668,7 +669,7 @@ void CPlayerT::Operate(void)
 			break;
 		}
 		// ジャンプ
-		if (CInput::GetKeyboardTrigger(DIK_LSHIFT) && m_bJump == false
+		if (input->GetKeyboardTrigger(DIK_LSHIFT) && m_bJump == false
 			&& (m_State == PLAYERSTATE_WAIT || m_State == PLAYERSTATE_WALK))
 		{
 			m_Move.y = JUMP_SPEED;
@@ -677,7 +678,7 @@ void CPlayerT::Operate(void)
 		}
 
 		// 変形
-		if (CInput::GetKeyboardTrigger(DIK_V))
+		if (input->GetKeyboardTrigger(DIK_V))
 		{
 			switch (m_Mode)
 			{// モードごとの処理

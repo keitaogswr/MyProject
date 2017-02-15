@@ -95,9 +95,10 @@ void CResult::Uninit( void )
 *******************************************************************************/
 void CResult::Update( void )
 {
+	CInput *input = CManager::GetInput();
 	CScene::UpdateAll();
 	m_nStateCnt++;
-	if( CInput::GetKeyboardTrigger( DIK_RETURN ) || m_nStateCnt > SWITCH_CNT)
+	if(input->GetKeyboardTrigger( DIK_RETURN ) || m_nStateCnt > SWITCH_CNT || input->TriggerJoyStick(XINPUT_GAMEPAD_START))
 	{
 		CFade::Start( new CTitle );
 	}

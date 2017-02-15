@@ -112,9 +112,10 @@ void CTitle::Uninit(void)
 *******************************************************************************/
 void CTitle::Update(void)
 {
+	CInput *input = CManager::GetInput();
 	m_Camera->Update();
 	CScene::UpdateAll();
-	if (CInput::GetKeyboardTrigger(DIK_RETURN))
+	if (input->GetKeyboardTrigger(DIK_RETURN) || input->TriggerJoyStick(XINPUT_GAMEPAD_START))
 	{
 		CFade::Start(new CLoad);
 		CSound::Play(CSound::SOUND_LABEL_SE_BUTTON_000);

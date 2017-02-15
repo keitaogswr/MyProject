@@ -200,12 +200,13 @@ void CBossEnemy::Update(void)
 		scene = next;
 	}
 #ifdef _DEBUG
-	if (CInput::GetKeyboardTrigger(DIK_B))
+	CInput *input = CManager::GetInput();
+	if (input->GetKeyboardTrigger(DIK_B))
 	{
 		SetCharge();
 		SetState(STATE_ATTACK_1);
 	}
-	if (CInput::GetKeyboardTrigger(DIK_N))
+	if (input->GetKeyboardTrigger(DIK_N))
 	{
 		SetState(STATE_SUMMON);
 	}

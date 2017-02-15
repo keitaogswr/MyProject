@@ -13,6 +13,7 @@
 #include "renderer.h"
 #include "main.h"
 #include "input.h"
+#include "manager.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -179,12 +180,13 @@ void CRenderer::Uninit( void )
 void CRenderer::Update( void )
 {
 #ifdef _DEBUG
+	CInput *input = CManager::GetInput();
 	// ワイヤーフレーム切替
-	if( CInput::GetKeyboardTrigger( DIK_F8 ) )
+	if(input->GetKeyboardTrigger( DIK_F8 ) )
 	{
 		m_Wireframe == WIREFRAME_NONE? m_Wireframe = WIREFRAME_ON: m_Wireframe = WIREFRAME_NONE;
 	}
-	if (CInput::GetKeyboardTrigger(DIK_F9))
+	if (input->GetKeyboardTrigger(DIK_F9))
 	{
 		m_bFog = m_bFog == false ? true : false;
 	}

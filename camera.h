@@ -58,6 +58,9 @@ class CCamera
 		float m_fAmplitude;				// U“®•
 		int m_nShakeTime;				// U“®ŠÔ
 		int m_nMode;					// ƒJƒƒ‰‚Ìƒ‚[ƒh
+
+		void Operate(void);
+		void OperateJoyStick(void);
 	public:
 		CCamera();
 		~CCamera();

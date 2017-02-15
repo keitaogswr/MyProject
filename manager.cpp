@@ -34,6 +34,7 @@ CRenderer *CManager::m_Renderer;
 CManager::OPMODE CManager::m_Opmode;
 HWND *CManager::m_hWnd;
 CMode *CManager::m_Mode;
+CInput *CManager::m_Input;
 
 /*******************************************************************************
 * ŠÖ”–¼FCManager::CManager()
@@ -75,8 +76,9 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 	m_Renderer = new CRenderer;
 	m_Renderer->Init( hInstance, hWnd, bWindow );
 
-	CInput::InitKeyboard( hInstance, hWnd );
-	CInput::InitMouse( hInstance, hWnd );
+	m_Input = new CInput;
+	m_Input->InitKeyboard( hInstance, hWnd );
+	m_Input->InitJoyStick();
 
 	CSound::Init( hWnd );
 
@@ -99,7 +101,8 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 *******************************************************************************/
 void CManager::Uninit( void )
 {
-	CInput::Uninit();
+	m_Input->UninitKeyboard();
+	SAFE_DELETE(m_Input);
 	CFade::Uninit();
 
 	m_Mode->Uninit();
@@ -124,8 +127,9 @@ void CManager::Uninit( void )
 *******************************************************************************/
 void CManager::Update( void )
 {
-	CInput::UpdateKeyboard();
-	CInput::UpdateMouse();
+	m_Input->UpdateKeyboard();
+	m_Input->UpdateMouse();
+	m_Input->UpdateJoyStick();
 
 	m_Renderer->Update();
 	m_Mode->Update();

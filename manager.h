@@ -36,6 +36,7 @@
 *******************************************************************************/
 class CRenderer;
 class CMode;
+class CInput;
 
 /*******************************************************************************
 * ÉNÉâÉXêÈåæ
@@ -69,11 +70,13 @@ public:
 	static void CheckRot(Vector3 *rot);
 	static void SetMode(CMode *mode);
 	static CMode *GetMode(void);
+	static CInput *GetInput(void) { return m_Input; }
 private:
 	static CRenderer *m_Renderer;
 	static HWND *m_hWnd;
 	static CMode *m_Mode;
 	static OPMODE m_Opmode;
+	static CInput *m_Input;
 };
 
 #endif

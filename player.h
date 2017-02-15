@@ -86,7 +86,9 @@ protected:
 	virtual void SetMode(PLAYERMODE mode);
 	virtual void UpdateState(void);
 	virtual void SetState(PLAYERSTATE state);
+	virtual void SetStateJoyStick(PLAYERSTATE state);
 	virtual void Operate(void);
+	virtual void OperateJoyStick(void);
 	virtual void UpdateMode(void);
 	virtual void SetOrbit(void);
 	virtual void UpdateRockOn(void);

@@ -210,22 +210,22 @@ void CMeshField::Update( void )
 		Vector3 vector;
 
 		// マウス取得
-		MOUSESTATE *mouse = CInput::GetMouseState();
-		// カメラ取得
-		CGame *game = (CGame*)CManager::GetMode();
-		CCamera *camera = game->GetCamera();
-		//  XZ平面とスクリーン座標の交点算出
-		CManager::CalcScreenToXZ(&vector, mouse->localPos.x, mouse->localPos.y,
-			SCREEN_WIDTH, SCREEN_HEIGHT, camera->GetMtxView(), camera->GetMtxProj());
-		// 座標設定
-		Collision(&vector);
-		CTreeObject::Set(vector, CTreeObject::m_nTexNum);
+		//MOUSESTATE *mouse = CInput::GetMouseState();
+		//// カメラ取得
+		//CGame *game = (CGame*)CManager::GetMode();
+		//CCamera *camera = game->GetCamera();
+		////  XZ平面とスクリーン座標の交点算出
+		//CManager::CalcScreenToXZ(&vector, mouse->localPos.x, mouse->localPos.y,
+		//	SCREEN_WIDTH, SCREEN_HEIGHT, camera->GetMtxView(), camera->GetMtxProj());
+		//// 座標設定
+		//Collision(&vector);
+		//CTreeObject::Set(vector, CTreeObject::m_nTexNum);
 
-		SetVertex();
-		SetColorVertex(m_nCollNumVtx, D3DCOLOR_RGBA(255, 0, 0, 255));
-		SetColorVertex(m_nCollNumVtx + 1, D3DCOLOR_RGBA(255, 0, 0, 255));
-		SetColorVertex(m_nCollNumVtx + m_nColumnNumVtx, D3DCOLOR_RGBA(255, 0, 0, 255));
-		SetColorVertex(m_nCollNumVtx + m_nColumnNumVtx + 1, D3DCOLOR_RGBA(255, 0, 0, 255));
+		//SetVertex();
+		//SetColorVertex(m_nCollNumVtx, D3DCOLOR_RGBA(255, 0, 0, 255));
+		//SetColorVertex(m_nCollNumVtx + 1, D3DCOLOR_RGBA(255, 0, 0, 255));
+		//SetColorVertex(m_nCollNumVtx + m_nColumnNumVtx, D3DCOLOR_RGBA(255, 0, 0, 255));
+		//SetColorVertex(m_nCollNumVtx + m_nColumnNumVtx + 1, D3DCOLOR_RGBA(255, 0, 0, 255));
 	}
 
 }
@@ -764,37 +764,38 @@ void CMeshField::ResetPosition( void )
 *******************************************************************************/
 void CMeshField::Operate( void )
 {
-	if( CInput::GetKeyboardPress( DIK_F5 ) )
+	CInput *input = CManager::GetInput();
+	if(input->GetKeyboardPress( DIK_F5 ) )
 	{
 		// 高さ初期化
 		ResetPosition();
 	}
-	if( CInput::GetKeyboardPress( DIK_F7 ) )
+	if(input->GetKeyboardPress( DIK_F7 ) )
 	{
 		// 高さ保存
 		SaveFile();
 	}
-	if( CInput::GetKeyboardPress( DIK_F10 ) )
+	if(input->GetKeyboardPress( DIK_F10 ) )
 	{
 		// 高さロード
 		LoadFile();
 	}
 
 	// マウスクリック
-	if( CInput::GetMousePress( DIM_LEFT ) )
+	/*if(input->GetMousePress( DIM_LEFT ) )
 	{
 		mesh[ m_nCollNumVtx ].y += OPARATE_SPEED;
 		mesh[ m_nCollNumVtx + 1 ].y += OPARATE_SPEED;
 		mesh[ m_nCollNumVtx + m_nColumnNumVtx ].y += OPARATE_SPEED;
 		mesh[ m_nCollNumVtx + m_nColumnNumVtx + 1 ].y += OPARATE_SPEED;
 	}
-	if( CInput::GetMousePress( DIM_RIGHT ) )
+	if(input->GetMousePress( DIM_RIGHT ) )
 	{
 		mesh[ m_nCollNumVtx ].y -= OPARATE_SPEED;
 		mesh[ m_nCollNumVtx + 1 ].y -= OPARATE_SPEED;
 		mesh[ m_nCollNumVtx + m_nColumnNumVtx ].y -= OPARATE_SPEED;
 		mesh[ m_nCollNumVtx + m_nColumnNumVtx + 1 ].y -= OPARATE_SPEED;
-	}
+	}*/
 }
 
 /*******************************************************************************
