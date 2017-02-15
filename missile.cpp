@@ -49,7 +49,7 @@
 #define LIFE_MAX_BOSS		( 100 )			// 弾の寿命(ボス)
 #define NUM_UPDATE			( 3 )			// 更新回数
 #define EXPLOSION_RAND		( 50 )			// 爆発範囲
-const int PLAYER_BULLET_DAMAGE = 100;		// 弾のダメージ(プレイヤー)
+const int PLAYER_BULLET_DAMAGE = 1;			// 弾のダメージ(プレイヤー)
 const int ENEMY_BULLET_DAMAGE = 20;			// 弾のダメージ(エネミー)
 const int BOSS_BULLET_DAMAGE = 10;			// 弾のダメージ(ボス)
 const int PLAYER_BULLET_LENGTH = 50;		// 弾のダメージ(プレイヤー)
@@ -73,7 +73,7 @@ CMissile::CMissile(DRAWORDER DrawOrder, OBJTYPE ObjType) :CBullet(DrawOrder, Obj
 {
 	m_nSmokeCnt = 0;
 	m_nSearchCnt = 0;
-	m_Target = NULL;
+	m_nTargetId = -1;
 	D3DXQuaternionIdentity(&m_Quaternion);
 	m_nLife = LIFE_MAX;
 }
@@ -90,18 +90,18 @@ CMissile::~CMissile()
 }
 
 /*******************************************************************************
-* 関数名：CMissile::Init(Vector3 pos, Vector3 vec, Vector3 *target)
+* 関数名：CMissile::Init(Vector3 pos, Vector3 vec, int id)
 *
 * 引数	：
 * 戻り値：
 * 説明	：初期化処理
 *******************************************************************************/
-void CMissile::Init(Vector3 pos, Vector3 vec, Vector3 *target)
+void CMissile::Init(Vector3 pos, Vector3 vec, int id)
 {
 	m_Pos = pos;
 	m_Vec = vec;
 	m_Vec.Normalize();
-	m_Target = target;
+	m_nTargetId = id;
 
 	// デバイスの取得
 	CRenderer *renderer = CManager::GetRenderer();
@@ -167,7 +167,7 @@ void CMissile::Init(Vector3 pos, Vector3 vec, Vector3 *target)
 *******************************************************************************/
 void CMissile::Update(void)
 {
-	if (!m_Target)
+	if (m_nTargetId < 0)
 	{// ターゲットしていたら
 		return;
 	}
@@ -203,18 +203,18 @@ void CMissile::Draw(void)
 }
 
 /*******************************************************************************
-* 関数名：CMissile *CMissile::Create( Vector3 pos, Vector3 vec, CScene *target )
+* 関数名：CMissile *CMissile::Create(Vector3 pos, Vector3 vec, int id)
 *
 * 引数	：
 * 戻り値：
 * 説明	：生成処理
 *******************************************************************************/
-CMissile *CMissile::Create(Vector3 pos, Vector3 vec, Vector3 *target)
+CMissile *CMissile::Create(Vector3 pos, Vector3 vec, int id)
 {
 	CMissile *missile;
 	missile = new CMissile;
 
-	missile->Init(pos, vec, target);
+	missile->Init(pos, vec, id);
 	return missile;
 }
 
@@ -268,8 +268,31 @@ void CMissile::UpdateQuaternion(void)
 	D3DXQUATERNION quat = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
 	D3DXMATRIX matrix;
 
+	/* 敵の索敵 */
+	CScene *scene = CScene::GetList(DRAWORDER_3D);
+	CScene *next = NULL;
+	// ターゲットしていなければ
+	while (scene != NULL)
+	{
+		next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
+		if (scene->GetObjType() == OBJTYPE_ENEMY && !scene->GetDeleteFlg())
+		{
+			CEnemy *enemy = dynamic_cast<CEnemy*>(scene);
+			if (m_nTargetId == enemy->GetId())
+			{
+				break;
+			}
+		}
+		scene = next;
+	}
+
+	if (!scene)
+	{
+		return;
+	}
+
 	// 自分から敵へのベクトルを求める
-	Vector3 vecTarget = *m_Target - m_Pos;
+	Vector3 vecTarget = scene->GetTargetPos() - m_Pos;
 
 	////ベクトルAとBの長さを計算する
 	float lengthA = m_Vec.Length();

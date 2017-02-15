@@ -58,6 +58,7 @@ const int BURNER_CNT = 20;				// バーナーカウンタ
 /*******************************************************************************
 * グローバル変数
 *******************************************************************************/
+int CEnemy::m_nEnemyNum;
 
 /*******************************************************************************
 * 関数名：CEnemy::CEnemy( DRAWORDER DrawOrder, OBJTYPE ObjType ):CDynamicModel( DrawOrder, ObjType )
@@ -80,6 +81,8 @@ CEnemy::CEnemy(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder, O
 	m_nSearchCnt = 0;
 	m_pAfterBurner = NULL;
 	m_bTarget = false;
+	m_nId = m_nEnemyNum;
+	m_nEnemyNum++;
 }
 
 /*******************************************************************************
@@ -356,11 +359,42 @@ void CEnemy::DeleteTarget(void)
 			next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
 			if (scene->GetObjType() == OBJTYPE_PLAYER)
 			{
-				dynamic_cast<CPlayer*>(scene)->SetTarget(NULL);
+				dynamic_cast<CPlayer*>(scene)->SetTargetId(-1);
  				CCamera *camera = dynamic_cast<CGame*>(CManager::GetMode())->GetCamera();
 				camera->SetCameraMode(CAMERAMODE_SNEAK);
 			}
 			scene = next;
 		}
 	}
+}
+
+/*******************************************************************************
+* 関数名：CEnemy *CEnemy::Get(int id)
+*
+* 引数	：
+* 戻り値：
+* 説明	：敵取得処理
+*******************************************************************************/
+CEnemy *CEnemy::Get(int id)
+{
+	/* 敵の索敵 */
+	CScene *scene = CScene::GetList(DRAWORDER_3D);
+	CScene *next = NULL;
+	CScene *nearScene = NULL;
+	// ターゲットしていなければ
+	while (scene != NULL)
+	{
+		next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
+		if (scene->GetObjType() == OBJTYPE_ENEMY && !scene->GetDeleteFlg())
+		{
+			CEnemy *enemy = dynamic_cast<CEnemy*>(scene);
+			if (id == enemy->GetId())
+			{
+				break;
+			}
+		}
+		scene = next;
+	}
+
+	return dynamic_cast<CEnemy*>(scene);
 }

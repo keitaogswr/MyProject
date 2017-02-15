@@ -105,6 +105,7 @@ public:
 	virtual void SetKeep(int keep) {}
 	virtual Vector3 GetTargetPos(void) { return Vector3(0.0f, 0.0f, 0.0f); }
 	virtual CScene *GetTarget(void) { return NULL; }
+	virtual int GetId(void) { return -1; }
 
 	CScene *m_Prev;			// 前のポインタ
 	CScene *m_Next;			// 次のポインタ

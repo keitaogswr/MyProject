@@ -38,7 +38,7 @@ class CMissile : public CBullet
 private:
 	int m_nSmokeCnt;				// 煙カウンタ
 	int m_nSearchCnt;				// 索敵カウンタ
-	Vector3 *m_Target;				// ターゲットの位置
+	int m_nTargetId;				// ターゲットのID
 	D3DXQUATERNION m_Quaternion;	// クォータニオン
 
 	void UpdateCollision(void);		// 当たり判定
@@ -47,10 +47,10 @@ public:
 	CMissile(DRAWORDER DrawOrder = DRAWORDER_3DLATE, OBJTYPE ObjType = OBJTYPE_BILLBOARD);
 	~CMissile();
 
-	void Init(Vector3 pos, Vector3 vec, Vector3 *target);
+	void Init(Vector3 pos, Vector3 vec, int id);
 	void Update(void);
 	void Draw(void);
 
-	static CMissile *Create(Vector3 pos, Vector3 vec, Vector3 *target);
+	static CMissile *Create(Vector3 pos, Vector3 vec, int id);
 };
 

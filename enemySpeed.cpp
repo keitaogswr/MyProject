@@ -46,7 +46,7 @@
 
 const float SHADOW_RADIUS = 20.0f;		// 影の半径
 const float SHADOW_HEIGHT = 1000.0f;	// 影の高さ
-const int LIFE_MAX = 100;				// 最大ライフ
+const int LIFE_MAX = 1;					// 最大ライフ
 const int SEARCH_LENG = 1600;			// 索敵範囲
 const int ATTACK_CNT = 60;				// 攻撃カウンタ
 const int COLLISION_LENGTH = 10;		// あたり判定
@@ -68,6 +68,7 @@ const int BURNER_CNT = 15;				// バーナーカウンタ
 CEnemySpeed::CEnemySpeed(DRAWORDER DrawOrder, OBJTYPE ObjType) :CEnemy(DrawOrder, ObjType)
 {
 	m_Scl = Vector3(1.5f, 1.5f, 1.5f);
+	m_nLife = LIFE_MAX;
 }
 
 /*******************************************************************************

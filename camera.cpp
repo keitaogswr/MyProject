@@ -159,13 +159,13 @@ void CCamera::Update( void )
 	CPlayer *player = game->GetPlayer();
 
 	// 視点旋回
-	if (CInput::GetKeyboardPress(DIK_K))
+	if (CInput::GetKeyboardPress(DIK_LEFT))
 	{
 		m_RotN.y -= ROT_SPEED;
 		CManager::CheckRot(&m_RotN.y); // 円周率チェック
 	}
 	// 視点旋回
-	if (CInput::GetKeyboardPress(DIK_L))
+	if (CInput::GetKeyboardPress(DIK_RIGHT))
 	{
 		m_RotN.y += ROT_SPEED;
 		CManager::CheckRot(&m_RotN.y); // 円周率チェック
@@ -199,7 +199,7 @@ void CCamera::Update( void )
 	Vector3 move = player->GetMove();
 	Vector3 rad;
 	float radTps;
-	CScene *target;
+	CEnemy *target;
 	Vector3 targetPos;
 	float x, z;
 	switch (m_nMode)
@@ -251,7 +251,7 @@ void CCamera::Update( void )
 		CManager::CheckRot(&m_Rot);		// 円周率チェック
 
 		// ターゲットの位置取得
-		target = player->GetTarget();
+		target = CEnemy::Get(player->GetTargetId());
 		if (target)
 		{
 			targetPos = target->GetTargetPos();

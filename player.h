@@ -79,7 +79,7 @@ protected:
 	CStencilShadow *m_Shadow;			// 影ポインタ
 	COrbit *m_Orbit[2];					// オービットポインタ
 	int m_nLife;						// ライフ
-	CScene *m_Target;					// ターゲットしているオブジェクト
+	int m_nTarget;						// ターゲットしている敵ID
 	int m_nExplosionCnt;				// 爆発カウンタ
 	int m_nKeep;						// 仰け反り耐久値
 
@@ -105,8 +105,8 @@ public:
 	static CPlayer *Create(Vector3 pos);
 	virtual void SetDamage(int nDamage) { m_nLife -= nDamage; }
 	virtual void SetKeep(int keep) { m_nKeep -= keep; }
-	CScene *GetTarget(void) { return m_Target; }
-	void SetTarget(CScene *scene) { m_Target = scene; }
+	int GetTargetId(void) { return m_nTarget; }
+	void SetTargetId(int id) { m_nTarget = id; }
 };
 
 #endif

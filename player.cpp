@@ -97,7 +97,7 @@ CPlayer::CPlayer(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder,
 	m_Shadow = NULL;
 	m_Orbit[0] = m_Orbit[1] = NULL;
 	m_nLife = LIFE_MAX;
-	m_Target = NULL;
+	m_nTarget = -1;
 	m_nExplosionCnt = 0;
 	m_nKeep = KEEP_MAX;
 	m_fCollision = COLLISION;
@@ -245,10 +245,14 @@ void CPlayer::Update(void)
 
 	if (m_bRockOn == true && m_bBullet == true && m_Mode == PLAYERMODE_HUMAN)
 	{// ターゲットしているときx軸を敵に向かせる
-		Vector3 pos = m_Target->GetTargetPos();
-		Vector2 vec2 = Vector2(pos.z - m_Pos.z, pos.x - m_Pos.x);
-		m_RotN.x = atan2f(pos.y - m_Pos.y, vec2.Length());
-		CManager::CheckRot(&m_RotN.x);
+		CEnemy *target = CEnemy::Get(m_nTarget);
+		if (target)
+		{
+			Vector3 pos = target->GetTargetPos();
+			Vector2 vec2 = Vector2(pos.z - m_Pos.z, pos.x - m_Pos.x);
+			m_RotN.x = atan2f(pos.y - m_Pos.y, vec2.Length());
+			CManager::CheckRot(&m_RotN.x);
+		}
 	}
 	else
 	{// ターゲットしていないときは正面を向かせる
@@ -553,14 +557,14 @@ void CPlayer::UpdateState(void)
 			CModel *model = m_MotionManager->GetModel(8);
 			D3DXMATRIX *matrix = model->GetMatrix();
 			Vector3 pos = Vector3(matrix->_41, matrix->_42, matrix->_43);
-			m_bRockOn ? vec = m_Target->GetTargetPos() - pos : vec = Vector3(sinf(D3DX_PI + m_Rot.y), 0.0f, cosf(D3DX_PI + m_Rot.y));
+			m_bRockOn ? vec = CEnemy::Get(m_nTarget)->GetTargetPos() - pos : vec = Vector3(sinf(D3DX_PI + m_Rot.y), 0.0f, cosf(D3DX_PI + m_Rot.y));
 			vec.Normalize();
 			CBullet::Create(Vector3(pos.x, pos.y, pos.z), vec, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
 			model = m_MotionManager->GetModel(7);
 			matrix = model->GetMatrix();
 			pos = Vector3(matrix->_41, matrix->_42, matrix->_43);
-			m_bRockOn ? vec = m_Target->GetTargetPos() - pos : vec = Vector3(sinf(D3DX_PI + m_Rot.y), 0.0f, cosf(D3DX_PI + m_Rot.y));
+			m_bRockOn ? vec = CEnemy::Get(m_nTarget)->GetTargetPos() - pos : vec = Vector3(sinf(D3DX_PI + m_Rot.y), 0.0f, cosf(D3DX_PI + m_Rot.y));
 			vec.Normalize();
 			CBullet::Create(Vector3(pos.x, pos.y, pos.z), vec, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
@@ -732,9 +736,10 @@ void CPlayer::Operate(void)
 			// 弾発射
 			if (CInput::GetKeyboardTrigger(DIK_SPACE))
 			{
-				if (m_Target)
+				if (CEnemy::Get(m_nTarget))
 				{
-					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y), 1.0f, cosf(m_Rot.y)), &m_Target->GetPosition());
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y + D3DX_PI * 0.5f), 1.0f, cosf(m_Rot.y + D3DX_PI * 0.5f)), m_nTarget);
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y - D3DX_PI * 0.5f), 1.0f, cosf(m_Rot.y - D3DX_PI * 0.5f)), m_nTarget);
 					m_bBullet = true;
 				}
 			}
@@ -811,7 +816,7 @@ void CPlayer::Operate(void)
 			break;
 		}
 		// ジャンプ
-		if (CInput::GetKeyboardTrigger(DIK_J) && m_bJump == false
+		if (CInput::GetKeyboardTrigger(DIK_UP) && m_bJump == false
 			&& (m_State == PLAYERSTATE_WAIT || m_State == PLAYERSTATE_WALK))
 		{
 			m_Move.y = JUMP_SPEED;
@@ -820,7 +825,7 @@ void CPlayer::Operate(void)
 		}
 
 		// 変形
-		if (CInput::GetKeyboardTrigger(DIK_V))
+		if (CInput::GetKeyboardTrigger(DIK_DOWN))
 		{
 			switch (m_Mode)
 			{// モードごとの処理
@@ -957,7 +962,7 @@ void CPlayer::UpdateRockOn(void)
 	/* 敵の索敵 */
 	CScene *scene = CScene::GetList(DRAWORDER_3D);
 	CScene *next = NULL;
-	CScene *nearScene = NULL;
+	int id = -1;
 	// ターゲットしていなければ
 	while (scene != NULL)
 	{
@@ -970,18 +975,44 @@ void CPlayer::UpdateRockOn(void)
 			if (length < SEARCH_LENG * SEARCH_LENG && length < nearLeng)
 			{// 一番近い敵を更新
 				nearLeng = length;
-				nearScene = scene;
+				id = dynamic_cast<CEnemy*>(scene)->GetId();
 			}
 		}
 		scene = next;
 	}
-	if (!m_Target && m_bRockOn == true && nearScene)
+	if (m_nTarget < 0 && m_bRockOn == true && id >= 0)
 	{
-		m_Target = nearScene;
+		m_nTarget = id;
 		// ターゲットしている敵にフラグを渡す
-		dynamic_cast<CEnemy*>(m_Target)->SetTarget(true);
+		CEnemy::Get(m_nTarget)->SetTarget(true);
 	}
-	if(!m_Target && !nearScene)
+
+	if (CInput::GetKeyboardTrigger(DIK_R))
+	{// ロックオンの切り替え
+		m_bRockOn = m_bRockOn == true ? false : true;
+
+		if (m_bRockOn)
+		{
+			if (m_nTarget >= 0)
+			{// ターゲットしている敵にフラグを渡す
+				CEnemy::Get(m_nTarget)->SetTarget(false);
+			}
+			m_nTarget = id;
+			if (m_nTarget >= 0)
+			{// ターゲットしている敵にフラグを渡す
+				CEnemy::Get(m_nTarget)->SetTarget(true);
+			}
+			else
+			{
+				m_bRockOn = false;
+			}
+		}
+		else
+		{
+			m_nTarget = -1;
+		}
+	}
+	if (m_nTarget < 0 && id < 0)
 	{
 		// ロックオンフラグをオフ
 		m_bRockOn = false;
@@ -992,45 +1023,25 @@ void CPlayer::UpdateRockOn(void)
 		reticle->SetRockOn(false);
 	}
 
-	if (CInput::GetKeyboardTrigger(DIK_R))
-	{// ロックオンの切り替え
-		m_bRockOn = m_bRockOn == true ? false : true;
-		if (m_bRockOn)
-		{
-			if (m_Target)
-			{// ターゲットしている敵にフラグを渡す
-				dynamic_cast<CEnemy*>(m_Target)->SetTarget(false);
-			}
-			m_Target = nearScene;
-			if (m_Target)
-			{// ターゲットしている敵にフラグを渡す
-				dynamic_cast<CEnemy*>(m_Target)->SetTarget(true);
-			}
-			else
-			{
-				m_bRockOn = false;
-			}
-		}
-	}
-
 	if (m_bRockOn)
 	{// ロックオンフラグがtrueのとき
 		// カメラをロックオンモードに変更
 		camera->SetCameraMode(CAMERAMODE_ROCKON);
-		vec = m_Target->GetPosition();
+		CEnemy *enemy = CEnemy::Get(m_nTarget);
+		vec = enemy->GetPosition();
 		vec = m_Pos - vec;
 		length = vec.LengthSq();
 		if (length > SEARCH_LENG * SEARCH_LENG)
 		{
 			m_bRockOn = false;
 		}
-		if (m_Target)
+		if (m_nTarget >= 0)
 		{// 敵が範囲内にいたら
 			// 照準をロックオンモードにする
 			CReticle *reticle = ((CGame*)CManager::GetMode())->GetReticle();
 			reticle->SetRockOn(true);
 		}
-		else if (!m_Target)
+		else if (m_nTarget < 0)
 		{// 敵が範囲内にいなかったら
 			// ロックオンフラグをオフ
 			m_bRockOn = false;
@@ -1048,10 +1059,6 @@ void CPlayer::UpdateRockOn(void)
 		// 照準を通常モードにする
 		CReticle *reticle = ((CGame*)CManager::GetMode())->GetReticle();
 		reticle->SetRockOn(false);
-		if (m_Target && !m_Target->GetDeleteFlg())
-		{// ターゲットしている敵にフラグを渡す
-			dynamic_cast<CEnemy*>(m_Target)->SetTarget(false);
-		}
 	}
 }
 
