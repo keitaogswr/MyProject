@@ -8,6 +8,3 @@ Release/
 *.iobj
 *.ipdb
 *.pdb
-*.aps
-*.rc
-resource.h
