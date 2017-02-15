@@ -87,7 +87,7 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 	CDebugProc::Init();
 #endif
 
-	SetMode(new CLoad);
+	SetMode(new CTitle);
 }
 
 /*******************************************************************************

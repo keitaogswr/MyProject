@@ -29,7 +29,10 @@
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
+
+#ifdef _DEBUG
 #include <crtdbg.h>
+#endif
 
 #include "Vector.h"
 

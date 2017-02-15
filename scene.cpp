@@ -40,7 +40,7 @@ CScene::CScene(DRAWORDER DrawOrder, OBJTYPE ObjType)
 	else
 	{// 先頭が埋まっていたら
 		m_Cur[DrawOrder]->m_Next = this;	// 現在の次のポインタに自分のポインタを代入
-		m_Prev = m_Cur[DrawOrder];		// 自分の前のポインタに現在のポインタを代入
+		m_Prev = m_Cur[DrawOrder];			// 自分の前のポインタに現在のポインタを代入
 		m_Cur[DrawOrder] = this;			// 現在に自分のポインタを代入
 		m_Next = NULL;						// 自分の次のポインタにNULLを設定
 	}

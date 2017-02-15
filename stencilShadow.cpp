@@ -15,7 +15,9 @@
 #include "renderer.h"
 #include "scene.h"
 #include "stencilShadow.h"
+#ifdef _DEBUG
 #include "debugProc.h"
+#endif
 
 /*******************************************************************************
 * É}ÉNÉçíËã`

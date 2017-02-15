@@ -15,10 +15,12 @@
 #include "renderer.h"
 #include "scene.h"
 #include "scene3D.h"
-#include "debugProc.h"
 #include "texture.h"
 #include "lazer.h"
 #include "explosion.h"
+#ifdef _DEBUG
+#include "debugProc.h"
+#endif
 
 /*******************************************************************************
 * É}ÉNÉçíËã`

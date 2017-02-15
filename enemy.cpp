@@ -79,6 +79,7 @@ CEnemy::CEnemy(DRAWORDER DrawOrder, OBJTYPE ObjType) :CDynamicModel(DrawOrder, O
 	m_nStateCnt = 0;
 	m_nSearchCnt = 0;
 	m_pAfterBurner = NULL;
+	m_bTarget = false;
 }
 
 /*******************************************************************************
@@ -345,7 +346,7 @@ void CEnemy::UpdateAttack(void)
 void CEnemy::DeleteTarget(void)
 {
 	// ターゲットされてたら
-	if (m_bTarget)
+	if (m_bTarget == true)
 	{// プレイヤーのターゲットを外す
 	 /* 敵の索敵 */
 		CScene *scene = CScene::GetList(DRAWORDER_3D);
@@ -356,7 +357,7 @@ void CEnemy::DeleteTarget(void)
 			if (scene->GetObjType() == OBJTYPE_PLAYER)
 			{
 				dynamic_cast<CPlayer*>(scene)->SetTarget(NULL);
-				CCamera *camera = dynamic_cast<CGame*>(CManager::GetMode())->GetCamera();
+ 				CCamera *camera = dynamic_cast<CGame*>(CManager::GetMode())->GetCamera();
 				camera->SetCameraMode(CAMERAMODE_SNEAK);
 			}
 			scene = next;

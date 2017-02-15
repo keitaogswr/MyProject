@@ -128,7 +128,7 @@ void CGame::Init(void)
 
 	// リソース読み込み
 	CTreeObject::LoadFile();
-
+	// ポーズ初期化
 	CPause::Init();
 	// サウンド再生
 	CSound::Play(CSound::SOUND_LABEL_BGM_001);

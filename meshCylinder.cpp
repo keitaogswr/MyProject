@@ -16,8 +16,10 @@
 #include "scene.h"
 #include "scene3D.h"
 #include "meshCylinder.h"
-#include "debugProc.h"
 #include "texture.h"
+#ifdef _DEBUG
+#include "debugProc.h"
+#endif
 
 /*******************************************************************************
 * É}ÉNÉçíËã`

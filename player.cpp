@@ -732,8 +732,11 @@ void CPlayer::Operate(void)
 			// 弾発射
 			if (CInput::GetKeyboardTrigger(DIK_SPACE))
 			{
-				CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y), 1.0f, cosf(m_Rot.y)), &m_Target->GetPosition());
-				m_bBullet = true;
+				if (m_Target)
+				{
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y), 1.0f, cosf(m_Rot.y)), &m_Target->GetPosition());
+					m_bBullet = true;
+				}
 			}
 			break;
 		}
@@ -950,16 +953,16 @@ void CPlayer::UpdateRockOn(void)
 	Vector3 vec;
 	float nearLeng = SEARCH_LENG * SEARCH_LENG;
 	float length;
-	bool targetFlag = false;
 
 	/* 敵の索敵 */
 	CScene *scene = CScene::GetList(DRAWORDER_3D);
 	CScene *next = NULL;
 	CScene *nearScene = NULL;
+	// ターゲットしていなければ
 	while (scene != NULL)
 	{
 		next = scene->m_Next;	// delete時のメモリリーク回避のためにポインタを格納
-		if (scene->GetObjType() == OBJTYPE_ENEMY)
+		if (scene->GetObjType() == OBJTYPE_ENEMY && !scene->GetDeleteFlg())
 		{
 			vec = scene->GetPosition();
 			vec = m_Pos - vec;
@@ -967,17 +970,16 @@ void CPlayer::UpdateRockOn(void)
 			if (length < SEARCH_LENG * SEARCH_LENG && length < nearLeng)
 			{// 一番近い敵を更新
 				nearLeng = length;
-				targetFlag = true;
 				nearScene = scene;
 			}
 		}
 		scene = next;
 	}
-
-	// ターゲットしていなければ
-	if (!m_Target && m_bRockOn == true)
+	if (!m_Target && m_bRockOn == true && nearScene)
 	{
 		m_Target = nearScene;
+		// ターゲットしている敵にフラグを渡す
+		dynamic_cast<CEnemy*>(m_Target)->SetTarget(true);
 	}
 	if(!m_Target && !nearScene)
 	{
@@ -995,9 +997,13 @@ void CPlayer::UpdateRockOn(void)
 		m_bRockOn = m_bRockOn == true ? false : true;
 		if (m_bRockOn)
 		{
+			if (m_Target)
+			{// ターゲットしている敵にフラグを渡す
+				dynamic_cast<CEnemy*>(m_Target)->SetTarget(false);
+			}
 			m_Target = nearScene;
 			if (m_Target)
-			{
+			{// ターゲットしている敵にフラグを渡す
 				dynamic_cast<CEnemy*>(m_Target)->SetTarget(true);
 			}
 			else
@@ -1018,13 +1024,13 @@ void CPlayer::UpdateRockOn(void)
 		{
 			m_bRockOn = false;
 		}
-		if (targetFlag == true)
+		if (m_Target)
 		{// 敵が範囲内にいたら
 			// 照準をロックオンモードにする
 			CReticle *reticle = ((CGame*)CManager::GetMode())->GetReticle();
 			reticle->SetRockOn(true);
 		}
-		else if (targetFlag == false)
+		else if (!m_Target)
 		{// 敵が範囲内にいなかったら
 			// ロックオンフラグをオフ
 			m_bRockOn = false;
@@ -1042,6 +1048,10 @@ void CPlayer::UpdateRockOn(void)
 		// 照準を通常モードにする
 		CReticle *reticle = ((CGame*)CManager::GetMode())->GetReticle();
 		reticle->SetRockOn(false);
+		if (m_Target && !m_Target->GetDeleteFlg())
+		{// ターゲットしている敵にフラグを渡す
+			dynamic_cast<CEnemy*>(m_Target)->SetTarget(false);
+		}
 	}
 }
 

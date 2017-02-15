@@ -49,7 +49,7 @@
 const int PLAYER_BULLET_DAMAGE = 100;		// 弾のダメージ(プレイヤー)
 const int ENEMY_BULLET_DAMAGE = 20;			// 弾のダメージ(エネミー)
 const int BOSS_BULLET_DAMAGE = 10;			// 弾のダメージ(ボス)
-const int PLAYER_BULLET_LENGTH = 70;		// 弾のダメージ(プレイヤー)
+const int PLAYER_BULLET_LENGTH = 50;		// 弾の当たり判定(プレイヤー)
 const int ENEMY_BULLET_LENGTH = 20;			// 弾の当たり判定(エネミー)
 const int BOSS_BULLET_LENGTH = 50;			// 弾の当たり判定(ボス)
 

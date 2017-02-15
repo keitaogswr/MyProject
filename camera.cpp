@@ -252,11 +252,19 @@ void CCamera::Update( void )
 
 		// ターゲットの位置取得
 		target = player->GetTarget();
-		targetPos = target->GetTargetPos();
+		if (target)
+		{
+			targetPos = target->GetTargetPos();
+		}
+		else
+		{
+			return;
+		}
+		
 		// 注視点移動量の更新
 		// 速度によって次の目的地を伸ばす
 		m_MoveR.x = (targetPos.x - m_PosR.x) * MOVE_ATTEN_R_ROCKON;
-		m_MoveR.y = (targetPos.y - m_PosR.y) * MOVE_ATTEN_R_ROCKON;
+ 		m_MoveR.y = (targetPos.y - m_PosR.y) * MOVE_ATTEN_R_ROCKON;
 		m_MoveR.z = (targetPos.z - m_PosR.z) * MOVE_ATTEN_R_ROCKON;
 
 		// 注視点の位置更新

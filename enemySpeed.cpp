@@ -38,7 +38,7 @@
 /*******************************************************************************
 * マクロ定義
 *******************************************************************************/
-#define MOVE_SPEED		( 1.5f )		// 移動量
+#define MOVE_SPEED		( 2.0f )		// 移動量
 #define ROT_SPEED		( 0.05f )		// 回転量
 
 #define ROT_ATTEN		( 0.1f )		// 回転量減衰係数
@@ -49,7 +49,7 @@ const float SHADOW_HEIGHT = 1000.0f;	// 影の高さ
 const int LIFE_MAX = 100;				// 最大ライフ
 const int SEARCH_LENG = 1600;			// 索敵範囲
 const int ATTACK_CNT = 60;				// 攻撃カウンタ
-const int COLLISION_LENGTH = 20;		// あたり判定
+const int COLLISION_LENGTH = 10;		// あたり判定
 const int DAMAGE_CNT = 60;				// 被弾カウンタ
 const int SEARCH_CNT = 10;				// 索敵カウンタ
 const int BURNER_CNT = 15;				// バーナーカウンタ
