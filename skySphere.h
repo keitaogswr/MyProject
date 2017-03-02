@@ -35,6 +35,8 @@ class CSkySphere : public CSkyDome
 {
 protected:
 	MESHFAN m_MeshFan[2];
+
+	void SetVertex(void);
 public:
 	CSkySphere(DRAWORDER DrawOrder = DRAWORDER_BACK, OBJTYPE ObjType = OBJTYPE_NONE);
 	~CSkySphere();

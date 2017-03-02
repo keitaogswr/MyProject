@@ -253,7 +253,7 @@ void CInput::UpdateKeyboard(void)
 
 			//Repeat
 			m_aKeyStateRepeat[nCntKey] = (m_aKeyState[nCntKey] | aKeyState[nCntKey]) ^ m_aKeyState[nCntKey];
-			if (GetKeyboardTrigger(nCntKey) == true | m_aKeystateRepeatCnt[nCntKey] > 40) {
+			if ((GetKeyboardTrigger(nCntKey) == true) | (m_aKeystateRepeatCnt[nCntKey] > 40)) {
 				m_aKeyStateRepeat[nCntKey] = aKeyState[nCntKey];
 			}
 		}
@@ -272,7 +272,6 @@ void CInput::UpdateKeyboard(void)
 ******************************************************************************/
 void CInput::UpdateMouse(void)
 {
-	BYTE aKeyState[MAX_MOUSE_KEY];
 	int nKeyID = 0;
 	DIMOUSESTATE2 aMouseState;
 
@@ -295,7 +294,7 @@ void CInput::UpdateMouse(void)
 
 			//Repeat
 			m_aMouseKeyStateRepeat[i] = (m_aMouseKeyState.rgbButtons[i] | aMouseState.rgbButtons[i]) ^ m_aMouseKeyState.rgbButtons[i];
-			if (GetMouseTrigger(i) == true | m_aMouseKeyStateRepeatCnt[i] > 40) {
+			if ((GetMouseTrigger(i) == true) | (m_aMouseKeyStateRepeatCnt[i] > 40)) {
 				m_aMouseKeyStateRepeat[i] = aMouseState.rgbButtons[i];
 			}
 
@@ -427,7 +426,7 @@ void CInput::UpdateJoyStick(void)
 
 			//Repeat
 			m_RepeatState.Gamepad.wButtons = (m_PressState.Gamepad.wButtons | state.Gamepad.wButtons) ^ m_PressState.Gamepad.wButtons;
-			if (TriggerJoyStick((WORD)i) == true | m_RepeatStateCnt > REPEAT_STATE_CNT) {
+			if ((TriggerJoyStick((WORD)i) == true) | (m_RepeatStateCnt > REPEAT_STATE_CNT)) {
 				m_RepeatState = state;
 			}
 

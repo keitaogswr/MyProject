@@ -167,7 +167,7 @@ void CSkySphere::Init(Vector3 pos, float rad, int row, int column)
 											cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 											cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn));
 
-			pVtx[nIdxCnt].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+			pVtx[nIdxCnt].col = m_Col;
 
 			// テクスチャブロック表示
 			//pVtx[ nIdxCnt ].tex.x = 1.0f * nCntColumn;
@@ -195,7 +195,7 @@ void CSkySphere::Init(Vector3 pos, float rad, int row, int column)
 											cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
 											cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn));
 
-			pVtx[nIdxCnt].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+			pVtx[nIdxCnt].col = m_Col;
 
 			// テクスチャブロック表示
 			//pVtx[ nIdxCnt ].tex.x = 1.0f * nCntColumn;
@@ -217,7 +217,7 @@ void CSkySphere::Init(Vector3 pos, float rad, int row, int column)
 	pVtx[0].pos.z = 0.0f;
 
 	pVtx[0].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
-	pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	pVtx[0].col = m_Col;
 
 	pVtx[0].tex.x = 0.0f;
 	pVtx[0].tex.y = 0.0f;
@@ -236,7 +236,7 @@ void CSkySphere::Init(Vector3 pos, float rad, int row, int column)
 			sinf(MESHDOME_ANGLE * RAD),
 			cosf(MESHDOME_ANGLE * RAD) *
 			cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * i));
-		pVtx[i].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[i].col = m_Col;
 
 		pVtx[i].tex.x = 0.0f;
 		pVtx[i].tex.y = 0.1f;
@@ -251,7 +251,7 @@ void CSkySphere::Init(Vector3 pos, float rad, int row, int column)
 	pVtx[0].pos.z = 0.0f;
 
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	pVtx[0].col = m_Col;
 
 	pVtx[0].tex.x = 0.0f;
 	pVtx[0].tex.y = 1.0f;
@@ -270,7 +270,7 @@ void CSkySphere::Init(Vector3 pos, float rad, int row, int column)
 			-sinf(MESHDOME_ANGLE * RAD),
 			cosf(MESHDOME_ANGLE * RAD) *
 			cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * (i - 1)));
-		pVtx[i].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[i].col = m_Col;
 
 		pVtx[i].tex.x = 0.0f;
 		pVtx[i].tex.y = 0.9f;
@@ -501,4 +501,148 @@ CSkySphere *CSkySphere::Create(Vector3 pos, float rad, int row, int column)
 	scene3D = new CSkySphere;
 	scene3D->Init(pos, rad, row, column);
 	return scene3D;
+}
+
+/*******************************************************************************
+* 関数名：void CSkySphere::SetVertex(void)
+*
+* 引数	：
+* 戻り値：
+* 説明	：頂点設定処理
+*******************************************************************************/
+void CSkySphere::SetVertex(void)
+{
+	// 頂点バッファの設定
+	VERTEX_3D *pVtx;
+	int nIdxCnt = 0;
+	int rowVtxMax;
+	/// ドーム部分
+	m_MeshDome.pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (int nCntRow = (m_MeshDome.nRowNumVtx - 1) / 2; nCntRow >= 0; nCntRow--)
+	{
+		for (int nCntColumn = 0; nCntColumn < m_MeshDome.nColumnNumVtx; nCntColumn++, nIdxCnt++)
+		{
+			pVtx[nIdxCnt].pos.x = cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
+				sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn) * m_MeshDome.fRadius;
+			pVtx[nIdxCnt].pos.y = sinf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) * m_MeshDome.fRadius;
+			pVtx[nIdxCnt].pos.z = cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
+				cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn) * m_MeshDome.fRadius;
+
+			pVtx[nIdxCnt].nor = D3DXVECTOR3(cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
+				sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn),
+				sinf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow),
+				cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
+				cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn));
+
+			pVtx[nIdxCnt].col = m_Col;
+
+			// テクスチャブロック表示
+			//pVtx[ nIdxCnt ].tex.x = 1.0f * nCntColumn;
+			//pVtx[ nIdxCnt ].tex.y = 1.0f * nCntRow;
+
+			// テクスチャ全面表示
+			pVtx[nIdxCnt].tex.x = (1.0f / m_MeshDome.nColumnBlock) * nCntColumn;
+			pVtx[nIdxCnt].tex.y = (1.0f / m_MeshDome.nRowBlock * 0.5f) * (m_MeshDome.nRowNumVtx - 1 - nCntRow);
+		}
+	}
+	rowVtxMax = (m_MeshDome.nRowNumVtx - 1) / 2 + 1;
+	for (int nCntRow = 1; nCntRow < rowVtxMax; nCntRow++)
+	{
+		for (int nCntColumn = 0; nCntColumn < m_MeshDome.nColumnNumVtx; nCntColumn++, nIdxCnt++)
+		{
+			pVtx[nIdxCnt].pos.x = cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
+				sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn) * m_MeshDome.fRadius;
+			pVtx[nIdxCnt].pos.y = sinf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) * -m_MeshDome.fRadius;
+			pVtx[nIdxCnt].pos.z = cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
+				cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn) * m_MeshDome.fRadius;
+
+			pVtx[nIdxCnt].nor = D3DXVECTOR3(cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
+				sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn),
+				sinf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow),
+				cosf(MESHDOME_ANGLE / (m_MeshDome.nRowBlock * 0.5f) * RAD * nCntRow) *
+				cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * nCntColumn));
+
+			pVtx[nIdxCnt].col = m_Col;
+
+			// テクスチャブロック表示
+			//pVtx[ nIdxCnt ].tex.x = 1.0f * nCntColumn;
+			//pVtx[ nIdxCnt ].tex.y = 1.0f * nCntRow;
+
+			// テクスチャ全面表示
+			pVtx[nIdxCnt].tex.x = (1.0f / m_MeshDome.nColumnBlock) * nCntColumn;
+			pVtx[nIdxCnt].tex.y = (1.0f / m_MeshDome.nRowBlock * 0.5f) * nCntRow + 0.5f;
+		}
+	}
+
+	m_MeshDome.pVtxBuff->Unlock();
+
+	/// ファン部分
+	m_MeshFan[0].pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[0].pos.x = 0.0f;
+	pVtx[0].pos.y = m_MeshDome.fRadius;
+	pVtx[0].pos.z = 0.0f;
+
+	pVtx[0].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+	pVtx[0].col = m_Col;
+
+	pVtx[0].tex.x = 0.0f;
+	pVtx[0].tex.y = 0.0f;
+
+	for (int i = 1, nIdxCnt = 0; i < m_MeshFan[0].nNumVtxMax; i++)
+	{
+		pVtx[i].pos.x = cosf(MESHDOME_ANGLE * RAD) *
+			sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * i) * m_MeshDome.fRadius;
+
+		pVtx[i].pos.y = sinf(MESHDOME_ANGLE * RAD) * m_MeshDome.fRadius;
+		pVtx[i].pos.z = cosf(MESHDOME_ANGLE * RAD) *
+			cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * i) * m_MeshDome.fRadius;
+
+		pVtx[i].nor = D3DXVECTOR3(cosf(MESHDOME_ANGLE * RAD) *
+			sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * i),
+			sinf(MESHDOME_ANGLE * RAD),
+			cosf(MESHDOME_ANGLE * RAD) *
+			cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * i));
+		pVtx[i].col = m_Col;
+
+		pVtx[i].tex.x = 0.0f;
+		pVtx[i].tex.y = 0.1f;
+	}
+
+	m_MeshFan[0].pVtxBuff->Unlock();
+
+	m_MeshFan[1].pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[0].pos.x = 0.0f;
+	pVtx[0].pos.y = -m_MeshDome.fRadius;
+	pVtx[0].pos.z = 0.0f;
+
+	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pVtx[0].col = m_Col;
+
+	pVtx[0].tex.x = 0.0f;
+	pVtx[0].tex.y = 1.0f;
+
+	for (int i = 1, nIdxCnt = 0; i < m_MeshFan[1].nNumVtxMax; i++)
+	{
+		pVtx[i].pos.x = cosf(MESHDOME_ANGLE * RAD) *
+			sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * (i - 1)) * m_MeshDome.fRadius;
+
+		pVtx[i].pos.y = -sinf(MESHDOME_ANGLE * RAD) * m_MeshDome.fRadius;
+		pVtx[i].pos.z = cosf(MESHDOME_ANGLE * RAD) *
+			cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * (i - 1)) * m_MeshDome.fRadius;
+
+		pVtx[i].nor = D3DXVECTOR3(cosf(MESHDOME_ANGLE * RAD) *
+			sinf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * (i - 1)),
+			-sinf(MESHDOME_ANGLE * RAD),
+			cosf(MESHDOME_ANGLE * RAD) *
+			cosf(-D3DX_PI + 360.0f / m_MeshDome.nColumnBlock * RAD * (i - 1)));
+		pVtx[i].col = m_Col;
+
+		pVtx[i].tex.x = 0.0f;
+		pVtx[i].tex.y = 0.9f;
+	}
+
+	m_MeshFan[1].pVtxBuff->Unlock();
 }

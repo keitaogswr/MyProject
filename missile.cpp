@@ -55,8 +55,8 @@ const int BOSS_BULLET_DAMAGE = 10;			// 弾のダメージ(ボス)
 const int PLAYER_BULLET_LENGTH = 50;		// 弾のダメージ(プレイヤー)
 const int ENEMY_BULLET_LENGTH = 20;			// 弾の当たり判定(エネミー)
 const int BOSS_BULLET_LENGTH = 50;			// 弾の当たり判定(ボス)
-const int SMOKE_UPDATE = 3;					// 煙の発生間隔
-const float ROT_ANGLE = 0.08f;				// 回転角度
+const int SMOKE_UPDATE = 1;					// 煙の発生間隔
+const float ROT_ANGLE = 0.05f;				// 回転角度
 
 /*******************************************************************************
 * グローバル変数
@@ -168,13 +168,13 @@ void CMissile::Init(Vector3 pos, Vector3 vec, int id)
 void CMissile::Update(void)
 {
 	if (m_nTargetId < 0)
-	{// ターゲットしていたら
+	{// ターゲットしてなかったら
 		return;
 	}
 	m_nSmokeCnt++;
 	if ((m_nSmokeCnt % SMOKE_UPDATE) == 0)
-	{
-		CSmoke::Create(m_Pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 50.0f, 50.0f);
+	{// 煙の生成
+		CSmoke::Create(m_Pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.2f), 70.0f, 70.0f);
 	}
 
 	// クォータニオンの更新
@@ -266,7 +266,6 @@ void CMissile::UpdateQuaternion(void)
 {
 	Vector3 axis = Vector3(0.0f, 0.0f, 0.0f);
 	D3DXQUATERNION quat = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
-	D3DXMATRIX matrix;
 
 	/* 敵の索敵 */
 	CScene *scene = CScene::GetList(DRAWORDER_3D);
@@ -287,7 +286,7 @@ void CMissile::UpdateQuaternion(void)
 	}
 
 	if (!scene)
-	{
+	{// ターゲットしている敵がいなかったら更新しない
 		return;
 	}
 
@@ -295,12 +294,10 @@ void CMissile::UpdateQuaternion(void)
 	Vector3 vecTarget = scene->GetTargetPos() - m_Pos;
 
 	////ベクトルAとBの長さを計算する
-	float lengthA = m_Vec.Length();
-	float lengthB = vecTarget.Length();
+	float lengthA;
 
 	// 自分の向いている向きと敵とのベクトルで外積を求め、軸のベクトルを求める
 	D3DXVec3Cross(&axis, &m_Vec, &vecTarget);
-	float sita = asinf(axis.Length() / (lengthA * lengthB));
 
 	D3DXQuaternionRotationAxis(&quat, &axis, ROT_ANGLE);	// 軸から回転させるクォータニオンを求める
 
@@ -308,16 +305,15 @@ void CMissile::UpdateQuaternion(void)
 	D3DXQuaternionConjugate(&R, &quat);
 
 	// ベクトル回転
-	D3DXVECTOR3 V;
-	D3DXVec3Normalize(&V, &m_Vec);							// 回転させるベクトルの正規化
-	Qv.x = V.x;
-	Qv.y = V.y;
-	Qv.z = V.z;
+	Qv.x = m_Vec.x;
+	Qv.y = m_Vec.y;
+	Qv.z = m_Vec.z;
 	Qv.w = 0.0f;
 	D3DXQuaternionMultiply(&Qv, &R, &Qv);
 	D3DXQuaternionMultiply(&Qv, &Qv, &quat);
 
-	m_Vec.x = Qv.x * lengthA;
-	m_Vec.y = Qv.y * lengthA;
-	m_Vec.z = Qv.z * lengthA;
+	m_Vec.x = Qv.x;
+	m_Vec.y = Qv.y;
+	m_Vec.z = Qv.z;
+	lengthA = m_Vec.Length();
 }

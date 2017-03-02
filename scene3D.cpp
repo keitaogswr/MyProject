@@ -43,6 +43,7 @@ CScene3D::CScene3D( DRAWORDER DrawOrder, OBJTYPE ObjType ):CScene( DrawOrder, Ob
 	m_Pos = Vector3( 0.0f, 0.0f, 0.0f );
 	m_Scl = D3DXVECTOR3( 1.0f, 1.0f, 1.0f );
 	m_Trans = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+	m_Col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 	m_pTexture = NULL;
 	m_VtxBuff = NULL;

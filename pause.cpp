@@ -165,11 +165,11 @@ void CPause::Update(void)
 	CInput *input = CManager::GetInput();
 	XINPUT_STATE *state = input->GetPressState();
 	// ポーズ画面操作
-	if (input->GetKeyboardTrigger(DIK_W) || state->Gamepad.sThumbLY > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	if (input->GetKeyboardTrigger(DIK_W)/* || input->TriggerJoyStick(XINPUT_GAMEPAD_DPAD_UP)*/)
 	{
 		m_nCurrent--;
 	}
-	if (input->GetKeyboardTrigger(DIK_S) || state->Gamepad.sThumbLY < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	if (input->GetKeyboardTrigger(DIK_S)/* || input->TriggerJoyStick(XINPUT_GAMEPAD_DPAD_DOWN)*/)
 	{
 		m_nCurrent++;
 	}
@@ -183,7 +183,7 @@ void CPause::Update(void)
 	}
 	// 選択ごとの動作
 	CGame *game = (CGame*)CManager::GetMode();
-	if(input->GetKeyboardTrigger(DIK_RETURN) || input->TriggerJoyStick(XINPUT_GAMEPAD_A))
+	if(input->GetKeyboardTrigger(DIK_RETURN)/* || input->TriggerJoyStick(XINPUT_GAMEPAD_A)*/)
 	{
 		switch (m_nCurrent)
 		{

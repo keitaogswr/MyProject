@@ -239,7 +239,7 @@ void CAnimationBoard::Draw(void)
 * 戻り値：
 * 説明	：生成処理
 *******************************************************************************/
-CAnimationBoard *CAnimationBoard::Create(Vector3 pos, D3DXCOLOR col, float width, float height)
+CAnimationBoard *CAnimationBoard::Create(Vector3 pos, Vector3 rot, D3DXCOLOR col, float width, float height)
 {
 	CAnimationBoard *effect;
 	effect = new CAnimationBoard;
@@ -358,7 +358,7 @@ void CAnimationBoard::SetRenderStateEnd(void)
 void CAnimationBoard::SetWorldMatrix(void)
 {
 	/* 変数定義 */
-	D3DXMATRIX mtxScl, mtxRot, mtxTrans;	// スケール、向き、ポジション
+	D3DXMATRIX mtxScl, mtxRot, mtxTrans, mtxInverse;	// スケール、向き、ポジション
 	D3DXMATRIX mtxView;
 
 	// デバイスの取得
@@ -368,27 +368,39 @@ void CAnimationBoard::SetWorldMatrix(void)
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_MtxWorld);
 
-	// ビューマトリックスを取得
-	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
-
-	// ビューマトリックスの逆行列を求める
-	D3DXMatrixInverse(&m_MtxWorld,
-		NULL,
-		&mtxView);
-
-	// マトリクスの移動に関する変数クリア
-	m_MtxWorld._41 = 0.0f;
-	m_MtxWorld._42 = 0.0f;
-	m_MtxWorld._43 = 0.0f;
-
 	// スケールを反映
 	D3DXMatrixScaling(&mtxScl, m_Scl.x, m_Scl.y, m_Scl.z);
 	D3DXMatrixMultiply(&m_MtxWorld,
 		&m_MtxWorld,
 		&mtxScl);
-	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
+
+	// 回転を反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Rot.y, m_Rot.x, m_Rot.z);
 	D3DXMatrixMultiply(&m_MtxWorld,
 		&m_MtxWorld,
+		&mtxRot);
+
+	// ビューマトリックスを取得
+	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+
+	// ビューマトリックスの逆行列を求める
+	D3DXMatrixInverse(&mtxInverse,
+		NULL,
+		&mtxView);
+
+	// マトリクスの移動に関する変数クリア
+	mtxInverse._41 = 0.0f;
+	mtxInverse._42 = 0.0f;
+	mtxInverse._43 = 0.0f;
+
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
+	D3DXMatrixMultiply(&mtxInverse,
+		&mtxInverse,
 		&mtxTrans);
+
+	// ワールドマトリックスと逆行列をかける
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxInverse);
 }

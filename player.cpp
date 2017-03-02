@@ -696,11 +696,11 @@ void CPlayer::UpdateState(void)
 void CPlayer::Operate(void)
 {
 	CInput *input = CManager::GetInput();
-	if (input->GetJoyStickConnected())
+	/*if (input->GetJoyStickConnected())
 	{
 		OperateJoyStick();
 		return;
-	}
+	}*/
 	CGame *game = (CGame*)CManager::GetMode();
 	CCamera *camera = game->GetCamera();
 	if (CManager::GetOperateMode() == CManager::OPMODE_PLAYER)
@@ -859,6 +859,8 @@ void CPlayer::Operate(void)
 				{
 					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y + D3DX_PI * 0.5f), 1.0f, cosf(m_Rot.y + D3DX_PI * 0.5f)), m_nTarget);
 					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y - D3DX_PI * 0.5f), 1.0f, cosf(m_Rot.y - D3DX_PI * 0.5f)), m_nTarget);
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y + D3DX_PI * 0.25f), 0.3f, cosf(m_Rot.y + D3DX_PI * 0.25f)), m_nTarget);
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y - D3DX_PI * 0.25f), 0.3f, cosf(m_Rot.y - D3DX_PI * 0.25f)), m_nTarget);
 					m_bBullet = true;
 				}
 			}
@@ -1158,6 +1160,8 @@ void CPlayer::OperateJoyStick(void)
 				{
 					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y + D3DX_PI * 0.5f), 1.0f, cosf(m_Rot.y + D3DX_PI * 0.5f)), m_nTarget);
 					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y - D3DX_PI * 0.5f), 1.0f, cosf(m_Rot.y - D3DX_PI * 0.5f)), m_nTarget);
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y + D3DX_PI * 0.25f), 0.3f, cosf(m_Rot.y + D3DX_PI * 0.25f)), m_nTarget);
+					CMissile::Create(m_Pos, Vector3(sinf(m_Rot.y - D3DX_PI * 0.25f), 0.3f, cosf(m_Rot.y - D3DX_PI * 0.25f)), m_nTarget);
 					m_bBullet = true;
 				}
 			}
@@ -1418,7 +1422,7 @@ void CPlayer::UpdateRockOn(void)
 		CEnemy::Get(m_nTarget)->SetTarget(true);
 	}
 
-	if (input->GetKeyboardTrigger(DIK_R) || input->TriggerJoyStick(XINPUT_GAMEPAD_Y))
+	if (input->GetKeyboardTrigger(DIK_R) /*|| input->TriggerJoyStick(XINPUT_GAMEPAD_Y)*/)
 	{// ƒƒbƒNƒIƒ“‚ÌØ‚è‘Ö‚¦
 		m_bRockOn = m_bRockOn == true ? false : true;
 

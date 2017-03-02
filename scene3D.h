@@ -41,6 +41,7 @@ class CScene3D : public CScene
 		D3DXVECTOR3 m_Scl;						// スケール値
 		D3DXVECTOR3 m_Trans;					// 平行移動
 		D3DXMATRIX m_MtxWorld;					// ワールドマトリックス
+		D3DXCOLOR m_Col;						// 頂点カラー
 
 		virtual void SetRenderStateBegin(void) {}	// レンダラーステート設定開始
 		virtual void SetRenderStateEnd(void) {}		// レンダラーステート設定終了

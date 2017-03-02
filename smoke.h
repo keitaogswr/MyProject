@@ -38,7 +38,7 @@ public:
 	CSmoke(DRAWORDER DrawOrder = DRAWORDER_EFFECT, OBJTYPE ObjType = OBJTYPE_EFFECT);
 	~CSmoke();
 
-	//void Init(Vector3 pos, D3DXCOLOR col, float width, float height);
+	void Init(Vector3 pos, D3DXCOLOR col, float width, float height);
 	//void Uninit(void);
 	void Update(void);
 	//void Draw(void);
