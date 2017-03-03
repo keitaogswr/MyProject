@@ -48,11 +48,11 @@ class CTime : public CScene
 		void Draw( void );
 
 		CNumber *m_Number[ TIMER_MAX ];
-		int m_nTime;
+		static int m_nTime;
 		int m_nTimeCnt;
 
 		static CTime *Create( Vector3 pos );
-		int GetTime(void) { return m_nTime; }
+		static int GetTime(void) { return m_nTime; }
 };
 
 #endif

@@ -32,6 +32,7 @@
 #include "titleCamera.h"
 #include "texture.h"
 #include "sound.h"
+#include "HewNetLib.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -73,6 +74,10 @@ CTitle::~CTitle()
 *******************************************************************************/
 void CTitle::Init(void)
 {
+	HewNetLib *hew = CManager::GetHew();
+	// 今ログインしてる輩を蹴り出す
+	hew->Reset();
+
 	CMotionManager::Load();
 	CScene *scene;
 	scene = CBg::Create(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), TEXTURE_TYPE_TITLE);
@@ -115,7 +120,10 @@ void CTitle::Update(void)
 	CInput *input = CManager::GetInput();
 	m_Camera->Update();
 	CScene::UpdateAll();
-	if (input->GetKeyboardTrigger(DIK_RETURN) || input->TriggerJoyStick(XINPUT_GAMEPAD_START))
+
+	HewNetLib *hew = CManager::GetHew();
+	// エンターを押すか、接続が確認されたら遷移
+	if (input->GetKeyboardTrigger(DIK_RETURN) || input->TriggerJoyStick(XINPUT_GAMEPAD_START) || hew->HasJoinUser())
 	{
 		CFade::Start(new CLoad);
 		CSound::Play(CSound::SOUND_LABEL_SE_BUTTON_000);

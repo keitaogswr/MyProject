@@ -56,7 +56,7 @@ const int PLAYER_BULLET_LENGTH = 50;		// 弾のダメージ(プレイヤー)
 const int ENEMY_BULLET_LENGTH = 20;			// 弾の当たり判定(エネミー)
 const int BOSS_BULLET_LENGTH = 50;			// 弾の当たり判定(ボス)
 const int SMOKE_UPDATE = 1;					// 煙の発生間隔
-const float ROT_ANGLE = 0.05f;				// 回転角度
+const float ROT_ANGLE = 0.06f;				// 回転角度
 
 /*******************************************************************************
 * グローバル変数

@@ -23,6 +23,7 @@
 #include "bg.h"
 #include "texture.h"
 #include "sound.h"
+#include "time.h"
 
 /*******************************************************************************
 * マクロ定義
@@ -84,6 +85,9 @@ void CResult::Uninit( void )
 {
 	CScene::UninitAll();
 	CSound::Stop();
+	HewNetLib *hew = CManager::GetHew();
+	// 好きな文字列        スコアがあるならスコア( 0から1000まで )
+	hew->SendResult("End", (int)CTime::GetTime());
 }
 
 /*******************************************************************************
@@ -98,9 +102,9 @@ void CResult::Update( void )
 	CInput *input = CManager::GetInput();
 	CScene::UpdateAll();
 	m_nStateCnt++;
-	if(input->GetKeyboardTrigger( DIK_RETURN ) || m_nStateCnt > SWITCH_CNT || input->TriggerJoyStick(XINPUT_GAMEPAD_START))
+	if (input->GetKeyboardTrigger(DIK_RETURN) || m_nStateCnt > SWITCH_CNT || input->TriggerJoyStick(XINPUT_GAMEPAD_START))
 	{
-		CFade::Start( new CTitle );
+		CFade::Start(new CTitle);
 	}
 }
 

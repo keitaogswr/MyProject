@@ -37,7 +37,7 @@
 #define LIFE_MAX			( 1000 )	// 寿命
 #define ATTEN_DEF			( 0.0001f )	// 初期減衰係数
 #define ATTEN_RISE			( 2.0f )	// 減衰係数の上昇倍率
-#define DRAW_SPEED			( 5 )		// 描画速度
+#define DRAW_SPEED			( 7 )		// 描画速度
 #define UP_SPEED			( 0.5f )	// 上昇速度
 #define LENG_SPEED			( 0.5f )	// 上昇速度
 const float RAND_WIDTH = 15.0f;
