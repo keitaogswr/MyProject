@@ -141,23 +141,7 @@ void CSceneX::Draw( void )
 	CRenderer *renderer = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
 
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity( &m_MtxWorld );
-	// スケールを反映
-	D3DXMatrixScaling( &mtxScl, m_Scl.x, m_Scl.y, m_Scl.z );
-	D3DXMatrixMultiply( &m_MtxWorld,
-						&m_MtxWorld,
-						&mtxScl );
-	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll( &mtxRot, m_Rot.y, m_Rot.x, m_Rot.z );
-	D3DXMatrixMultiply( &m_MtxWorld,
-						&m_MtxWorld,
-						&mtxRot );
-	// 位置を反映
-	D3DXMatrixTranslation( &mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z );
-	D3DXMatrixMultiply( &m_MtxWorld,
-						&m_MtxWorld,
-						&mtxTrans );
+	SetWorldMatrix();
 	
 	// ワールドマトリックスを設定
 	pDevice->SetTransform( D3DTS_WORLD, &m_MtxWorld );

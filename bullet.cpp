@@ -29,6 +29,7 @@
 #include "animationBoard.h"
 #include "explosion.h"
 #include "bullet.h"
+#include "orbit.h"
 #include "texture.h"
 
 /*******************************************************************************
@@ -38,7 +39,7 @@
 #define HEIGHT				( 10 )			// ポリゴン高さ
 #define TEXTURE_ROW			( 1 )			// テクスチャ列分割数
 #define TEXTURE_COLUMN		( 1 )			// テクスチャ行分割数
-#define MOVE_SPEED			( 10.0f )		// 弾の移動速度
+#define MOVE_SPEED			( 30.0f )		// 弾の移動速度
 #define MOVE_SPEED_ENEMY	( 25.0f )		// 弾の移動速度
 #define MOVE_SPEED_BOSS		( 50.0f )		// 弾の移動速度
 #define LIFE_MAX			( 50 )			// 弾の寿命
@@ -70,6 +71,7 @@ CBullet::CBullet(DRAWORDER DrawOrder, OBJTYPE ObjType) :CBillboard(DrawOrder, Ob
 	m_ObjType = OBJTYPE_NONE;
 	m_Col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Vec = Vector3(0.0f, 0.0f, 0.0f);
+	m_Orbit[0] = m_Orbit[1] = NULL;
 }
 
 /*******************************************************************************
@@ -97,12 +99,15 @@ void CBullet::Init(Vector3 pos, Vector3 vec, D3DXCOLOR col)
 	m_Vec = vec;
 	m_Col = col;
 
+	m_Orbit[0] = COrbit::Create(m_Pos, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+	m_Orbit[1] = COrbit::Create(m_Pos, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+
 	// デバイスの取得
 	CRenderer *renderer = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
 
 	// テクスチャの読み込み
-	m_pTexture = CTexture::GetTexture(TEXTURE_TYPE_BULLET_000);
+	m_pTexture = CTexture::GetTexture(TEXTURE_TYPE_EFFECT_000);
 
 	// 頂点バッファの生成
 	if (FAILED(pDevice->CreateVertexBuffer(
@@ -142,7 +147,7 @@ void CBullet::Init(Vector3 pos, Vector3 vec, D3DXCOLOR col)
 	pVtx[0].col =
 	pVtx[1].col =
 	pVtx[2].col =
-	pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	pVtx[3].col = m_Col;
 
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
 	pVtx[1].tex = D3DXVECTOR2(1.0f / TEXTURE_ROW, 0.0f);
@@ -168,6 +173,9 @@ void CBullet::Uninit(void)
 	m_pTexture = NULL;
 	// 削除フラグ
 	m_Delete = true;
+
+	m_Orbit[0]->SetDeleteFlg(true);
+	m_Orbit[1]->SetDeleteFlg(true);
 }
 
 /*******************************************************************************
@@ -179,33 +187,34 @@ void CBullet::Uninit(void)
 *******************************************************************************/
 void CBullet::Update(void)
 {
-	// エフェクトの生成
-	for (int i = 0; i < NUM_UPDATE; i++)
-	{
-		// 位置更新
-		//m_Pos.x += sinf(m_Rot.y + D3DX_PI) * MOVE_SPEED;
-		//m_Pos.z += cosf(m_Rot.y + D3DX_PI) * MOVE_SPEED;
-		m_Pos += m_Vec * MOVE_SPEED;
-		CEffect *effect = CEffect::Create(m_Pos, m_Col, 30, 30);
-	}
+	m_Pos += m_Vec * MOVE_SPEED;
+
+	/* 変数定義 */
+	D3DXMATRIX mtxRot, mtxTrans;				// 向き、ポジション
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_MtxWorld);
+
+	// 回転を反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Rot.y, m_Rot.x, m_Rot.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxRot);
+
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_Pos.x, m_Pos.y, m_Pos.z);
+	D3DXMatrixMultiply(&m_MtxWorld,
+		&m_MtxWorld,
+		&mtxTrans);
+
+	m_Orbit[0]->Set(Vector3(0.0f, 10.0f, 0.0f), Vector3(0.0f, -10.0f, 0.0f), m_MtxWorld);
+	m_Orbit[1]->Set(Vector3(10.0f, 0.0f, 0.0f), Vector3(-10.0f, 0.0f, 0.0f), m_MtxWorld);
 
 	// 消去判定
 	DeleteCheak();
 	
 	// 当たり判定
 	UpdateCollision();
-}
-
-/*******************************************************************************
-* 関数名：void CBullet::Draw( void )
-*
-* 引数	：
-* 戻り値：
-* 説明	：描画処理
-*******************************************************************************/
-void CBullet::Draw(void)
-{
-
 }
 
 /*******************************************************************************
@@ -288,6 +297,67 @@ void CBullet::DeleteCheak(void)
 	{// 寿命が尽きたら、またはフィールドの外に出たら、もしくはフィールドの中に入ったら破棄
 		Uninit();
 	}
+}
+
+/*******************************************************************************
+* 関数名：void CBillboard::SetRenderStateBegin( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：レンダラーステート設定開始処理
+*******************************************************************************/
+void CBullet::SetRenderStateBegin(void)
+{
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// 各種設定 /////
+	// ライトのOFF
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	// フォグのOFF
+	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	// ZテストのOFF
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	// アルファテストのON
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+	// 加算合成によるアルファブレンドのレンダーステートの設定
+	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+}
+
+/*******************************************************************************
+* 関数名：void CBillboard::SetRenderStateEnd( void )
+*
+* 引数	：
+* 戻り値：
+* 説明	：レンダラーステート設定終了処理
+*******************************************************************************/
+void CBullet::SetRenderStateEnd(void)
+{
+	// デバイスの取得
+	CRenderer *renderer = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	// 設定を元に戻す /////
+	// ライトのON
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	// フォグのON
+	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
+	// アルファテストのOFF
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
+	// ZテストのOF
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	// 元のアルファブレンドの設定に戻す
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 }
 
 /*******************************************************************************

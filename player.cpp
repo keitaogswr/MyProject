@@ -129,8 +129,8 @@ void CPlayer::Init(Vector3 pos)
 	m_MotionManager->SetMotion(PLAYERSTATE_WAIT);
 	m_Shadow = CStencilShadow::Create(pos);
 
-	m_Orbit[0] = COrbit::Create();
-	m_Orbit[1] = COrbit::Create();
+	m_Orbit[0] = COrbit::Create(m_Pos, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+	m_Orbit[1] = COrbit::Create(m_Pos, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 }
 
 /*******************************************************************************

@@ -148,7 +148,7 @@ void CMissile::Init(Vector3 pos, Vector3 vec, int id)
 	pVtx[0].col =
 	pVtx[1].col =
 	pVtx[2].col =
-	pVtx[3].col = D3DCOLOR_RGBA(255, 120, 0, 255);
+	pVtx[3].col = D3DCOLOR_RGBA(255, 255, 0, 125);
 
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
 	pVtx[1].tex = D3DXVECTOR2(1.0f / TEXTURE_ROW, 0.0f);

@@ -49,6 +49,7 @@ COrbit::COrbit(DRAWORDER DrawOrder, OBJTYPE ObjType) :CScene3D(DrawOrder, ObjTyp
 	}
 	m_ParentPos = Vector3(0.0f, 0.0f, 0.0f);
 	m_HeadPos = Vector3(0.0f, 0.0f, 0.0f);
+	m_Col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 /*******************************************************************************
@@ -63,14 +64,20 @@ COrbit::~COrbit()
 }
 
 /*******************************************************************************
-* 関数名：void COrbit::Init(void)
+* 関数名：void COrbit::Init(Vector3 pos, D3DXCOLOR col)
 *
 * 引数	：
 * 戻り値：
 * 説明	：初期化処理
 *******************************************************************************/
-void COrbit::Init(void)
+void COrbit::Init(Vector3 pos, D3DXCOLOR col)
 {
+	for (int i = 0; i < ORBIT_VERTEX; i++)
+	{// 過去のデータを保存
+		m_OldPos[i] = pos;
+	}
+	m_Col = col;
+
 	// デバイスの取得
 	CRenderer *renderer = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
@@ -131,6 +138,11 @@ void COrbit::Update(void)
 							&m_HeadPos,
 							&m_ParentMtx);
 	m_OldPos[ORBIT_VERTEX - 2] = m_HeadPos;
+
+	for (int i = 0; i < ORBIT_VERTEX; i++)
+	{
+		m_Col.a = 1.0f / ORBIT_VERTEX * i;
+	}
 
 	SetVertex();
 }
@@ -224,17 +236,17 @@ void COrbit::Draw(void)
 }
 
 /*******************************************************************************
-* 関数名：COrbit *COrbit::Create(void)
+* 関数名：COrbit *COrbit::Create(Vector3 pos, D3DXCOLOR col)
 *
 * 引数	：
 * 戻り値：
 * 説明	：生成処理
 *******************************************************************************/
-COrbit *COrbit::Create(void)
+COrbit *COrbit::Create(Vector3 pos, D3DXCOLOR col)
 {
 	COrbit *meshField;
 	meshField = new COrbit;
-	meshField->Init();
+	meshField->Init(pos, col);
 	return meshField;
 }
 

@@ -33,25 +33,26 @@ class CScene3D;
 /*******************************************************************************
 * ÉNÉâÉXêÈåæ
 *******************************************************************************/
-class COrbit : CScene3D
+class COrbit : public CScene3D
 {
 private:
 	Vector3 m_OldPos[ORBIT_VERTEX];
 	Vector3 m_ParentPos;
 	Vector3 m_HeadPos;
 	D3DXMATRIX m_ParentMtx;
+	D3DXCOLOR m_Col;
 
 	void SetVertex(void);
 public:
 	COrbit(DRAWORDER DrawOrder = DRAWORDER_EFFECT, OBJTYPE ObjType = OBJTYPE_EFFECT);
 	~COrbit();
-	void Init(void);
+	void Init(Vector3 pos, D3DXCOLOR col);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 
 	void Set(Vector3 parentPos, Vector3 headPos, D3DXMATRIX matrix) { m_ParentPos = parentPos; m_HeadPos = headPos; m_ParentMtx = matrix; }
 
-	static COrbit *Create(void);
+	static COrbit *Create(Vector3 pos, D3DXCOLOR col);
 };
 

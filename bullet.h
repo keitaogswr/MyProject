@@ -29,6 +29,7 @@
 * 前方宣言
 *******************************************************************************/
 class CScene3D;
+class COrbit;
 
 /*******************************************************************************
 * クラス宣言
@@ -41,8 +42,13 @@ protected:
 	D3DXCOLOR m_Col;
 	Vector3 m_Vec;
 
+	COrbit *m_Orbit[2];					// オービットポインタ
+
 	virtual void UpdateCollision(void);	// 当たり判定
 	virtual void DeleteCheak(void);		// 消去判定
+
+	virtual void SetRenderStateBegin(void);		// レンダラーステート設定開始
+	virtual void SetRenderStateEnd(void);		// レンダラーステート設定終了
 public:
 	CBullet(DRAWORDER DrawOrder = DRAWORDER_3DLATE, OBJTYPE ObjType = OBJTYPE_BILLBOARD);
 	~CBullet();
@@ -50,7 +56,6 @@ public:
 	virtual void Init(Vector3 pos, Vector3 vec, D3DXCOLOR col);
 	virtual void Uninit(void);
 	virtual void Update(void);
-	virtual void Draw(void);
 
 	static CBullet *Create(Vector3 pos, Vector3 vec, D3DXCOLOR col);
 };
