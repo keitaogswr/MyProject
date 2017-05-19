@@ -55,7 +55,7 @@ TEXTURE_PARAM CTexture::m_TexParam[TEXTURE_TYPE_MAX] =
 	{ "data\\TEXTURE\\exit.png" },					// TEXTURE_TYPE_EXIT_000
 	{ "data\\TEXTURE\\game_start.png" },			// TEXTURE_TYPE_GAME_START_000
 	{ "data\\TEXTURE\\finish.png" },				// TEXTURE_TYPE_FINISH_000
-	{ "data\\TEXTURE\\gameUI2.png" },				// TEXTURE_TYPE_GAMEUI_000
+	{ "data\\TEXTURE\\gameUI.png" },				// TEXTURE_TYPE_GAMEUI_000
 	{ "data\\TEXTURE\\thank_you.png" },				// TEXTURE_TYPE_THANK_YOU_000
 	{ "data\\TEXTURE\\chargeEffect000.png" },		// TEXTURE_TYPE_CHARGE_000
 	{ "data\\TEXTURE\\explosion_dome.png" }			// TEXTURE_TYPE_LAZER_000

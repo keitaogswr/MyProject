@@ -163,7 +163,6 @@
     <ClInclude Include="fade.h" />
     <ClInclude Include="field.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="HewNetLib.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lazer.h" />
     <ClInclude Include="light.h" />

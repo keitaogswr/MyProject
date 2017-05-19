@@ -458,9 +458,6 @@
     <ClInclude Include="missile.h">
       <Filter>ヘッダー ファイル\Scene\Billboard\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="HewNetLib.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GM31_GameBeta_20160711.rc">

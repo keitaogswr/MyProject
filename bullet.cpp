@@ -174,8 +174,13 @@ void CBullet::Uninit(void)
 	// íœƒtƒ‰ƒO
 	m_Delete = true;
 
-	m_Orbit[0]->SetDeleteFlg(true);
-	m_Orbit[1]->SetDeleteFlg(true);
+	for (int i = 0; i < 2; i++)
+	{
+		if (m_Orbit[i] != NULL)
+		{
+			m_Orbit[i]->SetDeleteFlg(true);
+		}
+	}
 }
 
 /*******************************************************************************

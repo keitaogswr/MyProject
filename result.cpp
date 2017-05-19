@@ -85,9 +85,6 @@ void CResult::Uninit( void )
 {
 	CScene::UninitAll();
 	CSound::Stop();
-	HewNetLib *hew = CManager::GetHew();
-	// 好きな文字列        スコアがあるならスコア( 0から1000まで )
-	hew->SendResult("End", (int)CTime::GetTime());
 }
 
 /*******************************************************************************

@@ -937,7 +937,7 @@ void CPlayer::Operate(void)
 			break;
 		}
 		// ジャンプ
-		if (input->GetKeyboardTrigger(DIK_UP) && m_bJump == false
+		if (input->GetKeyboardTrigger(DIK_J) && m_bJump == false
 			&& (m_State == PLAYERSTATE_WAIT || m_State == PLAYERSTATE_WALK))
 		{
 			m_Move.y = JUMP_SPEED;
@@ -946,7 +946,7 @@ void CPlayer::Operate(void)
 		}
 
 		// 変形
-		if (input->GetKeyboardTrigger(DIK_DOWN))
+		if (input->GetKeyboardTrigger(DIK_V))
 		{
 			switch (m_Mode)
 			{// モードごとの処理

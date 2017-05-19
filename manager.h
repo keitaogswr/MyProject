@@ -16,8 +16,6 @@
 /*******************************************************************************
 * インクルードファイル
 *******************************************************************************/
-#include "HewNetLib.h"
-
 /*******************************************************************************
 * ライブラリのリンク
 *******************************************************************************/
@@ -73,9 +71,7 @@ public:
 	static void SetMode(CMode *mode);
 	static CMode *GetMode(void);
 	static CInput *GetInput(void) { return m_Input; }
-	static HewNetLib *GetHew(){ return m_Hew; }
 private:
-	static HewNetLib *m_Hew;
 	static CRenderer *m_Renderer;
 	static HWND *m_hWnd;
 	static CMode *m_Mode;

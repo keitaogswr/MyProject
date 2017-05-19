@@ -23,7 +23,6 @@
 #include "load.h"
 #include "texture.h"
 #include "manager.h"
-#include "HewNetLib.h"
 #ifdef _DEBUG
 #include "debugProc.h"
 #endif
@@ -36,7 +35,6 @@ CManager::OPMODE CManager::m_Opmode;
 HWND *CManager::m_hWnd;
 CMode *CManager::m_Mode;
 CInput *CManager::m_Input;
-HewNetLib *CManager::m_Hew;
 
 /*******************************************************************************
 * 関数名：CManager::CManager()
@@ -82,8 +80,6 @@ void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 	m_Input->InitKeyboard( hInstance, hWnd );
 	m_Input->InitJoyStick();
 
-	m_Hew = new HewNetLib("data/EDITDATA/setting.txt");
-
 	CSound::Init( hWnd );
 
 	CTexture::Load();
@@ -121,7 +117,6 @@ void CManager::Uninit( void )
 	// サウンド解放
 	CSound::Uninit();
 
-	SAFE_DELETE(m_Hew);
 }
 
 /*******************************************************************************
