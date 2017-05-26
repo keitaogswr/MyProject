@@ -36,6 +36,8 @@ class CMode;
 class CReticle;
 class CPlayerLifeGauge;
 class CScene2D;
+class HewNetLib;
+class CTime;
 
 /*******************************************************************************
 * ƒNƒ‰ƒXéŒ¾

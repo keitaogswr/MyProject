@@ -143,6 +143,7 @@ void CGame::Init(void)
 *******************************************************************************/
 void CGame::Uninit(void)
 {
+
 	// ÉäÉ\Å[ÉXâï˙
 	CPause::Uninit();
 	SAFE_DELETE(m_Camera);
@@ -156,6 +157,7 @@ void CGame::Uninit(void)
 	CMotionManager::Unload();
 
 	CSound::Stop();
+
 }
 
 /*******************************************************************************

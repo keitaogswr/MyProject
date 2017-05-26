@@ -69,6 +69,7 @@ CManager::~CManager()
 *******************************************************************************/
 void CManager::Init( HINSTANCE hInstance, HWND hWnd, BOOL bWindow )
 {
+	HewNetLib::Singleton()->Init("data/setting.txt");
 	srand((unsigned)time(NULL));
 	rand(); rand(); rand(); rand(); rand();
 	m_hWnd = &hWnd;

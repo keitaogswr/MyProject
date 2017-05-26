@@ -696,11 +696,11 @@ void CPlayer::UpdateState(void)
 void CPlayer::Operate(void)
 {
 	CInput *input = CManager::GetInput();
-	/*if (input->GetJoyStickConnected())
+	if (input->GetJoyStickConnected())
 	{
 		OperateJoyStick();
 		return;
-	}*/
+	}
 	CGame *game = (CGame*)CManager::GetMode();
 	CCamera *camera = game->GetCamera();
 	if (CManager::GetOperateMode() == CManager::OPMODE_PLAYER)
@@ -1422,7 +1422,7 @@ void CPlayer::UpdateRockOn(void)
 		CEnemy::Get(m_nTarget)->SetTarget(true);
 	}
 
-	if (input->GetKeyboardTrigger(DIK_R) /*|| input->TriggerJoyStick(XINPUT_GAMEPAD_Y)*/)
+	if (input->GetKeyboardTrigger(DIK_R) || input->TriggerJoyStick(XINPUT_GAMEPAD_Y))
 	{// ƒƒbƒNƒIƒ“‚ÌØ‚è‘Ö‚¦
 		m_bRockOn = m_bRockOn == true ? false : true;
 

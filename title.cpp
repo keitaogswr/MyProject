@@ -33,6 +33,8 @@
 #include "texture.h"
 #include "sound.h"
 
+#include "HewNetLib.h"
+
 /*******************************************************************************
 * マクロ定義
 *******************************************************************************/
@@ -85,6 +87,9 @@ void CTitle::Init(void)
 	m_Light = CLight::Create();
 	// サウンド再生
 	CSound::Play(CSound::SOUND_LABEL_BGM_000);
+
+	//
+	HewNetLib::Singleton()->Reset();
 }
 
 /*******************************************************************************
@@ -117,7 +122,7 @@ void CTitle::Update(void)
 	m_Camera->Update();
 	CScene::UpdateAll();
 
-	if (input->GetKeyboardTrigger(DIK_RETURN) || input->TriggerJoyStick(XINPUT_GAMEPAD_START))
+	if (input->GetKeyboardTrigger(DIK_RETURN) || input->TriggerJoyStick(XINPUT_GAMEPAD_START) || HewNetLib::Singleton()->Ready())
 	{
 		CFade::Start(new CLoad);
 		CSound::Play(CSound::SOUND_LABEL_SE_BUTTON_000);
