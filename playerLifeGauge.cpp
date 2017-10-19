@@ -124,7 +124,6 @@ void CPlayerLifeGauge::Init(Vector3 pos)
 *******************************************************************************/
 void CPlayerLifeGauge::Uninit(void)
 {
-	HewNetLib::Singleton()->SendPoint(m_fCurrent);
 	// ‰ð•ú
 	SAFE_RELEASE(m_VtxBuff);
 	m_pTexture = NULL;
